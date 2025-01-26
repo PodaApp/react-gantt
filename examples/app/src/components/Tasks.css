@@ -1,0 +1,8 @@
+.tasks {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	margin: 2px 0;
+	flex: 1;
+}

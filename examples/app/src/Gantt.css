@@ -1,0 +1,11 @@
+.gantt {
+	position: relative;
+}
+
+.gantt__scrollable {
+	height: 50vh;
+	width: 80vw;
+	display: flex;
+	flex-direction: column;
+	overflow-x: auto;
+}

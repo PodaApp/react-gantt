@@ -1,0 +1,124 @@
+.task {
+	position: relative;
+	z-index: 2;
+	margin-top: 1px;
+	margin-bottom: 1px;
+	display: flex;
+}
+
+.task--focused .task__bar {
+	background: rgb(80, 80, 80);
+}
+
+.task__bar {
+	height: 30px;
+	width: 100%;
+	border-radius: 6px;
+	display: flex;
+	align-items: center;
+	background: rgb(60, 60, 60);
+	box-shadow:
+		rgba(91, 91, 91, 0.2) 0px 0px 0px 1px,
+		rgba(15, 15, 15, 0.2) 0px 2px 4px;
+}
+
+.task__content {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	gap: 4px;
+	align-items: center;
+	height: 30px;
+	padding: 0 6px;
+}
+
+.task__title {
+	font-weight: 600;
+}
+
+.task__dependencyHandle {
+	position: absolute;
+	top: 0;
+	right: -14px;
+	bottom: 0;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	width: 14px;
+}
+
+.task__dependencyHandle__tag {
+	position: relative;
+	width: 4px;
+	height: 4px;
+	border-radius: 50%;
+	border: 2px solid coral;
+	box-shadow:
+		rgba(91, 91, 91, 0.2) 0px 0px 0px 1px,
+		rgba(15, 15, 15, 0.2) 0px 2px 4px;
+}
+
+.task__dependencyHandle:hover {
+	transform: scale(1.3);
+}
+
+.task__dependencyHandle__tag::before {
+	content: "";
+	position: absolute;
+	top: calc(50% - 1px);
+	left: -8px;
+	width: 8px;
+	height: 2px;
+	background: coral;
+}
+
+.task__offscreen {
+	width: 16px;
+	height: 16px;
+	padding: 4px;
+	background: rgba(255, 255, 255, 0.443);
+	border-radius: 4px;
+	border: 1px solid rgb(25, 25, 25);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 12px;
+	color: white;
+	flex-shrink: 0;
+}
+
+.task__offscreen--right {
+	margin-left: auto;
+}
+
+.task__offscreen:hover {
+	background: rgba(255, 255, 255, 0.8);
+}
+
+.task__offscreen img {
+	width: 12px;
+}
+
+.task__offscreenTooltip {
+	font-size: 11px;
+	color: white;
+	background: black;
+	border-radius: 2px;
+	padding: 0 4px;
+	line-height: 18px;
+	display: none;
+	align-items: center;
+	gap: 2px;
+	position: absolute;
+	left: 26px;
+}
+
+.task__offscreenTooltip svg {
+	width: 13px;
+	height: 13px;
+}
+
+.task__offscreen:hover + .task__offscreenTooltip {
+	display: flex;
+}

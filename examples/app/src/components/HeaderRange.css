@@ -1,0 +1,9 @@
+.headerRange {
+	position: absolute;
+	bottom: 7px;
+	width: 488px;
+	margin-top: 3px;
+	height: 22px;
+	border-radius: 11px;
+	background: rgba(255, 255, 255, 0.03);
+}

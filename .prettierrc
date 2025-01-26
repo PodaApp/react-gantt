@@ -8,7 +8,7 @@
     "importOrderSeparation": true,
     "importOrderSortSpecifiers": true,
     "importOrderCaseInsensitive": true,
-    "printWidth": 125,
+    "printWidth": 150,
     "tabWidth": 2,
     "useTabs": true,
     "semi": true,
