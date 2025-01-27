@@ -110,9 +110,9 @@ export const Tasks = ({ tasks, onTaskHover, containerRef }: Props) => {
 	}, [containerRef]);
 
 	return (
-		<div className="tasks" ref={containerRef}>
+		<div className="tasks">
 			{tasks.map((task) => (
-				<Task data={task} key={task.id} sticky={taskPositions[task.id]} onHover={onTaskHover} />
+				<Task data={task} key={task.id} stickyPosition={taskPositions[task.id]} containerRef={containerRef} onHover={onTaskHover} />
 			))}
 			<Today />
 			{weekends.map((daysOffset) => (

@@ -1,80 +1,90 @@
-import classNames from "classnames";
-import { differenceInDays, format, getDayOfYear } from "date-fns";
+import { RefObject, useCallback, useRef } from "react";
 
-import left from "../assets/move-left.svg";
-import right from "../assets/move-right.svg";
-import { COL_WIDTH } from "../constants";
+import classNames from "classnames";
+import { differenceInDays, getDayOfYear } from "date-fns";
+
+import { COL_JUMP_TO_BUFFER_DAYS, COL_WIDTH } from "../constants";
 import { ITask, ITaskPosition } from "../types";
-import { RightArrow } from "./RightArrow";
 import "./Task.css";
+import { TaskOverflow, TaskOverflowDirection, TaskOverflowOnClick } from "./TaskOverflow";
 
 type Props = {
 	data: ITask;
-	sticky: ITaskPosition | null;
+	stickyPosition: ITaskPosition | null;
+	containerRef: RefObject<HTMLDivElement>;
 	onHover: (task: ITask) => void;
 };
 
-export const Task = ({ data, sticky, onHover }: Props) => {
+export const Task = ({ data, stickyPosition, containerRef, onHover }: Props) => {
+	const taskRef = useRef<HTMLDivElement>(null);
+
 	const rangeOffset = getDayOfYear(data.start) - 1;
 	const rangeLength = differenceInDays(data.end, data.start) + 1;
 
 	const width = rangeLength * COL_WIDTH;
 	const x = rangeOffset * COL_WIDTH;
 
-	const handleHover = () => {
-		onHover(data);
-	};
+	const handleHover = useCallback(() => onHover(data), [data, onHover]);
+
+	const handleOverflowClick: TaskOverflowOnClick = useCallback(
+		(direction) => _scrollToPosition(direction, containerRef.current, taskRef.current),
+		[containerRef],
+	);
 
 	const taskClass = classNames({
 		task: true,
 		"task--focused": data.focused,
 	});
 
-	const style: React.CSSProperties = sticky?.overflowLeft
-		? { position: "fixed", top: `${sticky.top}px`, left: `${sticky.left}px`, zIndex: 10 }
-		: { position: "static", zIndex: 10 };
-	const styleRight: React.CSSProperties = sticky?.overflowRight
-		? { position: "fixed", top: `${sticky.top}px`, left: `${sticky.right - 30}px`, zIndex: 10 }
-		: {};
+	const isOverflowLeft = !!stickyPosition?.overflowLeft;
+	const isOverflowRight = !!stickyPosition?.overflowRight;
+	const isTimelinInViewport = !stickyPosition?.gone;
+	const isFocused = data.focused;
+
+	const coordinatesStart = stickyPosition ? { x: stickyPosition.left, y: stickyPosition?.top } : null;
+	const cordoinantesEnd = stickyPosition ? { x: stickyPosition?.right - 30, y: stickyPosition?.top } : null;
 
 	return (
 		<>
-			{sticky?.overflowLeft && (
-				<div className="task__content" style={style}>
-					{sticky?.overflowLeft && (
-						<div className="task__offscreen">
-							<img src={left} />
-						</div>
-					)}
-					<div className="task__offscreenTooltip">
-						{format(data.start, "MMM dd, yyyy")} <RightArrow /> {format(data.end, "MMM dd, yyyy")}
-					</div>
-					{!sticky?.gone && <div className="task__title">{data.title}</div>}
-				</div>
+			{isOverflowLeft && (
+				<TaskOverflow direction="left" position={coordinatesStart} task={data} isInViewport={isTimelinInViewport} onClick={handleOverflowClick} />
 			)}
-			<div className={taskClass} style={{ width: `${width}px`, transform: `translateX(${x}px)` }} onMouseEnter={handleHover}>
+			<div className={taskClass} style={{ width: `${width}px`, transform: `translateX(${x}px)` }} onMouseEnter={handleHover} ref={taskRef}>
 				<div className="task__beacon" data-position="start" data-id={data.id} />
 				<div className="task__bar" data-id={data.id}></div>
 				<div className="task__beacon" data-position="end" data-id={data.id} />
 
-				{!sticky?.overflowLeft && (
+				{!isOverflowLeft && (
 					<div className="task__content">
 						<div className="task__title">{data.title}</div>
 					</div>
 				)}
-				{data.focused && (
+				{isFocused && (
 					<div className="task__dependencyHandle">
 						<div className="task__dependencyHandle__tag" />
 					</div>
 				)}
 			</div>
-			{sticky?.overflowRight && (
-				<div className="task__content" style={styleRight}>
-					<div className="task__offscreen task__offscreen--right">
-						<img src={right} />
-					</div>
-				</div>
-			)}
+			{isOverflowRight && <TaskOverflow direction="right" position={cordoinantesEnd} task={data} onClick={handleOverflowClick} />}
 		</>
 	);
+};
+
+const _scrollToPosition = (direction: TaskOverflowDirection, container: HTMLElement | null, task: HTMLElement | null): void => {
+	if (!container || !task) {
+		throw new Error("Can't find a required element");
+	}
+
+	const containerRect = container.getBoundingClientRect();
+	const taskRect = task.getBoundingClientRect();
+
+	const xPosition: { left: number; right: number } = {
+		left: taskRect.left - containerRect.left + container.scrollLeft - COL_JUMP_TO_BUFFER_DAYS * COL_WIDTH,
+		right: taskRect.right - containerRect.left - containerRect.width + container.scrollLeft + COL_JUMP_TO_BUFFER_DAYS * COL_WIDTH,
+	};
+
+	container.scrollTo({
+		left: xPosition[direction],
+		behavior: "smooth",
+	});
 };

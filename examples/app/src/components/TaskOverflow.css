@@ -1,0 +1,61 @@
+.taskOverflow {
+	position: fixed;
+	z-index: 3;
+	display: flex;
+	gap: 4px;
+	align-items: center;
+	height: 30px;
+	padding: 0 6px;
+}
+
+.taskOverflow__button {
+	width: 16px;
+	height: 16px;
+	padding: 4px;
+	background: rgba(255, 255, 255, 0.443);
+	border-radius: 4px;
+	border: 1px solid rgb(25, 25, 25);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 12px;
+	color: white;
+	flex-shrink: 0;
+}
+
+.taskOverflow__button:hover {
+	background: rgba(255, 255, 255, 0.8);
+}
+
+.taskOverflow__button img {
+	width: 12px;
+}
+
+.taskOverflow__tooltip {
+	font-size: 11px;
+	color: white;
+	background: black;
+	border-radius: 2px;
+	padding: 0 4px;
+	line-height: 18px;
+	display: none;
+	align-items: center;
+	gap: 2px;
+	position: absolute;
+	left: 26px;
+	white-space: nowrap;
+}
+
+.taskOverflow__tooltip--right {
+	left: unset;
+	right: 26px;
+}
+
+.taskOverflow__tooltip svg {
+	width: 13px;
+	height: 13px;
+}
+
+.taskOverflow__button:hover + .taskOverflow__tooltip {
+	display: flex;
+}
