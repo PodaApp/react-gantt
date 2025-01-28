@@ -33,7 +33,7 @@
 	text-align: center;
 }
 
-.header__day--bold {
+.header__day--today {
 	font-weight: 600;
 	opacity: 1;
 }

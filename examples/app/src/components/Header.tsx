@@ -86,18 +86,11 @@ export const Header = ({ startDate, endDate, focusedTask, containerRef }: Props)
 							<div className="header__week">
 								{month.weeks.map((dayOfTheWeek) => {
 									const day = new Date(dayOfTheWeek);
-
 									const today = isToday(day);
-									const inRange = focusedTask && day >= new Date(focusedTask.start) && day <= new Date(focusedTask.end);
-									const isStart = focusedTask && day.toDateString() === new Date(focusedTask.start).toDateString();
-									const isEnd = focusedTask && day.toDateString() === new Date(focusedTask.end).toDateString();
 
 									const rootClass = classNames({
 										header__day: true,
-										"header__day--bold": today,
-										"header__day--range": inRange,
-										"header__day--range-start": isStart,
-										"header__day--range-end": isEnd,
+										"header__day--today": today,
 									});
 
 									return (
