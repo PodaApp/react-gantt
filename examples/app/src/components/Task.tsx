@@ -12,26 +12,28 @@ import { TaskOverflow, TaskOverflowDirection, TaskOverflowOnClick } from "./Task
 export type TaskOnHover = (taskId: string) => void;
 
 type Props = {
-	ganttStartDate: number; //TODO: Temp use context
-	data: ITask;
+	task: ITask;
 	containerRef: RefObject<HTMLDivElement>;
-	onHover: TaskOnHover;
 };
+// TODO: Move to query
+const getPositionForTask = (id: ITask["id"]) => (s: GanttStoreState) => s.tasksPositions[id];
+const getIsFocused = (id: ITask["id"]) => (s: GanttStoreState) => s.tasksFocusedId === id;
 
-const getPositionForTask = (id: string) => (s: GanttStoreState) => s.tasksPositions[id];
-
-export const Task = ({ ganttStartDate, data, containerRef, onHover }: Props) => {
+export const Task = ({ task, containerRef }: Props) => {
 	const taskRef = useRef<HTMLDivElement>(null);
 
-	const stickyPosition = useGanttStore(getPositionForTask(data.id));
+	const dateStart = useGanttStore.use.dateStart();
+	const stickyPosition = useGanttStore(getPositionForTask(task.id));
+	const isTaskFocused = useGanttStore(getIsFocused(task.id));
+	const setTaskFocused = useGanttStore.use.setTaskFocused();
 
-	const rangeOffset = differenceInDays(data.start, new Date(ganttStartDate).toISOString()) + 1;
-	const rangeLength = differenceInDays(data.end, data.start) + 1;
+	const rangeOffset = differenceInDays(task.start, new Date(dateStart).toISOString()) + 1;
+	const rangeLength = differenceInDays(task.end, task.start) + 1;
 
 	const width = rangeLength * COL_WIDTH;
 	const x = rangeOffset * COL_WIDTH;
 
-	const handleHover = useCallback(() => onHover(data.id), [data.id, onHover]);
+	const handleHover = useCallback(() => setTaskFocused(task.id), [setTaskFocused, task.id]);
 
 	const handleOverflowClick: TaskOverflowOnClick = useCallback(
 		(direction) => _scrollToPosition(direction, containerRef.current, taskRef.current),
@@ -40,13 +42,12 @@ export const Task = ({ ganttStartDate, data, containerRef, onHover }: Props) => 
 
 	const taskClass = classNames({
 		task: true,
-		"task--focused": data.focused,
+		"task--focused": task.focused,
 	});
 
 	const isOverflowLeft = !!stickyPosition?.overflowLeft;
 	const isOverflowRight = !!stickyPosition?.overflowRight;
 	const isTimelinInViewport = !stickyPosition?.gone;
-	const isFocused = data.focused;
 
 	const coordinatesStart = stickyPosition ? { x: stickyPosition.left, y: stickyPosition?.top } : null;
 	const cordoinantesEnd = stickyPosition ? { x: stickyPosition?.right - 30, y: stickyPosition?.top } : null;
@@ -54,25 +55,25 @@ export const Task = ({ ganttStartDate, data, containerRef, onHover }: Props) => 
 	return (
 		<>
 			{isOverflowLeft && (
-				<TaskOverflow direction="left" position={coordinatesStart} task={data} isInViewport={isTimelinInViewport} onClick={handleOverflowClick} />
+				<TaskOverflow direction="left" position={coordinatesStart} task={task} isInViewport={isTimelinInViewport} onClick={handleOverflowClick} />
 			)}
 			<div className={taskClass} style={{ width: `${width}px`, transform: `translateX(${x}px)` }} onMouseEnter={handleHover} ref={taskRef}>
-				<div className="task__beacon" data-position="start" data-id={data.id} />
-				<div className="task__bar" data-id={data.id}></div>
-				<div className="task__beacon" data-position="end" data-id={data.id} />
+				<div className="task__beacon" data-position="start" data-id={task.id} />
+				<div className="task__bar" data-id={task.id}></div>
+				<div className="task__beacon" data-position="end" data-id={task.id} />
 
 				{!isOverflowLeft && (
 					<div className="task__content">
-						<div className="task__title">{data.title}</div>
+						<div className="task__title">{task.title}</div>
 					</div>
 				)}
-				{isFocused && (
+				{isTaskFocused && (
 					<div className="task__dependencyHandle">
 						<div className="task__dependencyHandle__tag" />
 					</div>
 				)}
 			</div>
-			{isOverflowRight && <TaskOverflow direction="right" position={cordoinantesEnd} task={data} onClick={handleOverflowClick} />}
+			{isOverflowRight && <TaskOverflow direction="right" position={cordoinantesEnd} task={task} onClick={handleOverflowClick} />}
 		</>
 	);
 };

@@ -1,17 +1,14 @@
-import { memo } from "react";
+import { differenceInDays, getDay } from "date-fns";
 
+import { useGanttStore } from "../store/ganttStore";
 import { Weekend } from "./Weekend";
 
-const mockWeekends = [
-	3, 10, 17, 24, 31, 38, 45, 52, 59, 66, 73, 80, 87, 94, 101, 108, 115, 122, 129, 136, 143, 150, 157, 164, 171, 178, 185, 192, 199, 206, 213, 220,
-	227, 234, 241, 248, 255, 262, 269, 276, 283, 290, 297, 304, 311, 318, 325, 332, 339, 346, 353, 360,
-];
+export const Weekends = () => {
+	const dateStart = useGanttStore.use.dateStart();
+	const dateEnd = useGanttStore.use.dateEnd();
 
-type Props = {
-	weekends?: number[];
-};
+	const weekends = _getWeekendOffsetDays(dateStart, dateEnd);
 
-export const Weekends: React.FC<Props> = memo(({ weekends = mockWeekends }) => {
 	return (
 		<>
 			{weekends.map((daysOffset) => (
@@ -19,6 +16,18 @@ export const Weekends: React.FC<Props> = memo(({ weekends = mockWeekends }) => {
 			))}
 		</>
 	);
-});
+};
 
-Weekends.displayName = "Weekends";
+const _getWeekendOffsetDays = (dateStart: number, dateEnd: number) => {
+	const startDayOfWeek = getDay(dateStart);
+	const totalDays = differenceInDays(dateEnd, dateStart);
+
+	const firstSaturday = startDayOfWeek === 0 ? -1 : 6 - startDayOfWeek;
+	const weekends: number[] = [];
+
+	for (let day = firstSaturday; day <= totalDays; day += 7) {
+		weekends.push(day);
+	}
+
+	return weekends;
+};

@@ -8,8 +8,8 @@ import { ITask, ITaskPosition } from "../types";
 
 export type GanttStoreState = {
 	tasks: ITask[];
-	// TODO: Do I merge this with the task model above
 	tasksPositions: Record<string, ITaskPosition>;
+	tasksFocusedId: ITask["id"] | null;
 
 	headerMonth: string | null;
 
@@ -32,6 +32,7 @@ export type IGanttStore = GanttStoreState & GanttStoreActions;
 const store = create<IGanttStore>((set, get) => ({
 	tasks: [],
 	tasksPositions: {},
+	tasksFocusedId: null,
 	headerMonth: null,
 	dateCentered: 0,
 	dateEnd: 0,
@@ -73,27 +74,7 @@ const store = create<IGanttStore>((set, get) => ({
 	setTasks: (tasks) => set({ tasks }),
 
 	setTaskFocused: (id) => {
-		const tasks = get().tasks;
-
-		set({
-			tasks: produce(tasks, (draft) => {
-				const focusedCurrent = draft.find((task) => task.focused);
-				const focusedNext = draft.find((task) => task.id === id);
-
-				if (focusedCurrent?.id === id) {
-					return draft;
-				}
-
-				if (focusedCurrent) {
-					focusedCurrent.focused = false;
-				}
-				if (focusedNext) {
-					focusedNext.focused = true;
-				}
-
-				return draft;
-			}),
-		});
+		set({ tasksFocusedId: id });
 	},
 }));
 

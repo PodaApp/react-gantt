@@ -1,15 +1,19 @@
 import { Month } from "date-fns";
 import { enUS } from "date-fns/locale";
 
-type Args = { startDate: number; endDate: number };
+import { useGanttStore } from "../store/ganttStore";
+
 export type GanttData = { month: string; year: number; weeks: string[]; startOnDay: number }[];
-type GetMonths = (args: Args) => GanttData;
 
 // TODO: Review this was GPT'd
-const getMonths: GetMonths = ({ startDate, endDate }) => {
-	const start = new Date(startDate);
-	const end = new Date(endDate);
-	const months = [];
+export const useCalendar = () => {
+	const dateStart = useGanttStore.use.dateStart();
+	const dateEnd = useGanttStore.use.dateEnd();
+
+	const start = new Date(dateStart);
+	const end = new Date(dateEnd);
+
+	const calendar: GanttData = [];
 
 	while (start <= end) {
 		// Calculate the first and last day of the current month
@@ -26,7 +30,7 @@ const getMonths: GetMonths = ({ startDate, endDate }) => {
 			daysInMonth.push(new Date(start.getFullYear(), start.getMonth(), day).toString());
 		}
 
-		months.push({
+		calendar.push({
 			month: enUS.localize.month(start.getMonth() as Month, { width: "wide" }),
 			year: start.getFullYear(),
 			weeks: daysInMonth,
@@ -38,9 +42,5 @@ const getMonths: GetMonths = ({ startDate, endDate }) => {
 		start.setDate(1); // Ensure the date is reset to the first of the next month
 	}
 
-	return months;
-};
-
-export const useCalendar = ({ startDate, endDate }: Args) => {
-	return getMonths({ startDate, endDate });
+	return calendar;
 };

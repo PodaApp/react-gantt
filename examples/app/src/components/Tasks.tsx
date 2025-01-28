@@ -1,21 +1,19 @@
 import { RefObject, useEffect } from "react";
 
 import { useGanttStore } from "../store/ganttStore";
-import { ITask } from "../types";
-import { Task, TaskOnHover } from "./Task";
+import { Task } from "./Task";
 import "./Tasks.css";
 import { Today } from "./Today";
 import { Weekends } from "./Weekends";
 
 type Props = {
-	startDate: number; //TODO: Temp use context
-	tasks: ITask[];
-	onTaskHover: TaskOnHover;
 	containerRef: RefObject<HTMLDivElement>;
 };
 
-export const Tasks = ({ startDate, tasks, onTaskHover, containerRef }: Props) => {
+export const Tasks = ({ containerRef }: Props) => {
 	const setOffscreenTasks = useGanttStore.use.setTaskPositions();
+
+	const tasks = useGanttStore.use.tasks();
 
 	useEffect(() => {
 		const onTaskIntersection: IntersectionObserverCallback = (entries) => {
@@ -87,7 +85,8 @@ export const Tasks = ({ startDate, tasks, onTaskHover, containerRef }: Props) =>
 			rootMargin: "4px",
 		});
 
-		// TODO: Decouple dependancy on class name
+		// TODO: Decouple dependancy on class name, tasks should store a reference to the node
+		// as its requried for this to work anyway
 		const observeTasksElements = containerRef.current?.querySelectorAll(".task__beacon");
 		observeTasksElements?.forEach((el) => observeTasks.observe(el));
 
@@ -97,14 +96,14 @@ export const Tasks = ({ startDate, tasks, onTaskHover, containerRef }: Props) =>
 				observeTasks.unobserve(el);
 			});
 		};
-	}, [startDate, containerRef, setOffscreenTasks]);
+	}, [tasks, containerRef, setOffscreenTasks]);
 
 	return (
 		<div className="tasks">
 			{tasks.map((task) => (
-				<Task ganttStartDate={startDate} data={task} key={task.id} containerRef={containerRef} onHover={onTaskHover} />
+				<Task task={task} containerRef={containerRef} key={task.id} />
 			))}
-			<Today ganttStartDate={startDate} />
+			<Today />
 			<Weekends />
 		</div>
 	);

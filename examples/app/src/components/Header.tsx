@@ -5,24 +5,20 @@ import { format, isToday } from "date-fns";
 
 import { useCalendar } from "../hooks/useCalendar";
 import { useGanttStore } from "../store/ganttStore";
-import { ITask } from "../types";
 import "./Header.css";
 import { HeaderRange } from "./HeaderRange";
 import { HeaderSticky } from "./HeaderSticky";
 
 type Props = {
-	startDate: number;
-	endDate: number;
-	focusedTask: ITask | null;
 	containerRef: RefObject<HTMLDivElement>;
 };
 
-export const Header = ({ startDate, endDate, focusedTask, containerRef }: Props) => {
+export const Header = ({ containerRef }: Props) => {
 	const elsMonth = useRef<(HTMLDivElement | null)[]>([]);
 
 	const setHeaderMonth = useGanttStore.use.setHeaderMonth();
 
-	const calendar = useCalendar({ startDate, endDate });
+	const calendar = useCalendar();
 
 	useEffect(() => {
 		const onHeaderIntersection: IntersectionObserverCallback = (entries) => {
@@ -64,13 +60,13 @@ export const Header = ({ startDate, endDate, focusedTask, containerRef }: Props)
 			observeHeaderElements?.forEach((el) => observeHeader.unobserve(el));
 		};
 		// TODO: Props required as dependancy else not all elements are observed
-	}, [startDate, containerRef, setHeaderMonth]);
+	}, [calendar, containerRef, setHeaderMonth]);
 
 	return (
 		<>
 			<HeaderSticky />
 			<div className="header" ref={containerRef}>
-				{focusedTask && <HeaderRange node={focusedTask} />}
+				<HeaderRange />
 				{calendar.map((month, index) => {
 					const nextMonth = calendar[index + 1] || month;
 
