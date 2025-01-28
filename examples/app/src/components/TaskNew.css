@@ -1,0 +1,12 @@
+.taskNew {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 14px;
+	color: #ffffff71;
+}
+
+.taskNew svg {
+	width: 14px;
+	height: 14px;
+}

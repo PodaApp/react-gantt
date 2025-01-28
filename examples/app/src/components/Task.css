@@ -1,8 +1,7 @@
 .task {
 	position: relative;
 	z-index: 2;
-	margin-top: 1px;
-	margin-bottom: 1px;
+	margin: 2px 0;
 	display: flex;
 }
 

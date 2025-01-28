@@ -2,10 +2,24 @@
 	position: relative;
 }
 
+.gantt__wrapper {
+	display: flex;
+	flex-direction: column;
+	width: max-content;
+	height: 100%;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .gantt__scrollable {
 	height: 50vh;
 	width: 80vw;
-	display: flex;
-	flex-direction: column;
 	overflow-x: auto;
+}
+
+.gantt__footer {
+	position: absolute;
+	height: 30px;
+	bottom: 16px;
+	left: 8px;
+	right: 0;
 }

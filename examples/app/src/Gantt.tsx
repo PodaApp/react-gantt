@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 
 import { tasks as mockTasks } from "./__fixtures__/tasks";
 import { Header } from "./components/Header";
+import { TaskNew } from "./components/TaskNew";
 import { Tasks } from "./components/Tasks";
 import "./Gantt.css";
 import { getGanttCurrentOffset } from "./queries/getGanttCurrentOffset";
@@ -29,10 +30,14 @@ function Gantt() {
 	return (
 		<div className="gantt">
 			<div className="gantt__scrollable" ref={elTimeline}>
-				<Header containerRef={elTimeline} />
-				<Tasks containerRef={elTimeline} />
+				<div className="gantt__wrapper">
+					<Header containerRef={elTimeline} />
+					<Tasks containerRef={elTimeline} />
+				</div>
 			</div>
-			<div>Sticky Footer</div>
+			<div className="gantt__footer">
+				<TaskNew />
+			</div>
 		</div>
 	);
 }
