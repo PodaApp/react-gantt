@@ -1,21 +1,3 @@
-.headerSticky {
-	position: absolute;
-	height: 22.5px;
-	z-index: 2;
-}
-
-.headerSticky__month {
-	background: linear-gradient(90deg, #242424 90%, transparent);
-	color: white;
-	display: flex;
-	align-items: center;
-	gap: 4px;
-	z-index: 2;
-	padding-right: 20px;
-}
-
-/* Main header */
-
 .header {
 	position: relative;
 	display: flex;

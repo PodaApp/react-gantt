@@ -1,13 +1,14 @@
-import { RefObject, useLayoutEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef } from "react";
 
 import classNames from "classnames";
 import { format, isToday } from "date-fns";
 
-import cevronsRight from "../assets/chevrons-right.svg";
-import { GanttData, useCalendar } from "../hooks/useCalendar";
+import { useCalendar } from "../hooks/useCalendar";
+import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
 import "./Header.css";
 import { HeaderRange } from "./HeaderRange";
+import { HeaderSticky } from "./HeaderSticky";
 
 type Props = {
 	startDate: number;
@@ -17,25 +18,41 @@ type Props = {
 };
 
 export const Header = ({ startDate, endDate, focusedTask, containerRef }: Props) => {
-	const calendar: GanttData = useCalendar({ startDate, endDate });
-
-	// TODO: Dodgy default
-	const [monthCurrent, setMonthCurrent] = useState<string | null>("January 2025");
-
 	const elsMonth = useRef<(HTMLDivElement | null)[]>([]);
 
-	useLayoutEffect(() => {
-		const headerCallback: IntersectionObserverCallback = (entries) => {
+	const setHeaderMonth = useGanttStore.use.setHeaderMonth();
+
+	const calendar = useCalendar({ startDate, endDate });
+
+	useEffect(() => {
+		const onHeaderIntersection: IntersectionObserverCallback = (entries) => {
 			entries.forEach((entry) => {
-				if (entry.boundingClientRect.x < 0 && entry.intersectionRatio <= 0) {
-					setMonthCurrent(entry.target.getAttribute("data-next"));
-				} else if (entry.boundingClientRect.x < 0 && entry.intersectionRatio > 0) {
-					setMonthCurrent(entry.target.getAttribute("data-current"));
+				const root = entry.rootBounds;
+
+				if (!root) {
+					throw new Error("Can't read root container");
+				}
+
+				const beacon = entry.boundingClientRect.right;
+
+				const containerLeftEdge = root.left;
+				const conatinerRightEdge = root.right;
+
+				const isInboundsLeft = beacon > containerLeftEdge;
+				const isInboundsRight = beacon < conatinerRightEdge;
+
+				const exitLeft = !isInboundsLeft;
+				const enterLeft = isInboundsLeft && isInboundsRight;
+
+				if (exitLeft) {
+					setHeaderMonth(entry.target.getAttribute("data-next"));
+				} else if (enterLeft) {
+					setHeaderMonth(entry.target.getAttribute("data-current"));
 				}
 			});
 		};
 
-		const observeHeader = new IntersectionObserver(headerCallback, {
+		const observeHeader = new IntersectionObserver(onHeaderIntersection, {
 			root: containerRef.current,
 			threshold: 0,
 		});
@@ -44,37 +61,31 @@ export const Header = ({ startDate, endDate, focusedTask, containerRef }: Props)
 		observeHeaderElements?.forEach((el) => observeHeader.observe(el));
 
 		return () => {
-			// Cleanup observers
 			observeHeaderElements?.forEach((el) => observeHeader.unobserve(el));
 		};
 		// TODO: Props required as dependancy else not all elements are observed
-	}, [startDate, containerRef]);
+	}, [startDate, containerRef, setHeaderMonth]);
 
 	return (
 		<>
-			<div className="headerSticky">
-				<div className="headerSticky__month header__month">
-					<img src={cevronsRight} /> {monthCurrent}
-				</div>
-			</div>
+			<HeaderSticky />
 			<div className="header" ref={containerRef}>
 				{focusedTask && <HeaderRange node={focusedTask} />}
 				{calendar.map((month, index) => {
-					// TODO: This should be a type error possibly undefined;
-					const nextMonth = calendar[index + 1] || calendar[index];
+					const nextMonth = calendar[index + 1] || month;
 
 					return (
 						<div
 							className="header__block"
 							data-current={`${month.month} ${month.year}`}
-							data-next={`${nextMonth.month} ${month.year}`}
-							key={`${month.year}-${month.month}`}>
+							data-next={`${nextMonth.month} ${nextMonth.year}`}
+							key={`${month.month} ${month.year}`}>
 							<div className="header__month" ref={(el) => (elsMonth.current[index] = el)}>
 								{month.month}
 							</div>
 							<div className="header__week">
-								{month.weeks.map((week) => {
-									const day = new Date(week);
+								{month.weeks.map((dayOfTheWeek) => {
+									const day = new Date(dayOfTheWeek);
 
 									const today = isToday(day);
 									const inRange = focusedTask && day >= new Date(focusedTask.start) && day <= new Date(focusedTask.end);
@@ -90,9 +101,9 @@ export const Header = ({ startDate, endDate, focusedTask, containerRef }: Props)
 									});
 
 									return (
-										<div className={rootClass} key={`week-${week}`}>
+										<div className={rootClass} key={`week-${dayOfTheWeek}`}>
 											{today ? <div className="header__today" /> : null}
-											{format(week, "d")}
+											{format(dayOfTheWeek, "d")}
 										</div>
 									);
 								})}

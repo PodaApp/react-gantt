@@ -4,7 +4,8 @@ import classNames from "classnames";
 import { differenceInDays } from "date-fns";
 
 import { COL_JUMP_TO_BUFFER_DAYS, COL_WIDTH } from "../constants";
-import { ITask, ITaskPosition } from "../types";
+import { GanttStoreState, useGanttStore } from "../store/ganttStore";
+import { ITask } from "../types";
 import "./Task.css";
 import { TaskOverflow, TaskOverflowDirection, TaskOverflowOnClick } from "./TaskOverflow";
 
@@ -13,13 +14,16 @@ export type TaskOnHover = (taskId: string) => void;
 type Props = {
 	ganttStartDate: number; //TODO: Temp use context
 	data: ITask;
-	stickyPosition: ITaskPosition | null;
 	containerRef: RefObject<HTMLDivElement>;
 	onHover: TaskOnHover;
 };
 
-export const Task = ({ ganttStartDate, data, stickyPosition, containerRef, onHover }: Props) => {
+const getPositionForTask = (id: string) => (s: GanttStoreState) => s.tasksPositions[id];
+
+export const Task = ({ ganttStartDate, data, containerRef, onHover }: Props) => {
 	const taskRef = useRef<HTMLDivElement>(null);
+
+	const stickyPosition = useGanttStore(getPositionForTask(data.id));
 
 	const rangeOffset = differenceInDays(data.start, new Date(ganttStartDate).toISOString()) + 1;
 	const rangeLength = differenceInDays(data.end, data.start) + 1;
