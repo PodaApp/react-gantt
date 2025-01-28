@@ -1,30 +1,33 @@
 import { RefObject, useCallback, useRef } from "react";
 
 import classNames from "classnames";
-import { differenceInDays, getDayOfYear } from "date-fns";
+import { differenceInDays } from "date-fns";
 
 import { COL_JUMP_TO_BUFFER_DAYS, COL_WIDTH } from "../constants";
 import { ITask, ITaskPosition } from "../types";
 import "./Task.css";
 import { TaskOverflow, TaskOverflowDirection, TaskOverflowOnClick } from "./TaskOverflow";
 
+export type TaskOnHover = (taskId: string) => void;
+
 type Props = {
+	ganttStartDate: number; //TODO: Temp use context
 	data: ITask;
 	stickyPosition: ITaskPosition | null;
 	containerRef: RefObject<HTMLDivElement>;
-	onHover: (task: ITask) => void;
+	onHover: TaskOnHover;
 };
 
-export const Task = ({ data, stickyPosition, containerRef, onHover }: Props) => {
+export const Task = ({ ganttStartDate, data, stickyPosition, containerRef, onHover }: Props) => {
 	const taskRef = useRef<HTMLDivElement>(null);
 
-	const rangeOffset = getDayOfYear(data.start) - 1;
+	const rangeOffset = differenceInDays(data.start, new Date(ganttStartDate).toISOString()) + 1;
 	const rangeLength = differenceInDays(data.end, data.start) + 1;
 
 	const width = rangeLength * COL_WIDTH;
 	const x = rangeOffset * COL_WIDTH;
 
-	const handleHover = useCallback(() => onHover(data), [data, onHover]);
+	const handleHover = useCallback(() => onHover(data.id), [data.id, onHover]);
 
 	const handleOverflowClick: TaskOverflowOnClick = useCallback(
 		(direction) => _scrollToPosition(direction, containerRef.current, taskRef.current),

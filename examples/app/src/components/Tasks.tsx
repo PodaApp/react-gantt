@@ -1,25 +1,21 @@
 import { RefObject, useEffect, useState } from "react";
 
 import { ITask, ITaskPosition } from "../types";
-import { Task } from "./Task";
+import { Task, TaskOnHover } from "./Task";
 import "./Tasks.css";
 import { Today } from "./Today";
-import { Weekend } from "./Weekend";
+import { Weekends } from "./Weekends";
 
 type OffscreenTasks = Record<string, ITaskPosition>;
 
-const weekends = [
-	3, 10, 17, 24, 31, 38, 45, 52, 59, 66, 73, 80, 87, 94, 101, 108, 115, 122, 129, 136, 143, 150, 157, 164, 171, 178, 185, 192, 199, 206, 213, 220,
-	227, 234, 241, 248, 255, 262, 269, 276, 283, 290, 297, 304, 311, 318, 325, 332, 339, 346, 353, 360,
-];
-
 type Props = {
+	startDate: number; //TODO: Temp use context
 	tasks: ITask[];
-	onTaskHover: (task: ITask) => void;
+	onTaskHover: TaskOnHover;
 	containerRef: RefObject<HTMLDivElement>;
 };
 
-export const Tasks = ({ tasks, onTaskHover, containerRef }: Props) => {
+export const Tasks = ({ startDate, tasks, onTaskHover, containerRef }: Props) => {
 	const [taskPositions, setOffscreenTasks] = useState<OffscreenTasks>({});
 
 	useEffect(() => {
@@ -107,17 +103,22 @@ export const Tasks = ({ tasks, onTaskHover, containerRef }: Props) => {
 				observeTasks.unobserve(el);
 			});
 		};
-	}, [containerRef]);
+	}, [startDate, containerRef]);
 
 	return (
 		<div className="tasks">
 			{tasks.map((task) => (
-				<Task data={task} key={task.id} stickyPosition={taskPositions[task.id]} containerRef={containerRef} onHover={onTaskHover} />
+				<Task
+					ganttStartDate={startDate}
+					data={task}
+					key={task.id}
+					stickyPosition={taskPositions[task.id]}
+					containerRef={containerRef}
+					onHover={onTaskHover}
+				/>
 			))}
-			<Today />
-			{weekends.map((daysOffset) => (
-				<Weekend key={daysOffset} daysOffset={daysOffset} />
-			))}
+			<Today ganttStartDate={startDate} />
+			<Weekends />
 		</div>
 	);
 };
