@@ -21,6 +21,10 @@ export const Header = ({ containerRef }: Props) => {
 	const calendar = useCalendar();
 
 	useEffect(() => {
+		if (!containerRef.current) {
+			return;
+		}
+
 		const onHeaderIntersection: IntersectionObserverCallback = (entries) => {
 			entries.forEach((entry) => {
 				const root = entry.rootBounds;
@@ -48,16 +52,17 @@ export const Header = ({ containerRef }: Props) => {
 			});
 		};
 
-		const observeHeader = new IntersectionObserver(onHeaderIntersection, {
+		const observer = new IntersectionObserver(onHeaderIntersection, {
 			root: containerRef.current,
 			threshold: 0,
 		});
 
-		const observeHeaderElements = containerRef.current?.querySelectorAll(".header__block");
-		observeHeaderElements?.forEach((el) => observeHeader.observe(el));
+		const elements = Array.from(containerRef.current.querySelectorAll(".header__block"));
+		elements?.forEach((el) => observer.observe(el));
 
 		return () => {
-			observeHeaderElements?.forEach((el) => observeHeader.unobserve(el));
+			elements?.forEach((el) => observer.unobserve(el));
+			observer.disconnect();
 		};
 		// TODO: Props required as dependancy else not all elements are observed
 	}, [calendar, containerRef, setHeaderMonth]);

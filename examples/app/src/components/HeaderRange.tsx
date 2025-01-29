@@ -1,20 +1,21 @@
 import { differenceInDays } from "date-fns";
 
 import { COL_WIDTH } from "../constants";
-import { getTaskFocusedQuery } from "../queries/getTaskFocusedQuery";
 import { useGanttStore } from "../store/ganttStore";
 import "./HeaderRange.css";
 
 export const HeaderRange = () => {
-	const node = useGanttStore(getTaskFocusedQuery);
-	const dateStart = useGanttStore.use.dateStart();
+	const dateRange = useGanttStore.use.dateFocusedRange();
+	const ganttDateStart = useGanttStore.use.dateStart();
 
-	if (!node) {
+	if (!dateRange) {
 		return null;
 	}
 
-	const rangeOffset = differenceInDays(node.start, dateStart) + 1;
-	const rangeLength = differenceInDays(node.end, node.start) + 1;
+	const [start, end] = dateRange;
+
+	const rangeOffset = differenceInDays(start, ganttDateStart) + 1;
+	const rangeLength = differenceInDays(end, start) + 1;
 
 	const width = rangeLength * COL_WIDTH;
 	const x = rangeOffset * COL_WIDTH;

@@ -1,7 +1,9 @@
 import { RefObject, useEffect } from "react";
 
 import { useGanttStore } from "../store/ganttStore";
+import { ITaskPosition } from "../types";
 import { Task } from "./Task";
+import { TaskNew } from "./TaskNew";
 import "./Tasks.css";
 import { Today } from "./Today";
 import { Weekends } from "./Weekends";
@@ -16,30 +18,21 @@ export const Tasks = ({ containerRef }: Props) => {
 	const tasks = useGanttStore.use.tasks();
 
 	useEffect(() => {
-		const onTaskIntersection: IntersectionObserverCallback = (entries) => {
+		if (!containerRef.current) {
+			return;
+		}
+
+		const handleIntersection: IntersectionObserverCallback = (entries) => {
 			entries.forEach((entry) => {
 				const id = entry.target.getAttribute("data-id");
 				const position = entry.target.getAttribute("data-position");
 				const root = entry.rootBounds;
 
-				if (!id) {
-					throw new Error("Task missing data-id attribute");
+				if (!id || !position || !root) {
+					throw new Error(`Task missing required attributes: id=${id}, position=${position}, root=${root}`);
 				}
-
-				if (!position) {
-					throw new Error("Task missing data-position attribute");
-				}
-
-				if (!root) {
-					throw new Error("Can't read root container");
-				}
-
-				// Can be left, right or x, beacons have 0 width and are used at the start and the end of
-				// Timeline tasks as observing the element itself failes for the case where the task exceeds
-				// the width of the root element
 
 				const beacon = entry.boundingClientRect.x;
-
 				const containerLeftEdge = root.left;
 				const containerRightEdge = root.right;
 
@@ -55,46 +48,47 @@ export const Tasks = ({ containerRef }: Props) => {
 				const exitRightEnd = position === "end" && !isInboundsRight;
 				const enterRightEnd = position === "end" && isInboundsRight && isInboundsLeft;
 
-				const currentPosition = { top: entry.boundingClientRect.top, left: containerLeftEdge, right: containerRightEdge };
+				const currentPosition = {
+					top: entry.boundingClientRect.top,
+					left: containerLeftEdge,
+					right: containerRightEdge,
+				};
 
-				// The left has an additional state where the task text remains visible when the start of the
-				// task is not within the view port. The text must also appear when the end of the tasks
-				// appears within the view port.
+				const calculatePostion = (options: Partial<ITaskPosition>) => setOffscreenTasks(id, { ...currentPosition, ...options });
 
 				if (enterLeftStart) {
-					setOffscreenTasks(id, { ...currentPosition, overflowLeft: false });
+					calculatePostion({ overflowLeft: false });
 				} else if (exitLeftEnd) {
-					setOffscreenTasks(id, { ...currentPosition, overflowLeft: true, gone: true });
+					calculatePostion({ overflowLeft: true, gone: true });
 				} else if (exitLeftStart) {
-					setOffscreenTasks(id, { ...currentPosition, overflowLeft: true, gone: false });
+					calculatePostion({ overflowLeft: true, gone: false });
 				} else if (enterLeftEnd) {
-					setOffscreenTasks(id, { ...currentPosition, gone: false });
+					calculatePostion({ gone: false });
 				}
 
 				if (exitRightEnd || exitRightStart) {
-					setOffscreenTasks(id, { ...currentPosition, overflowRight: true });
+					calculatePostion({ overflowRight: true });
 				} else if (enterRightEnd) {
-					setOffscreenTasks(id, { ...currentPosition, overflowRight: false });
+					calculatePostion({ overflowRight: false });
 				}
 			});
 		};
 
-		const observeTasks = new IntersectionObserver(onTaskIntersection, {
+		const observer = new IntersectionObserver(handleIntersection, {
 			root: containerRef.current,
 			threshold: [0, 1],
 			rootMargin: "4px",
 		});
 
-		// TODO: Decouple dependancy on class name, tasks should store a reference to the node
-		// as its requried for this to work anyway
-		const observeTasksElements = containerRef.current?.querySelectorAll(".task__beacon");
-		observeTasksElements?.forEach((el) => observeTasks.observe(el));
+		const elements = Array.from(containerRef.current.querySelectorAll(".task__beacon"));
+
+		elements.forEach((element) => {
+			observer.observe(element);
+		});
 
 		return () => {
-			// Cleanup observers
-			observeTasksElements?.forEach((el) => {
-				observeTasks.unobserve(el);
-			});
+			elements.forEach((el) => observer.unobserve(el));
+			observer.disconnect();
 		};
 	}, [tasks, containerRef, setOffscreenTasks]);
 
@@ -105,6 +99,9 @@ export const Tasks = ({ containerRef }: Props) => {
 			))}
 			<Today />
 			<Weekends />
+			<div className="tasks__addNew">
+				<TaskNew containerRef={containerRef} />
+			</div>
 		</div>
 	);
 };

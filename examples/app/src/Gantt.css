@@ -11,15 +11,6 @@
 }
 
 .gantt__scrollable {
-	height: 50vh;
 	width: 80vw;
 	overflow-x: auto;
-}
-
-.gantt__footer {
-	position: absolute;
-	height: 30px;
-	bottom: 16px;
-	left: 8px;
-	right: 0;
 }

@@ -33,7 +33,7 @@ export const Task = ({ task, containerRef }: Props) => {
 	const width = rangeLength * COL_WIDTH;
 	const x = rangeOffset * COL_WIDTH;
 
-	const handleHover = useCallback(() => setTaskFocused(task.id), [setTaskFocused, task.id]);
+	const handleHover = useCallback(() => setTaskFocused(task), [setTaskFocused, task]);
 
 	const handleOverflowClick: TaskOverflowOnClick = useCallback(
 		(direction) => _scrollToPosition(direction, containerRef.current, taskRef.current),
@@ -42,7 +42,7 @@ export const Task = ({ task, containerRef }: Props) => {
 
 	const taskClass = classNames({
 		task: true,
-		"task--focused": task.focused,
+		"task--focused": isTaskFocused,
 	});
 
 	const isOverflowLeft = !!stickyPosition?.overflowLeft;

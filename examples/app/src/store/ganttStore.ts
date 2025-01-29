@@ -17,17 +17,24 @@ export type GanttStoreState = {
 	dateCentered: number;
 	dateEnd: number;
 	dateStart: number;
+	dateFocusedRange: [string, string] | null;
 };
 
 type GanttStoreActions = {
 	setGantt: (dateCentered: GanttStoreState["dateCentered"]) => void;
 	setTasks: (tasks: GanttStoreState["tasks"]) => void;
-	setTaskFocused: (id: ITask["id"]) => void;
+	setTaskFocused: (task: ITask) => void;
+	setDateRangeFocused: (start: string, end: string) => void;
 	setHeaderMonth: (month: GanttStoreState["headerMonth"]) => void;
 	setTaskPositions: (id: string, options: Partial<ITaskPosition>) => void;
+	clearDateRangeFocused: () => void;
+	createTask: (start: string, end: string) => void;
 };
 
 export type IGanttStore = GanttStoreState & GanttStoreActions;
+
+// TODO Will need a way to specify a GUID generator;
+const dodgyGuid = () => Math.floor(Math.random() * 1000000).toString();
 
 const store = create<IGanttStore>((set, get) => ({
 	tasks: [],
@@ -37,6 +44,7 @@ const store = create<IGanttStore>((set, get) => ({
 	dateCentered: 0,
 	dateEnd: 0,
 	dateStart: 0,
+	dateFocusedRange: null,
 
 	setGantt: (dateCentered) => {
 		set({
@@ -73,8 +81,40 @@ const store = create<IGanttStore>((set, get) => ({
 
 	setTasks: (tasks) => set({ tasks }),
 
-	setTaskFocused: (id) => {
-		set({ tasksFocusedId: id });
+	setTaskFocused: (task) => {
+		set({
+			dateFocusedRange: [task.start, task.end],
+			tasksFocusedId: task.id,
+		});
+	},
+
+	setDateRangeFocused: (start, end) => {
+		set({
+			dateFocusedRange: [start, end],
+		});
+	},
+
+	clearDateRangeFocused: () => {
+		set({
+			dateFocusedRange: null,
+		});
+	},
+
+	createTask: (start, end) => {
+		const tasks = get().tasks;
+		const newTask: ITask = {
+			id: dodgyGuid(),
+			title: "",
+			start,
+			end,
+		};
+
+		set({
+			tasks: produce(tasks, (draft) => {
+				draft.push(newTask);
+				return draft;
+			}),
+		});
 	},
 }));
 

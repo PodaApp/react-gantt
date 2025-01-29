@@ -2,11 +2,23 @@
 	display: flex;
 	align-items: center;
 	gap: 4px;
-	font-size: 14px;
+	cursor: crosshair;
+	height: 30px;
+}
+
+.taskNew:hover .taskNew__action {
+	display: none;
+}
+
+.taskNew__action {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 15px;
 	color: #ffffff71;
 }
 
 .taskNew svg {
-	width: 14px;
-	height: 14px;
+	width: 15px;
+	height: 15px;
 }
