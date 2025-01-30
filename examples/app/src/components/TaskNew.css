@@ -6,11 +6,11 @@
 	height: 30px;
 }
 
-.taskNew:hover .taskNew__action {
-	display: none;
-}
-
 .taskNew__action {
+	position: absolute;
+	/* TODO: this position is using magic numbers consider removal */
+	left: 6px;
+	bottom: 52px;
 	display: flex;
 	align-items: center;
 	gap: 4px;
@@ -18,7 +18,7 @@
 	color: #ffffff71;
 }
 
-.taskNew svg {
+.taskNew__action svg {
 	width: 15px;
 	height: 15px;
 }

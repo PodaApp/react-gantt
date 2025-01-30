@@ -45,6 +45,15 @@ h1 {
 	line-height: 1.1;
 }
 
+input {
+	font: inherit;
+	color: inherit;
+}
+
+input::placeholder {
+	color: #ffffff66;
+}
+
 button {
 	border-radius: 8px;
 	border: 1px solid transparent;

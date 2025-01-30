@@ -2,12 +2,14 @@ import { RefObject, useCallback, useRef } from "react";
 
 import classNames from "classnames";
 import { differenceInDays } from "date-fns";
+import { createPortal } from "react-dom";
 
 import { COL_JUMP_TO_BUFFER_DAYS, COL_WIDTH } from "../constants";
 import { GanttStoreState, useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
 import "./Task.css";
 import { TaskOverflow, TaskOverflowDirection, TaskOverflowOnClick } from "./TaskOverflow";
+import { TaskTitleInline } from "./TaskTitleInline";
 
 export type TaskOnHover = (taskId: string) => void;
 
@@ -52,19 +54,30 @@ export const Task = ({ task, containerRef }: Props) => {
 	const coordinatesStart = stickyPosition ? { x: stickyPosition.left, y: stickyPosition?.top } : null;
 	const cordoinantesEnd = stickyPosition ? { x: stickyPosition?.right - 30, y: stickyPosition?.top } : null;
 
+	if (!containerRef.current) {
+		return null;
+	}
+
+	const showTitleStatic = !isOverflowLeft && !task.creating;
+	const showTitleInput = task.creating;
+
 	return (
-		<>
-			{isOverflowLeft && (
-				<TaskOverflow direction="left" position={coordinatesStart} task={task} isInViewport={isTimelinInViewport} onClick={handleOverflowClick} />
-			)}
+		<div>
 			<div className={taskClass} style={{ width: `${width}px`, transform: `translateX(${x}px)` }} onMouseEnter={handleHover} ref={taskRef}>
 				<div className="task__beacon" data-position="start" data-id={task.id} />
 				<div className="task__bar" data-id={task.id}></div>
 				<div className="task__beacon" data-position="end" data-id={task.id} />
 
-				{!isOverflowLeft && (
+				{showTitleStatic && (
 					<div className="task__content">
 						<div className="task__title">{task.title}</div>
+						<div className="task__title task__title--behind">{task.title}</div>
+					</div>
+				)}
+
+				{showTitleInput && (
+					<div className="task__content">
+						<TaskTitleInline id={task.id} title={task.title} />
 					</div>
 				)}
 				{isTaskFocused && (
@@ -73,8 +86,21 @@ export const Task = ({ task, containerRef }: Props) => {
 					</div>
 				)}
 			</div>
-			{isOverflowRight && <TaskOverflow direction="right" position={cordoinantesEnd} task={task} onClick={handleOverflowClick} />}
-		</>
+			{createPortal(
+				<>
+					<TaskOverflow
+						direction="left"
+						task={task}
+						position={coordinatesStart}
+						isVisible={isOverflowLeft}
+						isInViewport={isTimelinInViewport}
+						onClick={handleOverflowClick}
+					/>
+					<TaskOverflow direction="right" task={task} position={cordoinantesEnd} isVisible={isOverflowRight} onClick={handleOverflowClick} />
+				</>,
+				containerRef.current,
+			)}
+		</div>
 	);
 };
 

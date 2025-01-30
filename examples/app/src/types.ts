@@ -1,5 +1,6 @@
 export type ITask = {
 	id: string;
+	creating: boolean;
 	title: string;
 	start: string;
 	end: string;

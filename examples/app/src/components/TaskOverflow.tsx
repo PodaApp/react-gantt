@@ -17,38 +17,43 @@ type Props = {
 	task: ITask;
 	direction: TaskOverflowDirection;
 	position: { x: number; y: number } | null;
+	isVisible: boolean;
 	isInViewport?: boolean;
 	onClick: TaskOverflowOnClick;
 };
 
-export const TaskOverflow: React.FC<Props> = ({ task, direction, position, isInViewport = false, onClick }) => {
-	const iconSrc = direction === "left" ? left : right;
-
-	const startDate = format(task.start, DATE_FORMAT_SHORT_MONTH);
-	const endDate = format(task.end, DATE_FORMAT_SHORT_MONTH);
-
+export const TaskOverflow: React.FC<Props> = ({ task, direction, position, isVisible, isInViewport = false, onClick }) => {
 	const handleOverflowClick = useCallback(() => {
 		onClick(direction);
 	}, [direction, onClick]);
 
+	if (!position) {
+		return null;
+	}
+
+	const buttonClass = classNames({
+		taskOverflow__button: true,
+		"taskOverflow__button--active": isVisible,
+	});
+
 	const tooltipClass = classNames({
-		taskOverflow__tooltip: "true",
+		taskOverflow__tooltip: true,
 		"taskOverflow__tooltip--right": direction === "right",
 	});
 
-	if (!position) {
-		throw new Error("TaskOverflow must include position cordinates");
-	}
+	const iconSrc = direction === "left" ? left : right;
+	const startDate = format(task.start, DATE_FORMAT_SHORT_MONTH);
+	const endDate = format(task.end, DATE_FORMAT_SHORT_MONTH);
 
 	return (
-		<div className="taskOverflow" style={{ left: `${position.x}px`, top: `${position.y}px` }}>
-			<button className="taskOverflow__button" onClick={handleOverflowClick}>
+		<div className="taskOverflow" style={{ [direction]: `${0}px`, top: `${position.y}px` }}>
+			<button className={buttonClass} onClick={handleOverflowClick}>
 				<img src={iconSrc} />
 			</button>
 			<div className={tooltipClass}>
 				{startDate} <RightArrow /> {endDate}
 			</div>
-			{isInViewport && <div className="task__title">{task.title}</div>}
+			{isInViewport && isVisible && <div className="task__title">{task.title}</div>}
 		</div>
 	);
 };

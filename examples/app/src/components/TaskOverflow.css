@@ -1,5 +1,5 @@
 .taskOverflow {
-	position: fixed;
+	position: absolute;
 	z-index: 3;
 	display: flex;
 	gap: 4px;
@@ -21,6 +21,15 @@
 	font-size: 12px;
 	color: white;
 	flex-shrink: 0;
+	transform: scale(0);
+	transform-origin: center;
+	opacity: 0;
+	transition: transform 250ms ease-in-out;
+}
+
+.taskOverflow__button--active {
+	opacity: 1;
+	transform: scale(1);
 }
 
 .taskOverflow__button:hover {

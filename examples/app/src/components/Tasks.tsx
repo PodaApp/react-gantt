@@ -49,7 +49,7 @@ export const Tasks = ({ containerRef }: Props) => {
 				const enterRightEnd = position === "end" && isInboundsRight && isInboundsLeft;
 
 				const currentPosition = {
-					top: entry.boundingClientRect.top,
+					top: entry.boundingClientRect.top - entry.rootBounds.top,
 					left: containerLeftEdge,
 					right: containerRightEdge,
 				};
@@ -77,7 +77,6 @@ export const Tasks = ({ containerRef }: Props) => {
 		const observer = new IntersectionObserver(handleIntersection, {
 			root: containerRef.current,
 			threshold: [0, 1],
-			rootMargin: "4px",
 		});
 
 		const elements = Array.from(containerRef.current.querySelectorAll(".task__beacon"));

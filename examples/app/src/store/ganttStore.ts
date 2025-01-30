@@ -7,6 +7,7 @@ import { createSelectors } from "../shared/zustand/createSelectors";
 import { ITask, ITaskPosition } from "../types";
 
 export type GanttStoreState = {
+	// TODO: Consider storing this as a Map
 	tasks: ITask[];
 	tasksPositions: Record<string, ITaskPosition>;
 	tasksFocusedId: ITask["id"] | null;
@@ -29,6 +30,7 @@ type GanttStoreActions = {
 	setTaskPositions: (id: string, options: Partial<ITaskPosition>) => void;
 	clearDateRangeFocused: () => void;
 	createTask: (start: string, end: string) => void;
+	setTask: (id: string, partialTask: Partial<ITask>) => void;
 };
 
 export type IGanttStore = GanttStoreState & GanttStoreActions;
@@ -104,6 +106,7 @@ const store = create<IGanttStore>((set, get) => ({
 		const tasks = get().tasks;
 		const newTask: ITask = {
 			id: dodgyGuid(),
+			creating: true,
 			title: "",
 			start,
 			end,
@@ -112,6 +115,26 @@ const store = create<IGanttStore>((set, get) => ({
 		set({
 			tasks: produce(tasks, (draft) => {
 				draft.push(newTask);
+				return draft;
+			}),
+		});
+	},
+
+	setTask: (id, data) => {
+		const tasks = get().tasks;
+		set({
+			tasks: produce(tasks, (draft) => {
+				const taskIndex = draft.findIndex((task) => task.id === id);
+				const task = draft[taskIndex];
+
+				if (task) {
+					draft[taskIndex] = {
+						...task,
+						...data,
+						creating: false,
+					};
+				}
+
 				return draft;
 			}),
 		});

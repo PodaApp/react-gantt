@@ -1,0 +1,18 @@
+.taskTitleInline {
+	padding: 0;
+	height: 30px;
+	font-size: 1rem;
+	border: 0;
+	background: transparent;
+	font-weight: 600;
+	/* TODO: This doesn't work in ff or safari but its just soo easy :D */
+	field-sizing: content;
+}
+
+.taskTitleInline:focus {
+	outline: none;
+}
+
+.taskTitleInline::placeholder {
+	font-weight: 400;
+}

@@ -1,6 +1,7 @@
 import { MouseEvent, RefObject, useCallback, useRef, useState } from "react";
 
 import { addDays } from "date-fns";
+import { createPortal } from "react-dom";
 
 import { COL_WIDTH, GANTT_DEFAULT_NEW_TASK_SIZE } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
@@ -57,13 +58,11 @@ export const TaskNew = ({ containerRef }: Props) => {
 	}, [timelineX, createTask, dateStart]);
 
 	const showPlaceholder = timelineX !== 0;
-	const newTaskActionPosition = (containerRef.current?.scrollLeft ?? 0) + 8;
+
+	if (!containerRef.current) return null;
 
 	return (
 		<div className="taskNew" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} onClick={handleClick} ref={taskNewRef}>
-			<div className="taskNew__action" style={{ transform: `translateX(${newTaskActionPosition}px)` }}>
-				<Plus /> New
-			</div>
 			{showPlaceholder && (
 				<div
 					className="task__bar"
@@ -72,6 +71,16 @@ export const TaskNew = ({ containerRef }: Props) => {
 						transform: `translateX(${timelineX}px)`,
 					}}
 				/>
+			)}
+			{createPortal(
+				<>
+					{!showPlaceholder && (
+						<div className="taskNew__action">
+							<Plus /> New
+						</div>
+					)}
+				</>,
+				containerRef.current,
 			)}
 		</div>
 	);
