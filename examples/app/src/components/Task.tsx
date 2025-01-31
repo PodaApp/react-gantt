@@ -66,6 +66,12 @@ export const Task = ({ task, containerRef }: Props) => {
 			<div className={taskClass} style={{ width: `${width}px`, transform: `translateX(${x}px)` }} onMouseEnter={handleHover} ref={taskRef}>
 				<div className="task__beacon" data-position="start" data-id={task.id} />
 				<div className="task__bar" data-id={task.id}></div>
+				<div className="task__handle">
+					<div />
+				</div>
+				<div className="task__handle task__handle--right">
+					<div />
+				</div>
 				<div className="task__beacon" data-position="end" data-id={task.id} />
 
 				{showTitleStatic && (

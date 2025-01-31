@@ -89,3 +89,31 @@
 	height: 2px;
 	background: coral;
 }
+
+.task__handle {
+	position: absolute;
+	left: -6px;
+	top: 4px;
+	bottom: 4px;
+	width: 12px;
+	display: flex;
+	justify-content: center;
+	cursor: col-resize;
+	z-index: 4;
+}
+
+.task__handle--right {
+	left: unset;
+	right: -6px;
+}
+
+.task__handle div {
+	height: 100%;
+	visibility: hidden;
+	width: 4px;
+	border-radius: 4px;
+	background: #ffffff;
+}
+.task__handle:hover div {
+	visibility: visible;
+}
