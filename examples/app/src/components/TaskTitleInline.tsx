@@ -26,8 +26,12 @@ export const TaskTitleInline = ({ id, title }: Props) => {
 		[id, setTask],
 	);
 
-	useBindShortcut("escape", handleBlur, elInput);
-	useBindShortcut("enter", handleBlur, elInput);
+	const handleKeyboardEvent = () => {
+		elInput.current?.blur();
+	};
+
+	useBindShortcut("escape", handleKeyboardEvent, elInput);
+	useBindShortcut("enter", handleKeyboardEvent, elInput);
 
 	return <input type="text" defaultValue={title} placeholder="Type a name..." onBlur={handleBlur} className="taskTitleInline" ref={elInput} />;
 };

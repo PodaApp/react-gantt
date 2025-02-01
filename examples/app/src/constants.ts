@@ -5,3 +5,4 @@ export const GANTT_MONTH_BUFFER = 6;
 export const GANTT_DEFAULT_NEW_TASK_SIZE = 5;
 
 export const DATE_FORMAT_SHORT_MONTH = "MMM dd, yyyy";
+export const DATE_FORMAT_SHORT_MONTH_NO_YEAR = "MMM dd";

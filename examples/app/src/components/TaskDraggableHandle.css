@@ -1,0 +1,57 @@
+.taskDraggableHandle {
+	position: absolute;
+	left: -6px;
+	top: 4px;
+	bottom: 4px;
+	width: 12px;
+	display: flex;
+	justify-content: center;
+	cursor: col-resize;
+	z-index: 4;
+}
+
+.taskDraggableHandle--right {
+	left: unset;
+	right: -6px;
+}
+
+.taskDraggableHandle__handle {
+	visibility: hidden;
+	height: 100%;
+	width: 4px;
+	border-radius: 4px;
+	background: #ffffff;
+}
+
+.taskDraggableHandle--dragging .taskDraggableHandle__handle,
+.taskDraggableHandle:hover .taskDraggableHandle__handle {
+	visibility: visible;
+}
+
+.taskDraggableHandle__tooltip {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	transform: translateX(-14px);
+	align-items: center;
+	display: none;
+}
+
+.taskDraggableHandle__tooltip div {
+	font-size: 11px;
+	color: white;
+	background: black;
+	border-radius: 2px;
+	padding: 0 4px;
+	white-space: nowrap;
+}
+
+.taskDraggableHandle--dragging .taskDraggableHandle__tooltip,
+.taskDraggableHandle:hover .taskDraggableHandle__tooltip {
+	display: flex;
+}
+
+.taskDraggableHandle--right .taskDraggableHandle__tooltip {
+	transform: translateX(calc(100%));
+}

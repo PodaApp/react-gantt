@@ -1,7 +1,6 @@
 import { RefObject, useCallback, useRef } from "react";
 
 import classNames from "classnames";
-import { differenceInDays } from "date-fns";
 import { createPortal } from "react-dom";
 
 import { COL_JUMP_TO_BUFFER_DAYS, COL_WIDTH } from "../constants";
@@ -13,7 +12,7 @@ import { TaskTitleInline } from "./TaskTitleInline";
 
 export type TaskOnHover = (taskId: string) => void;
 
-type Props = {
+export type TaskProps = {
 	task: ITask;
 	containerRef: RefObject<HTMLDivElement>;
 };
@@ -21,19 +20,12 @@ type Props = {
 const getPositionForTask = (id: ITask["id"]) => (s: GanttStoreState) => s.tasksPositions[id];
 const getIsFocused = (id: ITask["id"]) => (s: GanttStoreState) => s.tasksFocusedId === id;
 
-export const Task = ({ task, containerRef }: Props) => {
+export const Task = ({ task, containerRef }: TaskProps) => {
 	const taskRef = useRef<HTMLDivElement>(null);
 
-	const dateStart = useGanttStore.use.dateStart();
 	const stickyPosition = useGanttStore(getPositionForTask(task.id));
 	const isTaskFocused = useGanttStore(getIsFocused(task.id));
 	const setTaskFocused = useGanttStore.use.setTaskFocused();
-
-	const rangeOffset = differenceInDays(task.start, new Date(dateStart).toISOString()) + 1;
-	const rangeLength = differenceInDays(task.end, task.start) + 1;
-
-	const width = rangeLength * COL_WIDTH;
-	const x = rangeOffset * COL_WIDTH;
 
 	const handleHover = useCallback(() => setTaskFocused(task), [setTaskFocused, task]);
 
@@ -62,16 +54,10 @@ export const Task = ({ task, containerRef }: Props) => {
 	const showTitleInput = task.creating;
 
 	return (
-		<div>
-			<div className={taskClass} style={{ width: `${width}px`, transform: `translateX(${x}px)` }} onMouseEnter={handleHover} ref={taskRef}>
+		<>
+			<div className={taskClass} onMouseEnter={handleHover} ref={taskRef}>
 				<div className="task__beacon" data-position="start" data-id={task.id} />
 				<div className="task__bar" data-id={task.id}></div>
-				<div className="task__handle">
-					<div />
-				</div>
-				<div className="task__handle task__handle--right">
-					<div />
-				</div>
 				<div className="task__beacon" data-position="end" data-id={task.id} />
 
 				{showTitleStatic && (
@@ -106,7 +92,7 @@ export const Task = ({ task, containerRef }: Props) => {
 				</>,
 				containerRef.current,
 			)}
-		</div>
+		</>
 	);
 };
 

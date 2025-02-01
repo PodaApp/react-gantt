@@ -1,0 +1,23 @@
+.tooltip__tip {
+	font-size: 11px;
+	color: white;
+	background: black;
+	border-radius: 2px;
+	padding: 0 4px;
+	line-height: 18px;
+	display: none;
+	align-items: center;
+	gap: 2px;
+	position: absolute;
+	left: 26px;
+	white-space: nowrap;
+}
+
+.tooltip__tip--right {
+	left: unset;
+	right: 26px;
+}
+
+.tooltip:hover + .tooltip__tip {
+	display: flex;
+}

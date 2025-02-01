@@ -31,6 +31,8 @@ type GanttStoreActions = {
 	clearDateRangeFocused: () => void;
 	createTask: (start: string, end: string) => void;
 	setTask: (id: string, partialTask: Partial<ITask>) => void;
+	setTaskStart: (id: string, start: string) => void;
+	setTaskEnd: (id: string, end: string) => void;
 };
 
 export type IGanttStore = GanttStoreState & GanttStoreActions;
@@ -138,6 +140,25 @@ const store = create<IGanttStore>((set, get) => ({
 				return draft;
 			}),
 		});
+	},
+
+	setTaskEnd: (id, end) => {
+		const setTask = get().setTask;
+		const current = get().tasks.find((task) => task.id === id);
+		if (!current || current.end === end) {
+			return;
+		}
+
+		setTask(id, { end });
+	},
+	setTaskStart: (id, start) => {
+		const setTask = get().setTask;
+		const current = get().tasks.find((task) => task.id === id);
+		if (!current || current.start === start) {
+			return;
+		}
+
+		setTask(id, { start });
 	},
 }));
 

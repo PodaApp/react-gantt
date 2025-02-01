@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 
 import { COL_WIDTH, GANTT_DEFAULT_NEW_TASK_SIZE } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
+import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { Plus } from "./Plus";
 import "./TaskNew.css";
 
@@ -13,14 +14,6 @@ type Props = {
 };
 
 const mockWidth = GANTT_DEFAULT_NEW_TASK_SIZE * COL_WIDTH;
-
-const getDateRangeFromOffset = (offset: number, dateStart: number): [string, string] => {
-	const daysFromStart = offset / COL_WIDTH;
-	const start = addDays(dateStart, daysFromStart).toDateString();
-	const end = addDays(start, GANTT_DEFAULT_NEW_TASK_SIZE - 1).toDateString();
-
-	return [start, end];
-};
 
 export const TaskNew = ({ containerRef }: Props) => {
 	const taskNewRef = useRef<HTMLDivElement>(null);
@@ -43,7 +36,7 @@ export const TaskNew = ({ containerRef }: Props) => {
 			const snappedOffsetX = offsetX - (offsetX % COL_WIDTH);
 
 			setTimelineX(snappedOffsetX);
-			setDateRangeFocused(...getDateRangeFromOffset(offsetX, dateStart));
+			setDateRangeFocused(..._getDateRange(offsetX, dateStart));
 		},
 		[setDateRangeFocused, dateStart],
 	);
@@ -54,7 +47,7 @@ export const TaskNew = ({ containerRef }: Props) => {
 	}, [clearDateRangeFocused]);
 
 	const handleClick = useCallback(() => {
-		createTask(...getDateRangeFromOffset(timelineX, dateStart));
+		createTask(..._getDateRange(timelineX, dateStart));
 	}, [timelineX, createTask, dateStart]);
 
 	const showPlaceholder = timelineX !== 0;
@@ -84,4 +77,11 @@ export const TaskNew = ({ containerRef }: Props) => {
 			)}
 		</div>
 	);
+};
+
+const _getDateRange = (offset: number, dateStart: number): [string, string] => {
+	const start = getDateFromOffset(offset, dateStart);
+	const end = addDays(start, GANTT_DEFAULT_NEW_TASK_SIZE - 1).toDateString();
+
+	return [start, end];
 };

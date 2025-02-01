@@ -2,7 +2,7 @@ import { RefObject, useEffect } from "react";
 
 import { useGanttStore } from "../store/ganttStore";
 import { ITaskPosition } from "../types";
-import { Task } from "./Task";
+import { TaskDraggable } from "./TaskDraggable";
 import { TaskNew } from "./TaskNew";
 import "./Tasks.css";
 import { Today } from "./Today";
@@ -94,7 +94,7 @@ export const Tasks = ({ containerRef }: Props) => {
 	return (
 		<div className="tasks">
 			{tasks.map((task) => (
-				<Task task={task} containerRef={containerRef} key={task.id} />
+				<TaskDraggable task={task} containerRef={containerRef} key={task.id} />
 			))}
 			<Today />
 			<Weekends />

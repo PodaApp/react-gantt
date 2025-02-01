@@ -41,30 +41,12 @@
 }
 
 .taskOverflow__tooltip {
-	font-size: 11px;
-	color: white;
-	background: black;
-	border-radius: 2px;
-	padding: 0 4px;
-	line-height: 18px;
-	display: none;
+	display: flex;
 	align-items: center;
 	gap: 2px;
-	position: absolute;
-	left: 26px;
-	white-space: nowrap;
-}
-
-.taskOverflow__tooltip--right {
-	left: unset;
-	right: 26px;
 }
 
 .taskOverflow__tooltip svg {
 	width: 13px;
 	height: 13px;
-}
-
-.taskOverflow__button:hover + .taskOverflow__tooltip {
-	display: flex;
 }
