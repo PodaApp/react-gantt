@@ -1,28 +1,28 @@
-import { useCallback, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 
 import { DndContext, DragMoveEvent } from "@dnd-kit/core";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
-import { differenceInDays } from "date-fns";
 
 import { COL_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
-import { Task, TaskProps } from "./Task";
-import "./TaskDraggable.css";
 import { TaskDraggableHandle } from "./TaskDraggableHandle";
 
-type Props = TaskProps & {};
-type TaskPosition = { x: number; width: number };
+type Props = {
+	task: ITask;
+	position: { x: number; width: number };
+	children: ReactNode;
+};
 
-export const TaskDraggable: React.FC<Props> = ({ task, containerRef }) => {
+export const TaskDraggable = ({ task, position, children }: Props) => {
 	const dateStart = useGanttStore.use.dateStart();
 	const setTaskStart = useGanttStore.use.setTaskStart();
 	const setTaskEnd = useGanttStore.use.setTaskEnd();
 
-	const [initialPosition, setInitialPosition] = useState<TaskPosition | null>(null);
+	const [initialPosition, setInitialPosition] = useState<Props["position"] | null>(null);
 
-	const { width, x } = _calculateTaskPosition(dateStart, task);
+	const { width, x } = position;
 
 	const handleDragStart = useCallback(() => {
 		setInitialPosition({ width, x });
@@ -63,18 +63,9 @@ export const TaskDraggable: React.FC<Props> = ({ task, containerRef }) => {
 
 	return (
 		<DndContext onDragStart={handleDragStart} onDragMove={handleDragTask} modifiers={[restrictToHorizontalAxis]}>
-			<div className="taskDraggable" style={{ width: `${width}px`, transform: `translateX(${x}px)` }}>
-				<Task task={task} containerRef={containerRef} />
-				<TaskDraggableHandle taskId={task.id} date={task.start} direction="left" />
-				<TaskDraggableHandle taskId={task.id} date={task.end} direction="right" />
-			</div>
+			<TaskDraggableHandle taskId={task.id} date={task.start} direction="left" />
+			{children}
+			<TaskDraggableHandle taskId={task.id} date={task.end} direction="right" />
 		</DndContext>
 	);
-};
-
-const _calculateTaskPosition = (ganttStart: number, task: ITask): { width: number; x: number } => {
-	const rangeOffset = differenceInDays(task.start, new Date(ganttStart).toISOString()) + 1;
-	const rangeLength = differenceInDays(task.end, task.start) + 1;
-
-	return { width: rangeLength * COL_WIDTH, x: rangeOffset * COL_WIDTH };
 };

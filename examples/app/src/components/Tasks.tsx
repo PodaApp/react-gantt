@@ -2,9 +2,9 @@ import { RefObject, useEffect } from "react";
 
 import { useGanttStore } from "../store/ganttStore";
 import { ITaskPosition } from "../types";
-import { TaskDraggable } from "./TaskDraggable";
 import { TaskNew } from "./TaskNew";
 import "./Tasks.css";
+import { TasksSortable } from "./TasksSortable";
 import { Today } from "./Today";
 import { Weekends } from "./Weekends";
 
@@ -17,6 +17,7 @@ export const Tasks = ({ containerRef }: Props) => {
 
 	const tasks = useGanttStore.use.tasks();
 
+	// TODO: Move this into a hook
 	useEffect(() => {
 		if (!containerRef.current) {
 			return;
@@ -79,7 +80,8 @@ export const Tasks = ({ containerRef }: Props) => {
 			threshold: [0, 1],
 		});
 
-		const elements = Array.from(containerRef.current.querySelectorAll(".task__beacon"));
+		// TODO: Use refs
+		const elements = Array.from(containerRef.current.querySelectorAll(".taskContent__beacon"));
 
 		elements.forEach((element) => {
 			observer.observe(element);
@@ -93,9 +95,7 @@ export const Tasks = ({ containerRef }: Props) => {
 
 	return (
 		<div className="tasks">
-			{tasks.map((task) => (
-				<TaskDraggable task={task} containerRef={containerRef} key={task.id} />
-			))}
+			<TasksSortable tasks={tasks} containerRef={containerRef} />
 			<Today />
 			<Weekends />
 			<div className="tasks__addNew">

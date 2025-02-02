@@ -12,7 +12,7 @@ type Props = {
 export const TaskTitleInline = ({ id, title }: Props) => {
 	const elInput = useRef<HTMLInputElement>(null);
 
-	const setTask = useGanttStore.use.setTask();
+	const setTaskTitle = useGanttStore.use.setTaskTitle();
 
 	useEffect(() => {
 		elInput.current?.select();
@@ -20,10 +20,9 @@ export const TaskTitleInline = ({ id, title }: Props) => {
 
 	const handleBlur = useCallback(
 		(event: FocusEvent<HTMLInputElement>) => {
-			const title = event.target.value || "New Task";
-			setTask(id, { title });
+			setTaskTitle(id, event.target.value);
 		},
-		[id, setTask],
+		[id, setTaskTitle],
 	);
 
 	const handleKeyboardEvent = () => {

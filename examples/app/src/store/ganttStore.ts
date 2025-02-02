@@ -1,4 +1,4 @@
-import { add, sub } from "date-fns";
+import { add, differenceInDays, sub } from "date-fns";
 import { produce } from "immer";
 import { create } from "zustand";
 
@@ -30,9 +30,12 @@ type GanttStoreActions = {
 	setTaskPositions: (id: string, options: Partial<ITaskPosition>) => void;
 	clearDateRangeFocused: () => void;
 	createTask: (start: string, end: string) => void;
-	setTask: (id: string, partialTask: Partial<ITask>) => void;
+	setTask: (id: string, partialTask: ITask) => void;
 	setTaskStart: (id: string, start: string) => void;
 	setTaskEnd: (id: string, end: string) => void;
+	// Maintins the current tasks duration
+	setTaskNewStart: (id: string, newStart: string) => void;
+	setTaskTitle: (id: string, title: string | undefined) => void;
 };
 
 export type IGanttStore = GanttStoreState & GanttStoreActions;
@@ -139,26 +142,70 @@ const store = create<IGanttStore>((set, get) => ({
 
 				return draft;
 			}),
+			dateFocusedRange: [data.start, data.end],
 		});
 	},
 
+	setTaskNewStart: (id, newStart) => {
+		const setTask = get().setTask;
+		const current = get().tasks.find((task) => task.id === id);
+
+		if (!current) {
+			throw new Error("No task found to update");
+		}
+
+		const deltaDays = differenceInDays(newStart, current.start);
+		const newEnd = add(current.end, { days: deltaDays }).toDateString();
+
+		setTask(id, { ...current, start: newStart, end: newEnd });
+	},
+
+	// TODO: Merge task setters into single method
 	setTaskEnd: (id, end) => {
 		const setTask = get().setTask;
 		const current = get().tasks.find((task) => task.id === id);
-		if (!current || current.end === end) {
+
+		if (!current) {
+			throw new Error("No task found to update");
+		}
+
+		if (current.end === end) {
 			return;
 		}
 
-		setTask(id, { end });
+		setTask(id, { ...current, end });
 	},
+
 	setTaskStart: (id, start) => {
 		const setTask = get().setTask;
 		const current = get().tasks.find((task) => task.id === id);
-		if (!current || current.start === start) {
+
+		if (!current) {
+			throw new Error("No task found to update");
+		}
+
+		if (current.start === start) {
 			return;
 		}
 
-		setTask(id, { start });
+		setTask(id, { ...current, start });
+	},
+
+	setTaskTitle: (id, title) => {
+		const setTask = get().setTask;
+		const current = get().tasks.find((task) => task.id === id);
+
+		if (!current) {
+			throw new Error("No task found to update");
+		}
+
+		const nextTitle = title || "New Task";
+
+		if (current.title === nextTitle) {
+			return;
+		}
+
+		setTask(id, { ...current, title: nextTitle });
 	},
 }));
 

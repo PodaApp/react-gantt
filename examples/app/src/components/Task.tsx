@@ -1,116 +1,43 @@
-import { RefObject, useCallback, useRef } from "react";
+import { RefObject, useRef } from "react";
 
-import classNames from "classnames";
-import { createPortal } from "react-dom";
+import { differenceInDays } from "date-fns";
 
-import { COL_JUMP_TO_BUFFER_DAYS, COL_WIDTH } from "../constants";
-import { GanttStoreState, useGanttStore } from "../store/ganttStore";
+import { COL_WIDTH } from "../constants";
+import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
 import "./Task.css";
-import { TaskOverflow, TaskOverflowDirection, TaskOverflowOnClick } from "./TaskOverflow";
-import { TaskTitleInline } from "./TaskTitleInline";
+import { TaskContent } from "./TaskContent";
+import { TaskDraggable } from "./TaskDraggable";
+import { TaskSortable } from "./TaskSortable";
 
-export type TaskOnHover = (taskId: string) => void;
-
-export type TaskProps = {
+type Props = {
 	task: ITask;
+	activeIndex: number;
 	containerRef: RefObject<HTMLDivElement>;
 };
-// TODO: Move to query
-const getPositionForTask = (id: ITask["id"]) => (s: GanttStoreState) => s.tasksPositions[id];
-const getIsFocused = (id: ITask["id"]) => (s: GanttStoreState) => s.tasksFocusedId === id;
 
-export const Task = ({ task, containerRef }: TaskProps) => {
-	const taskRef = useRef<HTMLDivElement>(null);
+export const Task = ({ task, activeIndex, containerRef }: Props) => {
+	const elRoot = useRef<HTMLDivElement>(null);
+	const dateStart = useGanttStore.use.dateStart();
 
-	const stickyPosition = useGanttStore(getPositionForTask(task.id));
-	const isTaskFocused = useGanttStore(getIsFocused(task.id));
-	const setTaskFocused = useGanttStore.use.setTaskFocused();
-
-	const handleHover = useCallback(() => setTaskFocused(task), [setTaskFocused, task]);
-
-	const handleOverflowClick: TaskOverflowOnClick = useCallback(
-		(direction) => _scrollToPosition(direction, containerRef.current, taskRef.current),
-		[containerRef],
-	);
-
-	const taskClass = classNames({
-		task: true,
-		"task--focused": isTaskFocused,
-	});
-
-	const isOverflowLeft = !!stickyPosition?.overflowLeft;
-	const isOverflowRight = !!stickyPosition?.overflowRight;
-	const isTimelinInViewport = !stickyPosition?.gone;
-
-	const coordinatesStart = stickyPosition ? { x: stickyPosition.left, y: stickyPosition?.top } : null;
-	const cordoinantesEnd = stickyPosition ? { x: stickyPosition?.right - 30, y: stickyPosition?.top } : null;
-
-	if (!containerRef.current) {
-		return null;
-	}
-
-	const showTitleStatic = !isOverflowLeft && !task.creating;
-	const showTitleInput = task.creating;
+	const position = _calculateTaskPosition(dateStart, task);
 
 	return (
-		<>
-			<div className={taskClass} onMouseEnter={handleHover} ref={taskRef}>
-				<div className="task__beacon" data-position="start" data-id={task.id} />
-				<div className="task__bar" data-id={task.id}></div>
-				<div className="task__beacon" data-position="end" data-id={task.id} />
-
-				{showTitleStatic && (
-					<div className="task__content">
-						<div className="task__title">{task.title}</div>
-						<div className="task__title task__title--behind">{task.title}</div>
-					</div>
-				)}
-
-				{showTitleInput && (
-					<div className="task__content">
-						<TaskTitleInline id={task.id} title={task.title} />
-					</div>
-				)}
-				{isTaskFocused && (
-					<div className="task__dependencyHandle">
-						<div className="task__dependencyHandle__tag" />
-					</div>
-				)}
+		<div className="task" ref={elRoot}>
+			<div style={{ width: `${position.width}px`, transform: `translateX(${position.x}px)` }}>
+				<TaskSortable task={task} activeIndex={activeIndex} key={task.id} parentRef={elRoot}>
+					<TaskDraggable task={task} position={position}>
+						<TaskContent task={task} containerRef={containerRef} />
+					</TaskDraggable>
+				</TaskSortable>
 			</div>
-			{createPortal(
-				<>
-					<TaskOverflow
-						direction="left"
-						task={task}
-						position={coordinatesStart}
-						isVisible={isOverflowLeft}
-						isInViewport={isTimelinInViewport}
-						onClick={handleOverflowClick}
-					/>
-					<TaskOverflow direction="right" task={task} position={cordoinantesEnd} isVisible={isOverflowRight} onClick={handleOverflowClick} />
-				</>,
-				containerRef.current,
-			)}
-		</>
+		</div>
 	);
 };
 
-const _scrollToPosition = (direction: TaskOverflowDirection, container: HTMLElement | null, task: HTMLElement | null): void => {
-	if (!container || !task) {
-		throw new Error("Can't find a required element");
-	}
+const _calculateTaskPosition = (ganttStart: number, task: ITask): { width: number; x: number } => {
+	const rangeOffset = differenceInDays(task.start, new Date(ganttStart).toISOString()) + 1;
+	const rangeLength = differenceInDays(task.end, task.start) + 1;
 
-	const containerRect = container.getBoundingClientRect();
-	const taskRect = task.getBoundingClientRect();
-
-	const xPosition: { left: number; right: number } = {
-		left: taskRect.left - containerRect.left + container.scrollLeft - COL_JUMP_TO_BUFFER_DAYS * COL_WIDTH,
-		right: taskRect.right - containerRect.left - containerRect.width + container.scrollLeft + COL_JUMP_TO_BUFFER_DAYS * COL_WIDTH,
-	};
-
-	container.scrollTo({
-		left: xPosition[direction],
-		behavior: "smooth",
-	});
+	return { width: rangeLength * COL_WIDTH, x: rangeOffset * COL_WIDTH };
 };

@@ -1,6 +1,0 @@
-.taskDraggable {
-	position: relative;
-	z-index: 2;
-	margin: 2px 0;
-	display: flex;
-}

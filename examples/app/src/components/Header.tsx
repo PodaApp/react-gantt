@@ -57,6 +57,7 @@ export const Header = ({ containerRef }: Props) => {
 			threshold: 0,
 		});
 
+		// TODO: use refs
 		const elements = Array.from(containerRef.current.querySelectorAll(".header__block"));
 		elements?.forEach((el) => observer.observe(el));
 
