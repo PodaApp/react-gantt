@@ -40,6 +40,7 @@ export const TaskDraggable = ({ task, position, children }: Props) => {
 				throw new Error("TaskDraggableHandle missing cached position");
 			}
 
+			// TODO: use new util method getDateFromOffset
 			// Calculate the left position of the element relative to the container
 			const relativeLeft = initialPosition.x + event.delta.x;
 			const draggedPosition = Math.ceil(relativeLeft / COL_WIDTH) * COL_WIDTH;

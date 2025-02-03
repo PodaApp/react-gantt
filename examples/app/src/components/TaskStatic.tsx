@@ -3,15 +3,15 @@ import { ITask } from "../types";
 type Props = {
 	task: ITask;
 	showTitle?: boolean;
+	showBeacons?: boolean;
 };
 
-export const TaskStatic = ({ task, showTitle = true }: Props) => {
+export const TaskStatic = ({ task, showTitle = true, showBeacons = true }: Props) => {
 	return (
 		<>
-			<div className="taskContent__beacon" data-position="start" data-id={task.id} />
+			{showBeacons && <div className="taskContent__beacon" data-position="start" data-id={task.id} />}
 			<div className="taskContent__bar" data-id={task.id}></div>
-			<div className="taskContent__beacon" data-position="end" data-id={task.id} />
-
+			{showBeacons && <div className="taskContent__beacon" data-position="end" data-id={task.id} />}
 			{showTitle && (
 				<div className="taskContent__content">
 					<div className="taskContent__title">{task.title}</div>

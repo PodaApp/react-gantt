@@ -22,7 +22,7 @@ export const TaskSortable: React.FC<Props> = ({ task, activeIndex, children, par
 
 	const style: CSSProperties = {
 		width: "100%",
-		visibility: isDragging ? "hidden" : "visible",
+		opacity: isDragging ? 0 : 1,
 	};
 
 	const markerClassName = classNames({

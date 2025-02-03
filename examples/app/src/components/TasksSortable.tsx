@@ -81,13 +81,21 @@ export const TasksSortable: React.FC<Props> = ({ tasks, containerRef }) => {
 					<Task task={task} activeIndex={activeIndex} containerRef={containerRef} key={task.id} />
 				))}
 			</SortableContext>
-			<DragOverlay>{draggingTask ? <TaskStatic task={draggingTask} /> : null}</DragOverlay>
+			<DragOverlay>{draggingTask ? <TaskStatic task={draggingTask} showBeacons={false} /> : null}</DragOverlay>
 		</DndContext>
 	);
 };
 
-// TODO: Make this a reusable util
 const _getSnappedDragOffset = (initialOffset: number, event: DragMoveEvent) => {
 	const left = initialOffset + event.delta.x;
-	return Math.ceil(left / COL_WIDTH) * COL_WIDTH;
+	const colIndex = Math.floor(left / COL_WIDTH);
+	const remainder = left % COL_WIDTH;
+
+	const isMovingLeft = event.delta.x < 0;
+
+	if (isMovingLeft && remainder > COL_WIDTH / 2) {
+		return (colIndex + 1) * COL_WIDTH;
+	} else {
+		return colIndex * COL_WIDTH;
+	}
 };
