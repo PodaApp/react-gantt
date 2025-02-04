@@ -58,7 +58,7 @@ export const TaskNew = ({ containerRef }: Props) => {
 		<div className="taskNew" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} onClick={handleClick} ref={taskNewRef}>
 			{showPlaceholder && (
 				<div
-					className="task__bar"
+					className="taskContent__bar"
 					style={{
 						width: `${mockWidth}px`,
 						transform: `translateX(${timelineX}px)`,
