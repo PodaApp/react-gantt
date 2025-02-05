@@ -2,7 +2,7 @@ import { add, differenceInDays, sub } from "date-fns";
 import { produce } from "immer";
 import { create } from "zustand";
 
-import { GANTT_MONTH_BUFFER } from "../constants";
+import { GANTT_WIDTH_MONTHS } from "../constants";
 import { createSelectors } from "../shared/zustand/createSelectors";
 import { ITask, ITaskViewportPosition } from "../types";
 
@@ -56,8 +56,8 @@ const store = create<IGanttStore>((set, get) => ({
 	setGantt: (dateCentered) => {
 		set({
 			dateCentered,
-			dateEnd: add(dateCentered, { months: GANTT_MONTH_BUFFER }).getTime(),
-			dateStart: sub(dateCentered, { months: GANTT_MONTH_BUFFER }).getTime(),
+			dateEnd: add(dateCentered, { months: GANTT_WIDTH_MONTHS }).getTime(),
+			dateStart: sub(dateCentered, { months: GANTT_WIDTH_MONTHS }).getTime(),
 		});
 	},
 

@@ -3,7 +3,7 @@ import { RefObject, useCallback, useRef } from "react";
 import classNames from "classnames";
 import { createPortal } from "react-dom";
 
-import { COL_JUMP_TO_BUFFER_DAYS, COL_WIDTH } from "../constants";
+import { GANTT_JUMP_TO_TASK_PADDING_DAYS, GRID_WIDTH } from "../constants";
 import { GanttStoreState, useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
 import "./TaskContent.css";
@@ -97,8 +97,8 @@ const _scrollToPosition = (direction: TaskOverflowDirection, container: HTMLElem
 	const taskRect = task.getBoundingClientRect();
 
 	const xPosition: { left: number; right: number } = {
-		left: taskRect.left - containerRect.left + container.scrollLeft - COL_JUMP_TO_BUFFER_DAYS * COL_WIDTH,
-		right: taskRect.right - containerRect.left - containerRect.width + container.scrollLeft + COL_JUMP_TO_BUFFER_DAYS * COL_WIDTH,
+		left: taskRect.left - containerRect.left + container.scrollLeft - GANTT_JUMP_TO_TASK_PADDING_DAYS * GRID_WIDTH,
+		right: taskRect.right - containerRect.left - containerRect.width + container.scrollLeft + GANTT_JUMP_TO_TASK_PADDING_DAYS * GRID_WIDTH,
 	};
 
 	container.scrollTo({

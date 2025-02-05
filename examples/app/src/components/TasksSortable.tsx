@@ -13,7 +13,7 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 
-import { COL_WIDTH } from "../constants";
+import { GRID_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
@@ -120,14 +120,14 @@ export const TasksSortable: React.FC<Props> = ({ tasks, containerRef }) => {
 
 const _getSnappedDragOffset = (initialOffset: number, event: DragMoveEvent) => {
 	const left = initialOffset + event.delta.x;
-	const colIndex = Math.floor(left / COL_WIDTH);
-	const remainder = left % COL_WIDTH;
+	const colIndex = Math.floor(left / GRID_WIDTH);
+	const remainder = left % GRID_WIDTH;
 
 	const isMovingLeft = event.delta.x < 0;
 
-	if (isMovingLeft && remainder > COL_WIDTH / 2) {
-		return (colIndex + 1) * COL_WIDTH;
+	if (isMovingLeft && remainder > GRID_WIDTH / 2) {
+		return (colIndex + 1) * GRID_WIDTH;
 	} else {
-		return colIndex * COL_WIDTH;
+		return colIndex * GRID_WIDTH;
 	}
 };

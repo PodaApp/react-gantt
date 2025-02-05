@@ -3,7 +3,7 @@ import { MouseEvent, RefObject, useCallback, useRef, useState } from "react";
 import { addDays } from "date-fns";
 import { createPortal } from "react-dom";
 
-import { COL_WIDTH, GANTT_DEFAULT_NEW_TASK_SIZE } from "../constants";
+import { GANTT_NEW_TASK_SIZE_DAYS, GRID_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { Plus } from "./Plus";
@@ -13,7 +13,7 @@ type Props = {
 	containerRef: RefObject<HTMLDivElement>;
 };
 
-const mockWidth = GANTT_DEFAULT_NEW_TASK_SIZE * COL_WIDTH;
+const mockWidth = GANTT_NEW_TASK_SIZE_DAYS * GRID_WIDTH;
 
 export const TaskNew = ({ containerRef }: Props) => {
 	const taskNewRef = useRef<HTMLDivElement>(null);
@@ -33,7 +33,7 @@ export const TaskNew = ({ containerRef }: Props) => {
 
 			const rectTask = taskNewRef.current.getBoundingClientRect();
 			const offsetX = event.clientX - rectTask.left;
-			const snappedOffsetX = offsetX - (offsetX % COL_WIDTH);
+			const snappedOffsetX = offsetX - (offsetX % GRID_WIDTH);
 
 			setTimelineX(snappedOffsetX);
 			setDateRangeFocused(..._getDateRange(offsetX, dateStart));
@@ -81,7 +81,7 @@ export const TaskNew = ({ containerRef }: Props) => {
 
 const _getDateRange = (offset: number, dateStart: number): [string, string] => {
 	const start = getDateFromOffset(offset, dateStart);
-	const end = addDays(start, GANTT_DEFAULT_NEW_TASK_SIZE - 1).toDateString();
+	const end = addDays(start, GANTT_NEW_TASK_SIZE_DAYS - 1).toDateString();
 
 	return [start, end];
 };

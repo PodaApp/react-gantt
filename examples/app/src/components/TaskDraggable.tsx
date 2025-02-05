@@ -3,7 +3,7 @@ import { ReactNode, useCallback, useState } from "react";
 import { DndContext, DragMoveEvent, DragStartEvent } from "@dnd-kit/core";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
-import { COL_WIDTH } from "../constants";
+import { GRID_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
 import { ITask, ITaskOffset } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
@@ -48,11 +48,11 @@ export const TaskDraggable = ({ task, position, children }: Props) => {
 			// TODO: use new util method getDateFromOffset
 			// Calculate the left position of the element relative to the container
 			const relativeLeft = initialPosition.x + event.delta.x;
-			const draggedPosition = Math.ceil(relativeLeft / COL_WIDTH) * COL_WIDTH;
+			const draggedPosition = Math.ceil(relativeLeft / GRID_WIDTH) * GRID_WIDTH;
 			const delta = direction === "left" ? initialPosition.x - draggedPosition : draggedPosition - initialPosition.x;
 
 			const leftEdge = initialPosition.x - delta;
-			const edgeRight = initialPosition.x + initialPosition.width + delta - COL_WIDTH;
+			const edgeRight = initialPosition.x + initialPosition.width + delta - GRID_WIDTH;
 
 			const start = getDateFromOffset(leftEdge, dateStart);
 			const end = getDateFromOffset(edgeRight, dateStart);
