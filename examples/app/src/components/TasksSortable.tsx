@@ -1,6 +1,16 @@
-import { RefObject, useState } from "react";
+import { RefObject, useCallback, useState } from "react";
 
-import { DndContext, DragEndEvent, DragMoveEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core";
+import {
+	DndContext,
+	DragEndEvent,
+	DragMoveEvent,
+	DragStartEvent,
+	KeyboardSensor,
+	MouseSensor,
+	TouchSensor,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 
 import { COL_WIDTH } from "../constants";
@@ -9,7 +19,11 @@ import { ITask } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { getOffsetFromDate } from "../utils/getOffsetFromDate";
 import { Task } from "./Task";
-import { TaskStatic } from "./TaskStatic";
+import { TaskDragOverlay } from "./TaskDragOverlay";
+
+const activationConstraint = {
+	distance: 5,
+};
 
 type Props = {
 	tasks: ITask[];
@@ -21,67 +35,85 @@ export const TasksSortable: React.FC<Props> = ({ tasks, containerRef }) => {
 	const setTaskNewStart = useGanttStore.use.setTaskNewStart();
 	const setTasks = useGanttStore.use.setTasks();
 
-	const [draggingTask, setDraggingTask] = useState<ITask | null>(null);
-	const [initialOffset, setInitialOffset] = useState<number | null>(null);
-	const [activeId, setActiveId] = useState<string | null>(null);
+	const [activeTask, setActiveTask] = useState<ITask | null>(null);
+	const [cachedTaskOffset, setCachedTaskOffset] = useState<number | null>(null);
 
-	const activeIndex = tasks.findIndex((task) => task.id === activeId);
+	const mouseSensor = useSensor(MouseSensor, {
+		activationConstraint,
+	});
 
-	const handleDragStart = (event: DragStartEvent) => {
-		const task = event.active.data.current as ITask;
+	const touchSensor = useSensor(TouchSensor, {
+		activationConstraint,
+	});
 
-		if (!task) {
-			throw new Error("Drag handler failed to set task data");
-		}
-		setInitialOffset(getOffsetFromDate(task.start, dateStart));
-		setActiveId(task.id);
-		setDraggingTask(task);
-	};
+	const keyboardSensor = useSensor(KeyboardSensor, {});
 
-	const handleDragMove = (event: DragMoveEvent) => {
-		const task = event.active.data.current as ITask;
+	const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor);
 
-		if (!task) {
-			throw new Error("Drag handler failed to set task data");
-		}
+	const activeIndex = tasks.findIndex((task) => task.id === activeTask?.id);
 
-		if (!initialOffset) {
-			throw new Error("Initial offset was not set");
-		}
+	const handleDragStart = useCallback(
+		(event: DragStartEvent) => {
+			const task = event.active.data.current as ITask;
 
-		const offsetNext = _getSnappedDragOffset(initialOffset, event);
-
-		const newStart = getDateFromOffset(offsetNext, dateStart);
-
-		setTaskNewStart(task.id, newStart);
-	};
-
-	const handleDragEnd = (event: DragEndEvent) => {
-		const over = event.over;
-
-		if (over) {
-			const overIndex = tasks.findIndex((task) => task.id === over?.id);
-
-			if (activeIndex !== overIndex) {
-				const newIndex = overIndex;
-
-				// TODO: Move this into a command
-				setTasks(arrayMove(tasks, activeIndex, newIndex));
+			if (!task) {
+				throw new Error("Drag handler failed to set task data");
 			}
-		}
+			setCachedTaskOffset(getOffsetFromDate(task.start, dateStart));
+			setActiveTask(task);
+		},
+		[dateStart],
+	);
 
-		setDraggingTask(null);
-		setActiveId(null);
-	};
+	const handleDragMove = useCallback(
+		(event: DragMoveEvent) => {
+			const task = event.active.data.current as ITask;
+
+			if (!task) {
+				throw new Error("Drag handler failed to set task data");
+			}
+
+			if (!cachedTaskOffset) {
+				throw new Error("Initial offset was not set");
+			}
+
+			const offsetNext = _getSnappedDragOffset(cachedTaskOffset, event);
+
+			const newStart = getDateFromOffset(offsetNext, dateStart);
+
+			setTaskNewStart(task.id, newStart);
+		},
+		[dateStart, cachedTaskOffset, setTaskNewStart],
+	);
+
+	const handleDragEnd = useCallback(
+		(event: DragEndEvent) => {
+			const over = event.over;
+
+			if (over) {
+				const overIndex = tasks.findIndex((task) => task.id === over?.id);
+
+				if (activeIndex !== overIndex) {
+					const newIndex = overIndex;
+
+					// TODO: Move this into a command
+					setTasks(arrayMove(tasks, activeIndex, newIndex));
+				}
+			}
+
+			setActiveTask(null);
+		},
+		[activeIndex, setTasks, tasks],
+	);
 
 	return (
-		<DndContext onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd}>
+		<DndContext onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd} sensors={sensors}>
 			<SortableContext items={tasks}>
 				{tasks.map((task) => (
 					<Task task={task} activeIndex={activeIndex} containerRef={containerRef} key={task.id} />
 				))}
 			</SortableContext>
-			<DragOverlay>{draggingTask ? <TaskStatic task={draggingTask} showBeacons={false} /> : null}</DragOverlay>
+			<TaskDragOverlay task={activeTask} dateStart={dateStart} />
 		</DndContext>
 	);
 };

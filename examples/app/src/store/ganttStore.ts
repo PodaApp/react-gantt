@@ -4,12 +4,12 @@ import { create } from "zustand";
 
 import { GANTT_MONTH_BUFFER } from "../constants";
 import { createSelectors } from "../shared/zustand/createSelectors";
-import { ITask, ITaskPosition } from "../types";
+import { ITask, ITaskViewportPosition } from "../types";
 
 export type GanttStoreState = {
 	// TODO: Consider storing this as a Map
 	tasks: ITask[];
-	tasksPositions: Record<string, ITaskPosition>;
+	tasksPositions: Record<string, ITaskViewportPosition>;
 	tasksFocusedId: ITask["id"] | null;
 
 	headerMonth: string | null;
@@ -27,7 +27,7 @@ type GanttStoreActions = {
 	setTaskFocused: (task: ITask) => void;
 	setDateRangeFocused: (start: string, end: string) => void;
 	setHeaderMonth: (month: GanttStoreState["headerMonth"]) => void;
-	setTaskPositions: (id: string, options: Partial<ITaskPosition>) => void;
+	setTaskPositions: (id: string, options: Partial<ITaskViewportPosition>) => void;
 	clearDateRangeFocused: () => void;
 	createTask: (start: string, end: string) => void;
 	setTask: (id: string, partialTask: ITask) => void;

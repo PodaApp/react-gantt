@@ -1,7 +1,7 @@
 import { RefObject, useEffect } from "react";
 
 import { useGanttStore } from "../store/ganttStore";
-import { ITaskPosition } from "../types";
+import { ITaskViewportPosition } from "../types";
 import { TaskNew } from "./TaskNew";
 import "./Tasks.css";
 import { TasksSortable } from "./TasksSortable";
@@ -55,7 +55,7 @@ export const Tasks = ({ containerRef }: Props) => {
 					right: containerRightEdge,
 				};
 
-				const calculatePostion = (options: Partial<ITaskPosition>) => setOffscreenTasks(id, { ...currentPosition, ...options });
+				const calculatePostion = (options: Partial<ITaskViewportPosition>) => setOffscreenTasks(id, { ...currentPosition, ...options });
 
 				if (enterLeftStart) {
 					calculatePostion({ overflowLeft: false });

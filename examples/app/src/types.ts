@@ -6,4 +6,13 @@ export type ITask = {
 	end: string;
 };
 
-export type ITaskPosition = { top: number; left: number; right: number; overflowLeft: boolean; overflowRight: boolean; gone?: boolean };
+export type ITaskOffset = { x: number; width: number };
+
+export type ITaskViewportPosition = {
+	top: number;
+	left: number;
+	right: number;
+	overflowLeft: boolean;
+	overflowRight: boolean;
+	gone?: boolean;
+};

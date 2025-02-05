@@ -1,14 +1,14 @@
-import { RefObject, useRef } from "react";
+import { RefObject } from "react";
 
-import { differenceInDays } from "date-fns";
+import { useSortable } from "@dnd-kit/sortable";
+import classNames from "classnames";
 
-import { COL_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
+import { getTaskPosition } from "../utils/getTaskPosition";
 import "./Task.css";
 import { TaskContent } from "./TaskContent";
 import { TaskDraggable } from "./TaskDraggable";
-import { TaskSortable } from "./TaskSortable";
 
 type Props = {
 	task: ITask;
@@ -17,27 +17,45 @@ type Props = {
 };
 
 export const Task = ({ task, activeIndex, containerRef }: Props) => {
-	const elRoot = useRef<HTMLDivElement>(null);
 	const dateStart = useGanttStore.use.dateStart();
 
-	const position = _calculateTaskPosition(dateStart, task);
+	const { over, index, attributes, isDragging, listeners, setNodeRef } = useSortable({ id: task.id, data: task });
+
+	const taskPosition = getTaskPosition(dateStart, task);
+	const markerPosition = _calculateMarkerPosition(task.id, over?.id.toString(), index, activeIndex);
+
+	const draggableContainerClassName = classNames({
+		"task__draggable--dragging": isDragging,
+	});
+
+	const draggableMarkerClassName = classNames("task__marker", {
+		"task__marker--after": markerPosition === "after",
+		"task__marker--before": markerPosition === "before",
+	});
+
+	const taskbarInlinePosition = {
+		"--task-width": `${taskPosition.width}px`,
+		"--task-x": `${taskPosition.x}px`,
+	} as React.CSSProperties;
 
 	return (
-		<div className="task" ref={elRoot}>
-			<div style={{ width: `${position.width}px`, transform: `translateX(${position.x}px)` }}>
-				<TaskSortable task={task} activeIndex={activeIndex} key={task.id} parentRef={elRoot}>
-					<TaskDraggable task={task} position={position}>
+		<div className="task" ref={setNodeRef}>
+			<div className="task__bar" style={taskbarInlinePosition}>
+				<div {...attributes} {...listeners} className={draggableContainerClassName}>
+					<TaskDraggable task={task} position={taskPosition}>
 						<TaskContent task={task} containerRef={containerRef} />
 					</TaskDraggable>
-				</TaskSortable>
+				</div>
 			</div>
+			<div className={draggableMarkerClassName} />
 		</div>
 	);
 };
 
-const _calculateTaskPosition = (ganttStart: number, task: ITask): { width: number; x: number } => {
-	const rangeOffset = differenceInDays(task.start, new Date(ganttStart).toISOString()) + 1;
-	const rangeLength = differenceInDays(task.end, task.start) + 1;
+const _calculateMarkerPosition = (taskId: string, overId: string | undefined, currentIndex: number, activeIndex: number) => {
+	if (taskId !== overId || !overId) {
+		return undefined;
+	}
 
-	return { width: rangeLength * COL_WIDTH, x: rangeOffset * COL_WIDTH };
+	return currentIndex > activeIndex ? "after" : "before";
 };

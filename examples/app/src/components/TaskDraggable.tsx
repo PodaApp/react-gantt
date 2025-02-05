@@ -1,17 +1,17 @@
 import { ReactNode, useCallback, useState } from "react";
 
-import { DndContext, DragMoveEvent } from "@dnd-kit/core";
+import { DndContext, DragMoveEvent, DragStartEvent } from "@dnd-kit/core";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
 import { COL_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
-import { ITask } from "../types";
+import { ITask, ITaskOffset } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { TaskDraggableHandle } from "./TaskDraggableHandle";
 
 type Props = {
 	task: ITask;
-	position: { x: number; width: number };
+	position: ITaskOffset;
 	children: ReactNode;
 };
 
@@ -24,12 +24,17 @@ export const TaskDraggable = ({ task, position, children }: Props) => {
 
 	const { width, x } = position;
 
-	const handleDragStart = useCallback(() => {
-		setInitialPosition({ width, x });
-	}, [width, x]);
+	const handleDragStart = useCallback(
+		(event: DragStartEvent) => {
+			event.activatorEvent.preventDefault();
+			setInitialPosition({ width, x });
+		},
+		[width, x],
+	);
 
 	const handleDragTask = useCallback(
 		(event: DragMoveEvent) => {
+			event.activatorEvent.preventDefault();
 			const direction = event.active.data.current?.direction;
 
 			if (!direction) {
