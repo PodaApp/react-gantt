@@ -1,0 +1,69 @@
+.taskTable {
+	display: flex;
+	flex-direction: column;
+	font-size: 15px;
+	width: 300px;
+	margin-left: 128px;
+	margin-bottom: 15px;
+	border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.taskTable__header {
+	height: 60px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	color: rgba(255, 255, 255, 0.87);
+	opacity: 0.6;
+	line-height: 28px;
+	font-weight: 500;
+	padding: 0 8px;
+}
+
+.taskTable__headerClose {
+	flex-grow: 0;
+	align-self: flex-end;
+	margin-bottom: auto;
+}
+
+.taskTable__tasks {
+	flex: 1;
+}
+
+.taskTable__task {
+	position: relative;
+	display: flex;
+	align-items: center;
+	height: 34px;
+	padding: 0 8px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.taskTable__task div {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.taskTable__taskActions {
+	visibility: hidden;
+	position: absolute;
+	top: auto;
+	left: 0;
+	bottom: auto;
+	display: flex;
+	transform: translateX(-100%);
+	padding-right: 2px;
+	opacity: 0;
+	transition: opacity 200ms ease-in-out;
+}
+
+.taskTable__task:hover .taskTable__taskActions {
+	visibility: visible;
+	opacity: 1;
+}
+
+.taskTable__taskAction {
+	cursor: grab;
+}

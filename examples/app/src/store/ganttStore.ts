@@ -12,6 +12,8 @@ export type GanttStoreState = {
 	tasksPositions: Record<string, ITaskViewportPosition>;
 	tasksFocusedId: ITask["id"] | null;
 
+	taskTableOpen: boolean;
+
 	headerMonth: string | null;
 
 	// TODO: Consider how I'm going to store dates
@@ -36,6 +38,7 @@ type GanttStoreActions = {
 	// Maintins the current tasks duration
 	setTaskNewStart: (id: string, newStart: string) => void;
 	setTaskTitle: (id: string, title: string | undefined) => void;
+	setTaskTableOpen: (open: boolean) => void;
 };
 
 export type IGanttStore = GanttStoreState & GanttStoreActions;
@@ -47,6 +50,7 @@ const store = create<IGanttStore>((set, get) => ({
 	tasks: [],
 	tasksPositions: {},
 	tasksFocusedId: null,
+	taskTableOpen: false,
 	headerMonth: null,
 	dateCentered: 0,
 	dateEnd: 0,
@@ -206,6 +210,10 @@ const store = create<IGanttStore>((set, get) => ({
 		}
 
 		setTask(id, { ...current, title: nextTitle });
+	},
+
+	setTaskTableOpen: (open) => {
+		set({ taskTableOpen: open });
 	},
 }));
 

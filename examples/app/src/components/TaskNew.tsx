@@ -3,10 +3,10 @@ import { MouseEvent, RefObject, useCallback, useRef, useState } from "react";
 import { addDays } from "date-fns";
 import { createPortal } from "react-dom";
 
+import IconPlus from "../assets/plus.svg?react";
 import { GANTT_NEW_TASK_SIZE_DAYS, GRID_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
-import { Plus } from "./Plus";
 import "./TaskNew.css";
 
 type Props = {
@@ -69,7 +69,7 @@ export const TaskNew = ({ containerRef }: Props) => {
 				<>
 					{!showPlaceholder && (
 						<div className="taskNew__action">
-							<Plus /> New
+							<IconPlus /> New
 						</div>
 					)}
 				</>,

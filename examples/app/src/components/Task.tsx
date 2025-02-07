@@ -53,7 +53,7 @@ export const Task = ({ task, activeIndex, containerRef }: Props) => {
 };
 
 const _calculateMarkerPosition = (taskId: string, overId: string | undefined, currentIndex: number, activeIndex: number) => {
-	if (taskId !== overId || !overId) {
+	if (taskId !== overId || !overId || currentIndex === activeIndex) {
 		return undefined;
 	}
 
