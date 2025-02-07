@@ -4,13 +4,13 @@ import classNames from "classnames";
 
 import IconChevronsRight from "../assets/chevrons-right.svg?react";
 import { useGanttStore } from "../store/ganttStore";
-import "./HeaderActionOpenTable.css";
+import "./ButtonTaskTableOpen.css";
 
 type Props = {
 	hide: "onOpen" | "onClose";
 };
 
-export const HeaderActionOpenTable = ({ hide }: Props) => {
+export const ButtonTaskTableOpen = ({ hide }: Props) => {
 	const isOpen = useGanttStore.use.taskTableOpen();
 	const setOpen = useGanttStore.use.setTaskTableOpen();
 
@@ -18,8 +18,8 @@ export const HeaderActionOpenTable = ({ hide }: Props) => {
 		setOpen(!isOpen);
 	}, [isOpen, setOpen]);
 
-	const actionClassname = classNames("headerActionOpenTable action", {
-		"headerActionOpenTable--open": isOpen,
+	const actionClassname = classNames("buttonTaskTableOpen action", {
+		"buttonTaskTableOpen--open": isOpen,
 	});
 
 	if ((isOpen && hide === "onOpen") || (!isOpen && hide === "onClose")) {

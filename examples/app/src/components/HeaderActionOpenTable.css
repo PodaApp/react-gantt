@@ -1,7 +1,0 @@
-.headerActionOpenTable {
-	display: block;
-}
-
-.headerActionOpenTable--open {
-	transform: rotate(180deg);
-}

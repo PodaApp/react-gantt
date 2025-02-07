@@ -8,17 +8,5 @@
 
 .taskNew__action {
 	position: absolute;
-	/* TODO: this position is using magic numbers consider removal */
-	left: 6px;
-	bottom: 52px;
-	display: flex;
-	align-items: center;
-	gap: 4px;
-	font-size: 15px;
-	color: #ffffff71;
-}
-
-.taskNew__action svg {
-	width: 15px;
-	height: 15px;
+	bottom: 46px;
 }

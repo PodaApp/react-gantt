@@ -1,0 +1,7 @@
+.buttonTaskTableOpen {
+	display: block;
+}
+
+.buttonTaskTableOpen--open {
+	transform: rotate(180deg);
+}

@@ -1,7 +1,8 @@
 import IconGrip from "../assets/grip-vertical.svg?react";
 import IconPlus from "../assets/plus.svg?react";
 import { useGanttStore } from "../store/ganttStore";
-import { HeaderActionOpenTable } from "./HeaderActionOpenTable";
+import { ButtonTaskNew } from "./ButtonTaskTableNew";
+import { ButtonTaskTableOpen } from "./ButtonTaskTableOpen";
 import "./TaskTable.css";
 
 export const TaskTable = () => {
@@ -11,7 +12,7 @@ export const TaskTable = () => {
 		<div className="taskTable">
 			<div className="taskTable__header">
 				<div className="taskTable__headerClose">
-					<HeaderActionOpenTable hide="onClose" />
+					<ButtonTaskTableOpen hide="onClose" />
 				</div>
 				<div>Title</div>
 			</div>
@@ -31,6 +32,7 @@ export const TaskTable = () => {
 						</div>
 					</>
 				))}
+				<ButtonTaskNew hide="onClose" />
 			</div>
 		</div>
 	);
