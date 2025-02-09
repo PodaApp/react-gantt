@@ -13,6 +13,7 @@ export type GanttStoreState = {
 	tasks: ITask[];
 	tasksPositions: Record<string, ITaskViewportPosition>;
 	tasksFocusedId: ITask["id"] | null;
+	tasksEditingId: ITask["id"] | null;
 
 	taskTableOpen: boolean;
 
@@ -36,6 +37,7 @@ type GanttStoreActions = {
 	createTask: (start: Date, end: Date) => void;
 	createTaskAtIndex: (index: number) => void;
 	setTask: (id: string, partialTask: ITask) => void;
+	setTaskEditing: (id: GanttStoreState["tasksEditingId"]) => void;
 	setTaskStart: (id: string, start: Date) => void;
 	setTaskEnd: (id: string, end: Date) => void;
 	// Maintins the current tasks duration
@@ -54,6 +56,7 @@ const store = create<IGanttStore>((set, get) => ({
 	tasks: mockTasks,
 	tasksPositions: {},
 	tasksFocusedId: null,
+	tasksEditingId: null,
 	taskTableOpen: true,
 	headerMonth: null,
 	dateCentered: today,
@@ -102,6 +105,8 @@ const store = create<IGanttStore>((set, get) => ({
 		});
 	},
 
+	setTaskEditing: (id) => set({ tasksEditingId: id }),
+
 	setDateRangeFocused: (start, end) => {
 		set({
 			dateFocusedRange: [start, end],
@@ -143,6 +148,7 @@ const store = create<IGanttStore>((set, get) => ({
 		};
 
 		set({
+			tasksEditingId: newTask.id,
 			tasks: produce(tasks, (draft) => {
 				draft.splice(index, 0, newTask);
 				return draft;

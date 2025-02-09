@@ -1,5 +1,5 @@
 import { useGanttStore } from "../store/ganttStore";
-import { ButtonTaskNew } from "./ButtonTaskTableNew";
+import { ButtonTaskNew } from "./ButtonTaskNew";
 import { ButtonTaskTableOpen } from "./ButtonTaskTableOpen";
 import "./TaskTable.css";
 import { TaskTableTask } from "./TaskTableTask";

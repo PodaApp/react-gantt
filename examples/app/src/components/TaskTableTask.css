@@ -5,6 +5,7 @@
 	height: 34px;
 	padding: 0 8px;
 	font-size: 1rem;
+	cursor: default;
 }
 
 .taskTableTask__title {

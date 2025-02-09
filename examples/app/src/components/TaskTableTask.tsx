@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import classNames from "classnames";
 
@@ -15,32 +15,36 @@ type Props = {
 };
 
 export const TaskTableTask = ({ task, index }: Props) => {
-	// TODO: Move this to zustand, so that when an item is editing the hover actions
-	// are not shown
-	const [isEditing, setEditing] = useState(false);
+	const taskEditingId = useGanttStore.use.tasksEditingId();
 
+	const setTaskEditing = useGanttStore.use.setTaskEditing();
 	const createTaskAtIndex = useGanttStore.use.createTaskAtIndex();
 
 	const handleSetEditing = useCallback(() => {
-		setEditing(true);
-	}, []);
+		setTaskEditing(task.id);
+	}, [setTaskEditing, task.id]);
 
 	const handleFinishEditing = useCallback(() => {
-		setEditing(false);
-	}, []);
+		setTaskEditing(null);
+	}, [setTaskEditing]);
 
 	const handleAddTask = useCallback(() => {
 		createTaskAtIndex(index + 1);
 	}, [createTaskAtIndex, index]);
 
+	// TODO: This caauses all the tasks in the task table to re render. Current this is used
+	// to hide the action buttons so that they don't render when a tasks is being created.
+	const isEditing = taskEditingId !== null;
+	const isEditingSelf = taskEditingId === task.id;
+
 	const taskClassName = classNames("taskTableTask", {
-		"taskTableTask--editing": isEditing,
+		"taskTableTask--editing": isEditingSelf,
 	});
 
-	const showInput = isEditing || (task.creating && !task.end && !task.start);
+	const showInput = isEditingSelf || (task.creating && !task.end && !task.start);
 
 	return (
-		<div className={taskClassName} key={task.id}>
+		<div className={taskClassName}>
 			{!showInput && (
 				<div className="taskTableTask__title" onClick={handleSetEditing}>
 					<span>{task.title}</span>
@@ -51,14 +55,16 @@ export const TaskTableTask = ({ task, index }: Props) => {
 					<TaskTitleInline id={task.id} title={task.title} onComplete={handleFinishEditing} />
 				</div>
 			)}
-			<div className="taskTableTask__actions">
-				<button className="taskTableTask__action action" onClick={handleAddTask}>
-					<IconPlus />
-				</button>
-				<button className="taskTableTask__action action">
-					<IconGrip />
-				</button>
-			</div>
+			{!isEditing && (
+				<div className="taskTableTask__actions">
+					<button className="taskTableTask__action action" onClick={handleAddTask}>
+						<IconPlus />
+					</button>
+					<button className="taskTableTask__action action">
+						<IconGrip />
+					</button>
+				</div>
+			)}
 		</div>
 	);
 };

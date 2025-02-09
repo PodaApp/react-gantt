@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import { GANTT_NEW_TASK_SIZE_DAYS, GRID_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
-import { ButtonTaskNew } from "./ButtonTaskTableNew";
+import { ButtonTaskNew } from "./ButtonTaskNew";
 import "./TaskNew.css";
 
 type Props = {

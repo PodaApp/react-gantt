@@ -116,7 +116,9 @@ export const TasksSortable: React.FC<Props> = ({ tasks, containerRef }) => {
 					return task.start !== null && task.end !== null ? (
 						<Task task={task as ITaskWithDate} activeIndex={activeIndex} containerRef={containerRef} key={task.id} />
 					) : (
-						<div className="task">{!task.creating && <TaskNew containerRef={containerRef} />}</div>
+						<div className="task" key={task.id}>
+							{!task.creating && <TaskNew containerRef={containerRef} />}
+						</div>
 					);
 				})}
 			</SortableContext>
