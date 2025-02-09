@@ -14,7 +14,7 @@ export const HeaderRange = () => {
 		return null;
 	}
 
-	const rangeOffset = differenceInDays(start, ganttDateStart) + 1;
+	const rangeOffset = differenceInDays(start, ganttDateStart);
 	const rangeLength = differenceInDays(end, start) + 1;
 
 	const width = rangeLength * GRID_WIDTH;
