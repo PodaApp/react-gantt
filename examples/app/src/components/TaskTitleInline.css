@@ -1,7 +1,7 @@
 .taskTitleInline {
+	font: unset;
+	resize: none;
 	padding: 0;
-	height: 30px;
-	font-size: 1rem;
 	border: 0;
 	background: transparent;
 	font-weight: 600;

@@ -5,12 +5,12 @@ import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
 import { GRID_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
-import { ITask, ITaskOffset } from "../types";
+import { ITaskOffset, ITaskWithDate } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { TaskDraggableHandle } from "./TaskDraggableHandle";
 
 type Props = {
-	task: ITask;
+	task: ITaskWithDate;
 	position: ITaskOffset;
 	children: ReactNode;
 };

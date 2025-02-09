@@ -7,7 +7,7 @@ import "./TaskDraggableHandle.css";
 
 type Props = {
 	taskId: string;
-	date: string;
+	date: Date;
 	direction: "left" | "right";
 };
 

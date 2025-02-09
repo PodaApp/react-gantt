@@ -2,8 +2,13 @@ export type ITask = {
 	id: string;
 	creating: boolean;
 	title: string;
-	start: string;
-	end: string;
+	start: Date | null;
+	end: Date | null;
+};
+
+export type ITaskWithDate = ITask & {
+	start: Date;
+	end: Date;
 };
 
 export type ITaskOffset = { x: number; width: number };

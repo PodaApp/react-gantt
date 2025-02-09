@@ -1,12 +1,12 @@
 import { DragOverlay } from "@dnd-kit/core";
 
-import { ITask } from "../types";
+import { ITaskWithDate } from "../types";
 import { getTaskPosition } from "../utils/getTaskPosition";
 import { TaskStatic } from "./TaskStatic";
 
 type Props = {
-	task: ITask | null;
-	dateStart: number;
+	task: ITaskWithDate | null;
+	dateStart: Date;
 };
 
 export const TaskDragOverlay = ({ task, dateStart }: Props) => {

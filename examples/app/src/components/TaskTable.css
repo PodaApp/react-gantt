@@ -34,39 +34,3 @@
 .taskTable__tasks > * {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
-
-.taskTable__task {
-	position: relative;
-	display: flex;
-	align-items: center;
-	height: 34px;
-	padding: 0 8px;
-}
-
-.taskTable__task div {
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
-}
-
-.taskTable__taskActions {
-	visibility: hidden;
-	position: absolute;
-	top: auto;
-	left: 0;
-	bottom: auto;
-	display: flex;
-	transform: translateX(-100%);
-	padding-right: 2px;
-	opacity: 0;
-	transition: opacity 200ms ease-in-out;
-}
-
-.taskTable__task:hover .taskTable__taskActions {
-	visibility: visible;
-	opacity: 1;
-}
-
-.taskTable__taskAction {
-	cursor: grab;
-}

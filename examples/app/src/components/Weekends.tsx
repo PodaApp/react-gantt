@@ -18,7 +18,7 @@ export const Weekends = () => {
 	);
 };
 
-const _getWeekendOffsetDays = (dateStart: number, dateEnd: number) => {
+const _getWeekendOffsetDays = (dateStart: Date, dateEnd: Date) => {
 	const startDayOfWeek = getDay(dateStart);
 	const totalDays = differenceInDays(dateEnd, dateStart);
 

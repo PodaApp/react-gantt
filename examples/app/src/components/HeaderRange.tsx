@@ -8,11 +8,11 @@ export const HeaderRange = () => {
 	const dateRange = useGanttStore.use.dateFocusedRange();
 	const ganttDateStart = useGanttStore.use.dateStart();
 
-	if (!dateRange) {
+	const [start, end] = dateRange;
+
+	if (!start || !end) {
 		return null;
 	}
-
-	const [start, end] = dateRange;
 
 	const rangeOffset = differenceInDays(start, ganttDateStart) + 1;
 	const rangeLength = differenceInDays(end, start) + 1;

@@ -26,6 +26,8 @@ export const Header = ({ containerRef }: Props) => {
 		}
 
 		const onHeaderIntersection: IntersectionObserverCallback = (entries) => {
+			let currentMonth: string | null = null;
+
 			entries.forEach((entry) => {
 				const root = entry.rootBounds;
 
@@ -33,23 +35,28 @@ export const Header = ({ containerRef }: Props) => {
 					throw new Error("Can't read root container");
 				}
 
-				const beacon = entry.boundingClientRect.right;
+				const headerRight = entry.boundingClientRect.right;
+				const headerLeft = entry.boundingClientRect.left;
 
 				const containerLeftEdge = root.left;
 				const conatinerRightEdge = root.right;
 
-				const isInboundsLeft = beacon > containerLeftEdge;
-				const isInboundsRight = beacon < conatinerRightEdge;
+				const isInboundsLeft = headerRight > containerLeftEdge;
+				const isInboundsRight = headerRight < conatinerRightEdge;
 
 				const exitLeft = !isInboundsLeft;
-				const enterLeft = isInboundsLeft && isInboundsRight;
+				const enterLeft = headerLeft < containerLeftEdge && isInboundsLeft && isInboundsRight;
 
 				if (exitLeft) {
-					setHeaderMonth(entry.target.getAttribute("data-next"));
+					currentMonth = entry.target.getAttribute("data-next");
 				} else if (enterLeft) {
-					setHeaderMonth(entry.target.getAttribute("data-current"));
+					currentMonth = entry.target.getAttribute("data-current");
 				}
 			});
+
+			if (currentMonth) {
+				setHeaderMonth(currentMonth);
+			}
 		};
 
 		const observer = new IntersectionObserver(onHeaderIntersection, {
@@ -65,8 +72,7 @@ export const Header = ({ containerRef }: Props) => {
 			elements?.forEach((el) => observer.unobserve(el));
 			observer.disconnect();
 		};
-		// TODO: Props required as dependancy else not all elements are observed
-	}, [calendar, containerRef, setHeaderMonth]);
+	}, [containerRef, setHeaderMonth]);
 
 	return (
 		<>

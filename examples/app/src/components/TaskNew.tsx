@@ -79,9 +79,9 @@ export const TaskNew = ({ containerRef }: Props) => {
 	);
 };
 
-const _getDateRange = (offset: number, dateStart: number): [string, string] => {
+const _getDateRange = (offset: number, dateStart: Date): [Date, Date] => {
 	const start = getDateFromOffset(offset, dateStart);
-	const end = addDays(start, GANTT_NEW_TASK_SIZE_DAYS - 1).toDateString();
+	const end = addDays(start, GANTT_NEW_TASK_SIZE_DAYS - 1);
 
 	return [start, end];
 };

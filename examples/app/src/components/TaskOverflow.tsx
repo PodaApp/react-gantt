@@ -7,7 +7,7 @@ import IconArrorRight from "../assets/arrow-right.svg?react";
 import left from "../assets/move-left.svg";
 import right from "../assets/move-right.svg";
 import { DATE_FORMAT_SHORT_MONTH } from "../constants";
-import { ITask } from "../types";
+import { ITaskWithDate } from "../types";
 import "./TaskOverflow.css";
 import { Tooltip } from "./Tooltip";
 
@@ -15,7 +15,7 @@ export type TaskOverflowDirection = "left" | "right";
 export type TaskOverflowOnClick = (position: TaskOverflowDirection) => void;
 
 type Props = {
-	task: ITask;
+	task: ITaskWithDate;
 	direction: TaskOverflowDirection;
 	position: { x: number; y: number } | null;
 	isVisible: boolean;

@@ -15,11 +15,12 @@ import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 
 import { GRID_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
-import { ITask } from "../types";
+import { ITask, ITaskWithDate } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { getOffsetFromDate } from "../utils/getOffsetFromDate";
 import { Task } from "./Task";
 import { TaskDragOverlay } from "./TaskDragOverlay";
+import { TaskNew } from "./TaskNew";
 
 const activationConstraint = {
 	distance: 5,
@@ -35,7 +36,7 @@ export const TasksSortable: React.FC<Props> = ({ tasks, containerRef }) => {
 	const setTaskNewStart = useGanttStore.use.setTaskNewStart();
 	const setTasks = useGanttStore.use.setTasks();
 
-	const [activeTask, setActiveTask] = useState<ITask | null>(null);
+	const [activeTask, setActiveTask] = useState<ITaskWithDate | null>(null);
 	const [cachedTaskOffset, setCachedTaskOffset] = useState<number | null>(null);
 
 	const mouseSensor = useSensor(MouseSensor, {
@@ -54,11 +55,12 @@ export const TasksSortable: React.FC<Props> = ({ tasks, containerRef }) => {
 
 	const handleDragStart = useCallback(
 		(event: DragStartEvent) => {
-			const task = event.active.data.current as ITask;
+			const task = event.active.data.current as ITaskWithDate;
 
 			if (!task) {
 				throw new Error("Drag handler failed to set task data");
 			}
+
 			setCachedTaskOffset(getOffsetFromDate(task.start, dateStart));
 			setActiveTask(task);
 		},
@@ -109,9 +111,14 @@ export const TasksSortable: React.FC<Props> = ({ tasks, containerRef }) => {
 	return (
 		<DndContext onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd} sensors={sensors}>
 			<SortableContext items={tasks}>
-				{tasks.map((task) => (
-					<Task task={task} activeIndex={activeIndex} containerRef={containerRef} key={task.id} />
-				))}
+				{tasks.map((task) => {
+					// TODO: Temp split this into a new component
+					return task.start !== null && task.end !== null ? (
+						<Task task={task as ITaskWithDate} activeIndex={activeIndex} containerRef={containerRef} key={task.id} />
+					) : (
+						<div className="task">{!task.creating && <TaskNew containerRef={containerRef} />}</div>
+					);
+				})}
 			</SortableContext>
 			<TaskDragOverlay task={activeTask} dateStart={dateStart} />
 		</DndContext>

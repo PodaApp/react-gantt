@@ -1,6 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 
-import { tasks as mockTasks } from "./__fixtures__/tasks";
 import { Header } from "./components/Header";
 import { Tasks } from "./components/Tasks";
 import { TaskTable } from "./components/TaskTable";
@@ -12,17 +11,10 @@ function Gantt() {
 	const elTimeline = useRef<HTMLDivElement>(null);
 
 	const taskTableOpen = useGanttStore.use.taskTableOpen();
-	const setGantt = useGanttStore.use.setGantt();
-	const setTasks = useGanttStore.use.setTasks();
-
-	useEffect(() => {
-		setGantt(Date.now());
-		setTasks(mockTasks);
-	}, [setGantt, setTasks]);
 
 	const ganttCurrentOffset = useGanttStore(getGanttCurrentOffset);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (elTimeline.current) {
 			elTimeline.current.scrollLeft = ganttCurrentOffset - elTimeline.current.offsetWidth / 2;
 		}

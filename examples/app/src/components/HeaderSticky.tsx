@@ -4,6 +4,7 @@ import "./HeaderSticky.css";
 
 export const HeaderSticky = () => {
 	const currentMonth = useGanttStore.use.headerMonth();
+
 	return (
 		<div className="headerSticky">
 			<ButtonTaskTableOpen hide="onOpen" />

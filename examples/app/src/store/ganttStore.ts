@@ -2,12 +2,14 @@ import { add, differenceInDays, sub } from "date-fns";
 import { produce } from "immer";
 import { create } from "zustand";
 
+import { tasks as mockTasks } from "../__fixtures__/tasks";
 import { GANTT_WIDTH_MONTHS } from "../constants";
 import { createSelectors } from "../shared/zustand/createSelectors";
-import { ITask, ITaskViewportPosition } from "../types";
+import { ITask, ITaskViewportPosition, ITaskWithDate } from "../types";
+
+type TaskDate = Date | null;
 
 export type GanttStoreState = {
-	// TODO: Consider storing this as a Map
 	tasks: ITask[];
 	tasksPositions: Record<string, ITaskViewportPosition>;
 	tasksFocusedId: ITask["id"] | null;
@@ -17,26 +19,27 @@ export type GanttStoreState = {
 	headerMonth: string | null;
 
 	// TODO: Consider how I'm going to store dates
-	dateCentered: number;
-	dateEnd: number;
-	dateStart: number;
-	dateFocusedRange: [string, string] | null;
+	dateCentered: Date;
+	dateEnd: Date;
+	dateStart: Date;
+	dateFocusedRange: [TaskDate, TaskDate];
 };
 
 type GanttStoreActions = {
-	setGantt: (dateCentered: GanttStoreState["dateCentered"]) => void;
+	setGantt: (dateCentered: Date) => void;
 	setTasks: (tasks: GanttStoreState["tasks"]) => void;
-	setTaskFocused: (task: ITask) => void;
-	setDateRangeFocused: (start: string, end: string) => void;
+	setTaskFocused: (task: ITaskWithDate) => void;
+	setDateRangeFocused: (start: Date, end: Date) => void;
 	setHeaderMonth: (month: GanttStoreState["headerMonth"]) => void;
 	setTaskPositions: (id: string, options: Partial<ITaskViewportPosition>) => void;
 	clearDateRangeFocused: () => void;
-	createTask: (start: string, end: string) => void;
+	createTask: (start: Date, end: Date) => void;
+	createTaskAtIndex: (index: number) => void;
 	setTask: (id: string, partialTask: ITask) => void;
-	setTaskStart: (id: string, start: string) => void;
-	setTaskEnd: (id: string, end: string) => void;
+	setTaskStart: (id: string, start: Date) => void;
+	setTaskEnd: (id: string, end: Date) => void;
 	// Maintins the current tasks duration
-	setTaskNewStart: (id: string, newStart: string) => void;
+	setTaskNewStart: (id: string, newStart: Date) => void;
 	setTaskTitle: (id: string, title: string | undefined) => void;
 	setTaskTableOpen: (open: boolean) => void;
 };
@@ -45,23 +48,23 @@ export type IGanttStore = GanttStoreState & GanttStoreActions;
 
 // TODO Will need a way to specify a GUID generator;
 const dodgyGuid = () => Math.floor(Math.random() * 1000000).toString();
+const today = Object.freeze(new Date());
 
 const store = create<IGanttStore>((set, get) => ({
-	tasks: [],
+	tasks: mockTasks,
 	tasksPositions: {},
 	tasksFocusedId: null,
-	taskTableOpen: false,
+	taskTableOpen: true,
 	headerMonth: null,
-	dateCentered: 0,
-	dateEnd: 0,
-	dateStart: 0,
-	dateFocusedRange: null,
-
+	dateCentered: today,
+	dateEnd: add(today, { months: GANTT_WIDTH_MONTHS }),
+	dateStart: sub(today, { months: GANTT_WIDTH_MONTHS }),
+	dateFocusedRange: [null, null],
 	setGantt: (dateCentered) => {
 		set({
-			dateCentered,
-			dateEnd: add(dateCentered, { months: GANTT_WIDTH_MONTHS }).getTime(),
-			dateStart: sub(dateCentered, { months: GANTT_WIDTH_MONTHS }).getTime(),
+			dateCentered: Object.freeze(dateCentered),
+			dateEnd: Object.freeze(add(dateCentered, { months: GANTT_WIDTH_MONTHS })),
+			dateStart: Object.freeze(sub(dateCentered, { months: GANTT_WIDTH_MONTHS })),
 		});
 	},
 
@@ -107,7 +110,7 @@ const store = create<IGanttStore>((set, get) => ({
 
 	clearDateRangeFocused: () => {
 		set({
-			dateFocusedRange: null,
+			dateFocusedRange: [null, null],
 		});
 	},
 
@@ -124,6 +127,24 @@ const store = create<IGanttStore>((set, get) => ({
 		set({
 			tasks: produce(tasks, (draft) => {
 				draft.push(newTask);
+				return draft;
+			}),
+		});
+	},
+
+	createTaskAtIndex: (index) => {
+		const tasks = get().tasks;
+		const newTask: ITask = {
+			id: dodgyGuid(),
+			creating: true,
+			title: "",
+			start: null,
+			end: null,
+		};
+
+		set({
+			tasks: produce(tasks, (draft) => {
+				draft.splice(index, 0, newTask);
 				return draft;
 			}),
 		});
@@ -154,12 +175,12 @@ const store = create<IGanttStore>((set, get) => ({
 		const setTask = get().setTask;
 		const current = get().tasks.find((task) => task.id === id);
 
-		if (!current) {
-			throw new Error("No task found to update");
+		if (!current?.start || !current?.end) {
+			throw new Error("Task must have start and end date");
 		}
 
 		const deltaDays = differenceInDays(newStart, current.start);
-		const newEnd = add(current.end, { days: deltaDays }).toDateString();
+		const newEnd = add(current.end, { days: deltaDays });
 
 		setTask(id, { ...current, start: newStart, end: newEnd });
 	},

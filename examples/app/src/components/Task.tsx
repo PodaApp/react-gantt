@@ -4,14 +4,14 @@ import { useSortable } from "@dnd-kit/sortable";
 import classNames from "classnames";
 
 import { useGanttStore } from "../store/ganttStore";
-import { ITask } from "../types";
+import { ITaskWithDate } from "../types";
 import { getTaskPosition } from "../utils/getTaskPosition";
 import "./Task.css";
 import { TaskContent } from "./TaskContent";
 import { TaskDraggable } from "./TaskDraggable";
 
 type Props = {
-	task: ITask;
+	task: ITaskWithDate;
 	activeIndex: number;
 	containerRef: RefObject<HTMLDivElement>;
 };

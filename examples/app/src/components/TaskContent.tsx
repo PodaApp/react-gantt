@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 
 import { GANTT_JUMP_TO_TASK_PADDING_DAYS, GRID_WIDTH } from "../constants";
 import { GanttStoreState, useGanttStore } from "../store/ganttStore";
-import { ITask } from "../types";
+import { ITaskWithDate } from "../types";
 import "./TaskContent.css";
 import { TaskOverflow, TaskOverflowDirection, TaskOverflowOnClick } from "./TaskOverflow";
 import { TaskStatic } from "./TaskStatic";
@@ -14,19 +14,19 @@ import { TaskTitleInline } from "./TaskTitleInline";
 export type TaskOnHover = (taskId: string) => void;
 
 export type TaskProps = {
-	task: ITask;
+	task: ITaskWithDate;
 	containerRef: RefObject<HTMLDivElement>;
 };
 
 // TODO: Move to querys
-const getPositionForTask = (id: ITask["id"]) => (s: GanttStoreState) => s.tasksPositions[id];
-const getIsFocused = (id: ITask["id"]) => (s: GanttStoreState) => s.tasksFocusedId === id;
+const _getPositionForTask = (id: ITaskWithDate["id"]) => (s: GanttStoreState) => s.tasksPositions[id];
+const _getIsFocused = (id: ITaskWithDate["id"]) => (s: GanttStoreState) => s.tasksFocusedId === id;
 
 export const TaskContent = ({ task, containerRef }: TaskProps) => {
 	const taskRef = useRef<HTMLDivElement>(null);
 
-	const stickyPosition = useGanttStore(getPositionForTask(task.id));
-	const isTaskFocused = useGanttStore(getIsFocused(task.id));
+	const stickyPosition = useGanttStore(_getPositionForTask(task.id));
+	const isTaskFocused = useGanttStore(_getIsFocused(task.id));
 	const setTaskFocused = useGanttStore.use.setTaskFocused();
 
 	const handleHover = useCallback(() => setTaskFocused(task), [setTaskFocused, task]);
@@ -48,12 +48,8 @@ export const TaskContent = ({ task, containerRef }: TaskProps) => {
 	const coordinatesStart = stickyPosition ? { x: stickyPosition.left, y: stickyPosition?.top } : null;
 	const cordoinantesEnd = stickyPosition ? { x: stickyPosition?.right - 30, y: stickyPosition?.top } : null;
 
-	if (!containerRef.current) {
-		return null;
-	}
-
 	const showTitleStatic = !isOverflowLeft && !task.creating;
-	const showTitleInput = task.creating;
+	const showTitleInput = task.creating && task.start && task.end;
 
 	return (
 		<>
@@ -61,7 +57,7 @@ export const TaskContent = ({ task, containerRef }: TaskProps) => {
 				<TaskStatic task={task} showTitle={showTitleStatic} />
 				{showTitleInput && (
 					<div className="taskContent__content">
-						<TaskTitleInline id={task.id} title={task.title} />
+						<TaskTitleInline id={task.id} placeholder="Type a name..." title={task.title} />
 					</div>
 				)}
 				{isTaskFocused && (
@@ -70,20 +66,21 @@ export const TaskContent = ({ task, containerRef }: TaskProps) => {
 					</div>
 				)}
 			</div>
-			{createPortal(
-				<>
-					<TaskOverflow
-						direction="left"
-						task={task}
-						position={coordinatesStart}
-						isVisible={isOverflowLeft}
-						isInViewport={isTimelinInViewport}
-						onClick={handleOverflowClick}
-					/>
-					<TaskOverflow direction="right" task={task} position={cordoinantesEnd} isVisible={isOverflowRight} onClick={handleOverflowClick} />
-				</>,
-				containerRef.current,
-			)}
+			{containerRef.current &&
+				createPortal(
+					<>
+						<TaskOverflow
+							direction="left"
+							task={task}
+							position={coordinatesStart}
+							isVisible={isOverflowLeft}
+							isInViewport={isTimelinInViewport}
+							onClick={handleOverflowClick}
+						/>
+						<TaskOverflow direction="right" task={task} position={cordoinantesEnd} isVisible={isOverflowRight} onClick={handleOverflowClick} />
+					</>,
+					containerRef.current,
+				)}
 		</>
 	);
 };

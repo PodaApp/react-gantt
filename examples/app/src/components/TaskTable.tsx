@@ -1,9 +1,8 @@
-import IconGrip from "../assets/grip-vertical.svg?react";
-import IconPlus from "../assets/plus.svg?react";
 import { useGanttStore } from "../store/ganttStore";
 import { ButtonTaskNew } from "./ButtonTaskTableNew";
 import { ButtonTaskTableOpen } from "./ButtonTaskTableOpen";
 import "./TaskTable.css";
+import { TaskTableTask } from "./TaskTableTask";
 
 export const TaskTable = () => {
 	const tasks = useGanttStore.use.tasks();
@@ -17,20 +16,8 @@ export const TaskTable = () => {
 				<div>Title</div>
 			</div>
 			<div className="taskTable__tasks">
-				{tasks.map((task) => (
-					<>
-						<div className="taskTable__task" key={task.id}>
-							<div>{task.title}</div>
-							<div className="taskTable__taskActions">
-								<button className="taskTable__taskAction action">
-									<IconPlus />
-								</button>
-								<button className="taskTable__taskAction action">
-									<IconGrip />
-								</button>
-							</div>
-						</div>
-					</>
+				{tasks.map((task, index) => (
+					<TaskTableTask task={task} index={index} key={task.id} />
 				))}
 				<ButtonTaskNew hide="onClose" />
 			</div>
