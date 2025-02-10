@@ -2,10 +2,12 @@
 
 ## Notion Features
 
+[] Sidebar task view
+
 - Materialised view / infinate scroll
 - Different scales (Day, Week, Month, Quater...)
 - Prev, Today, Next navigation
-- Sidebar task view
+
 - Simple task details
 - Today marker based on time of day
 - Task dependencies

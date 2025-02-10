@@ -127,7 +127,7 @@ const _getSnappedDragOffset = (initialOffset: number, event: DragMoveEvent) => {
 	const isMovingLeft = event.delta.x < 0;
 
 	if (isMovingLeft && remainder > GRID_WIDTH / 2) {
-		return (colIndex + 1) * GRID_WIDTH;
+		return colIndex * GRID_WIDTH;
 	} else {
 		return colIndex * GRID_WIDTH;
 	}
