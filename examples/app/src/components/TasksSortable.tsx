@@ -20,7 +20,6 @@ import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { getOffsetFromDate } from "../utils/getOffsetFromDate";
 import { Task } from "./Task";
 import { TaskDragOverlay } from "./TaskDragOverlay";
-import { TaskNew } from "./TaskNew";
 
 const activationConstraint = {
 	distance: 5,
@@ -111,16 +110,9 @@ export const TasksSortable: React.FC<Props> = ({ tasks, containerRef }) => {
 	return (
 		<DndContext onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd} sensors={sensors}>
 			<SortableContext items={tasks}>
-				{tasks.map((task) => {
-					// TODO: Temp split this into a new component
-					return task.start !== null && task.end !== null ? (
-						<Task task={task as ITaskWithDate} activeIndex={activeIndex} containerRef={containerRef} key={task.id} />
-					) : (
-						<div className="task" key={task.id}>
-							{!task.creating && <TaskNew containerRef={containerRef} />}
-						</div>
-					);
-				})}
+				{tasks.map((task) => (
+					<Task task={task} activeIndex={activeIndex} containerRef={containerRef} key={task.id} />
+				))}
 			</SortableContext>
 			<TaskDragOverlay task={activeTask} dateStart={dateStart} />
 		</DndContext>

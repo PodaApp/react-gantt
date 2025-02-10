@@ -1,0 +1,33 @@
+.taskWithDate__bar {
+	width: var(--task-width);
+	transform: translateX(var(--task-x));
+}
+
+.taskWithDate__marker {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: rgb(152, 204, 225);
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 200ms ease-in-out;
+}
+
+.taskWithDate__marker--after,
+.taskWithDate__marker--before {
+	visibility: visible;
+	opacity: 0.8;
+}
+
+.taskWithDate__marker--before {
+	top: -3px;
+}
+
+.taskWithDate__marker--after {
+	bottom: -3px;
+}
+
+.taskWithDate__draggable--dragging {
+	visibility: hidden;
+}

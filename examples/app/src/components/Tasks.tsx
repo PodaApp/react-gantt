@@ -12,12 +12,17 @@ type Props = {
 	containerRef: RefObject<HTMLDivElement>;
 };
 
+/**
+ * TODO:
+ * - Move intersection obeserver logic into a hook
+ * - Remove dependency on tasks
+ * - Ensure that Weekends/Today don't re render when tasks are updated
+ */
 export const Tasks = ({ containerRef }: Props) => {
 	const setOffscreenTasks = useGanttStore.use.setTaskPositions();
 
 	const tasks = useGanttStore.use.tasks();
 
-	// TODO: Move this into a hook
 	useEffect(() => {
 		if (!containerRef.current) {
 			return;

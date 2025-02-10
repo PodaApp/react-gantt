@@ -5,23 +5,28 @@ import { createPortal } from "react-dom";
 
 import { GANTT_NEW_TASK_SIZE_DAYS, GRID_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
+import { ITask } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { ButtonTaskNew } from "./ButtonTaskNew";
 import "./TaskNew.css";
 
 type Props = {
+	taskId?: ITask["id"];
 	containerRef: RefObject<HTMLDivElement>;
 };
 
 const mockWidth = GANTT_NEW_TASK_SIZE_DAYS * GRID_WIDTH;
 
-export const TaskNew = ({ containerRef }: Props) => {
+// TODO: There is a bug where all empty tasks show up when you hover over the new button
+export const TaskNew = ({ taskId, containerRef }: Props) => {
 	const taskNewRef = useRef<HTMLDivElement>(null);
 
-	const setDateRangeFocused = useGanttStore.use.setDateRangeFocused();
+	const dateStart = useGanttStore.use.dateStart();
+
 	const clearDateRangeFocused = useGanttStore.use.clearDateRangeFocused();
 	const createTask = useGanttStore.use.createTask();
-	const dateStart = useGanttStore.use.dateStart();
+	const setDateRangeFocused = useGanttStore.use.setDateRangeFocused();
+	const setTaskRange = useGanttStore.use.setTaskRange();
 
 	const [timelineX, setTimelineX] = useState(0);
 
@@ -47,8 +52,13 @@ export const TaskNew = ({ containerRef }: Props) => {
 	}, [clearDateRangeFocused]);
 
 	const handleClick = useCallback(() => {
-		createTask(..._getDateRange(timelineX, dateStart));
-	}, [timelineX, createTask, dateStart]);
+		const dateRange = _getDateRange(timelineX, dateStart);
+		if (taskId) {
+			setTaskRange(taskId, ...dateRange);
+		} else {
+			createTask(...dateRange);
+		}
+	}, [timelineX, dateStart, taskId, setTaskRange, createTask]);
 
 	const showPlaceholder = timelineX !== 0;
 

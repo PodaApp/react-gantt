@@ -40,6 +40,7 @@ type GanttStoreActions = {
 	setTaskEditing: (id: GanttStoreState["tasksEditingId"]) => void;
 	setTaskStart: (id: string, start: Date) => void;
 	setTaskEnd: (id: string, end: Date) => void;
+	setTaskRange: (id: string, start: Date, end: Date) => void;
 	// Maintins the current tasks duration
 	setTaskNewStart: (id: string, newStart: Date) => void;
 	setTaskTitle: (id: string, title: string | undefined) => void;
@@ -175,6 +176,21 @@ const store = create<IGanttStore>((set, get) => ({
 			}),
 			dateFocusedRange: [data.start, data.end],
 		});
+	},
+
+	setTaskRange: (id, start, end) => {
+		const setTask = get().setTask;
+		const current = get().tasks.find((task) => task.id === id);
+
+		if (!current) {
+			throw new Error("No task found to update");
+		}
+
+		if (current.start === start && current.end === end) {
+			return;
+		}
+
+		setTask(id, { ...current, start, end });
 	},
 
 	setTaskNewStart: (id, newStart) => {

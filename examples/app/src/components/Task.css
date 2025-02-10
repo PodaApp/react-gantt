@@ -3,38 +3,8 @@
 	z-index: 2;
 	margin: 2px 0;
 	display: flex;
-}
-
-.task__bar {
-	width: var(--task-width);
-	transform: translateX(var(--task-x));
-}
-
-.task__marker {
-	position: absolute;
-	left: 0;
-	right: 0;
-	height: 2px;
-	background: rgb(152, 204, 225);
-	visibility: hidden;
-	opacity: 0;
-	transition: opacity 200ms ease-in-out;
-}
-
-.task__marker--after,
-.task__marker--before {
-	visibility: visible;
-	opacity: 0.8;
-}
-
-.task__marker--before {
-	top: -3px;
-}
-
-.task__marker--after {
-	bottom: -3px;
-}
-
-.task__draggable--dragging {
-	visibility: hidden;
+	align-items: center;
+	gap: 4px;
+	height: 30px;
+	width: 100%;
 }
