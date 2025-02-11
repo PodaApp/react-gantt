@@ -19,8 +19,8 @@ export type TaskProps = {
 };
 
 // TODO: Move to querys
-const _getPositionForTask = (id: ITaskWithDate["id"]) => (s: GanttStoreState) => s.tasksPositions[id];
-const _getIsFocused = (id: ITaskWithDate["id"]) => (s: GanttStoreState) => s.tasksFocusedId === id;
+const _getPositionForTask = (id: ITaskWithDate["id"]) => (s: GanttStoreState) => s.tasksPosition[id];
+const _getIsFocused = (id: ITaskWithDate["id"]) => (s: GanttStoreState) => s.taskFocusedId === id;
 
 export const TaskContent = ({ task, containerRef }: TaskProps) => {
 	const taskRef = useRef<HTMLDivElement>(null);

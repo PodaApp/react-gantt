@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const TaskTableTask = ({ task, index }: Props) => {
-	const taskEditingId = useGanttStore.use.tasksEditingId();
+	const taskEditingId = useGanttStore.use.taskEditingId();
 
 	const setTaskEditing = useGanttStore.use.setTaskEditing();
 	const createTaskAtIndex = useGanttStore.use.createTaskAtIndex();

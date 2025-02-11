@@ -5,8 +5,8 @@ import { useGanttStore } from "../store/ganttStore";
 import "./HeaderRange.css";
 
 export const HeaderRange = () => {
-	const dateRange = useGanttStore.use.dateFocusedRange();
-	const ganttDateStart = useGanttStore.use.dateStart();
+	const dateRange = useGanttStore.use.headerTaskRange();
+	const ganttDateStart = useGanttStore.use.ganttDateStart();
 
 	const [start, end] = dateRange;
 

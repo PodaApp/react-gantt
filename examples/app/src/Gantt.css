@@ -22,3 +22,8 @@
 .gantt__scrollable {
 	overflow-x: auto;
 }
+
+.gantt__newTask {
+	position: absolute;
+	bottom: 46px;
+}

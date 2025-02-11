@@ -33,7 +33,7 @@ type Props = {
 export const TasksSortable: React.FC<Props> = ({ containerRef }) => {
 	useTrackTaskPositions(containerRef);
 
-	const dateStart = useGanttStore.use.dateStart();
+	const dateStart = useGanttStore.use.ganttDateStart();
 	const tasks = useGanttStore.use.tasks();
 
 	const setTaskNewStart = useGanttStore.use.setTaskNewStart();

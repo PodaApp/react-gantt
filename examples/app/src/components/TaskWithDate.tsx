@@ -14,7 +14,7 @@ type Props = {
 };
 
 export const TaskWithDate = ({ task, containerRef }: Props) => {
-	const dateStart = useGanttStore.use.dateStart();
+	const dateStart = useGanttStore.use.ganttDateStart();
 
 	const taskPosition = getTaskPosition(dateStart, task);
 

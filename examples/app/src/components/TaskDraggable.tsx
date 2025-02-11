@@ -16,9 +16,9 @@ type Props = {
 };
 
 export const TaskDraggable = ({ task, position, children }: Props) => {
-	const dateStart = useGanttStore.use.dateStart();
-	const setTaskStart = useGanttStore.use.setTaskStart();
-	const setTaskEnd = useGanttStore.use.setTaskEnd();
+	const dateStart = useGanttStore.use.ganttDateStart();
+	const setTaskStart = useGanttStore.use.setTaskDateStart();
+	const setTaskEnd = useGanttStore.use.setTaskDateEnd();
 
 	const [initialPosition, setInitialPosition] = useState<Props["position"] | null>(null);
 

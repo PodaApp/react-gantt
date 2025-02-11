@@ -1,13 +1,8 @@
-.taskNew {
+.newTask {
 	display: flex;
 	align-items: center;
 	gap: 4px;
 	cursor: crosshair;
 	height: 30px;
 	width: 100%;
-}
-
-.taskNew__action {
-	position: absolute;
-	bottom: 46px;
 }

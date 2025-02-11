@@ -1,6 +1,6 @@
 import { RefObject } from "react";
 
-import { TaskNew } from "./TaskNew";
+import { NewTask } from "./NewTask";
 import { TasksSortable } from "./TasksSortable";
 import "./TasksTimeline.css";
 import { Today } from "./Today";
@@ -17,7 +17,7 @@ export const TasksTimeline = ({ containerRef }: Props) => {
 			<Today />
 			<Weekends />
 			<div className="tasksTimeline__addNew">
-				<TaskNew containerRef={containerRef} />
+				<NewTask />
 			</div>
 		</div>
 	);

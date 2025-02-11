@@ -1,4 +1,4 @@
-.buttonTaskNew {
+.newTaskButton {
 	display: flex;
 	align-items: center;
 	gap: 4px;
@@ -9,11 +9,11 @@
 	cursor: default;
 }
 
-.buttonTaskNew:hover {
+.newTaskButton:hover {
 	background: rgba(255, 255, 255, 0.05);
 }
 
-.buttonTaskNew svg {
+.newTaskButton svg {
 	width: 15px;
 	height: 15px;
 }

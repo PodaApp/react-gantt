@@ -6,8 +6,8 @@ import { useGanttStore } from "../store/ganttStore";
 export type GanttData = { month: string; year: number; weeks: string[]; startOnDay: number }[];
 
 export const useCalendar = () => {
-	const dateStart = useGanttStore.use.dateStart();
-	const dateEnd = useGanttStore.use.dateEnd();
+	const dateStart = useGanttStore.use.ganttDateStart();
+	const dateEnd = useGanttStore.use.ganttDateEnd();
 
 	const current = new Date(dateStart);
 	const end = new Date(dateEnd);

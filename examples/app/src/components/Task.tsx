@@ -4,8 +4,8 @@ import { useSortable } from "@dnd-kit/sortable";
 import classNames from "classnames";
 
 import { ITask, ITaskWithDate } from "../types";
+import { NewTask } from "./NewTask";
 import "./Task.css";
-import { TaskNew } from "./TaskNew";
 import { TaskWithDate } from "./TaskWithDate";
 import "./TaskWithDate.css";
 
@@ -36,7 +36,7 @@ export const Task = ({ task, activeIndex, containerRef }: Props) => {
 	return (
 		<div className="task" ref={setNodeRef}>
 			{showAddToTimeline ? (
-				<TaskNew taskId={task.id} containerRef={containerRef} />
+				<NewTask taskId={task.id} />
 			) : (
 				<div {...attributes} {...listeners} className={draggableContainerClassName}>
 					<TaskWithDate task={task as ITaskWithDate} activeIndex={activeIndex} containerRef={containerRef} />

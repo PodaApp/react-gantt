@@ -3,48 +3,52 @@ import { produce } from "immer";
 import { create } from "zustand";
 
 import { tasks as mockTasks } from "../__fixtures__/tasks";
-import { GANTT_WIDTH_MONTHS } from "../constants";
+import { GANTT_NEW_TASK_SIZE_DAYS, GANTT_WIDTH_MONTHS } from "../constants";
 import { createSelectors } from "../shared/zustand/createSelectors";
 import { ITask, ITaskViewportPosition, ITaskWithDate } from "../types";
+import { getDateRangeFromOffset } from "../utils/getDateRangeFromOffset";
+import { getOffsetFromDate } from "../utils/getOffsetFromDate";
 
 type TaskDate = Date | null;
 
 export type GanttStoreState = {
-	tasks: ITask[];
-	tasksPositions: Record<string, ITaskViewportPosition>;
-	tasksFocusedId: ITask["id"] | null;
-	tasksEditingId: ITask["id"] | null;
-
-	taskTableOpen: boolean;
+	gantDateCentered: Date;
+	ganttDateEnd: Date;
+	ganttDateStart: Date;
+	ganttTaskListOpen: boolean;
+	ganttSchedulingTaskPosition: { id: string | undefined; x: number } | null;
 
 	headerMonth: string | null;
+	headerTaskRange: [TaskDate, TaskDate];
 
-	// TODO: Consider how I'm going to store dates
-	dateCentered: Date;
-	dateEnd: Date;
-	dateStart: Date;
-	dateFocusedRange: [TaskDate, TaskDate];
+	taskEditingId: ITask["id"] | null;
+	taskFocusedId: ITask["id"] | null;
+
+	tasks: ITask[];
+	tasksPosition: Record<string, ITaskViewportPosition>;
 };
 
 type GanttStoreActions = {
-	setGantt: (dateCentered: Date) => void;
-	setTasks: (tasks: GanttStoreState["tasks"]) => void;
-	setTaskFocused: (task: ITaskWithDate) => void;
-	setDateRangeFocused: (start: Date, end: Date) => void;
-	setHeaderMonth: (month: GanttStoreState["headerMonth"]) => void;
-	setTaskPositions: (id: string, options: Partial<ITaskViewportPosition>) => void;
-	clearDateRangeFocused: () => void;
 	createTask: (start: Date, end: Date) => void;
 	createTaskAtIndex: (index: number) => void;
+	createTaskAtEnd: () => void;
+	scheduleTask: (id: ITask["id"] | undefined, offsetX: number) => void;
+	scheduleTaskClear: () => void;
+	scheduleTaskConfirm: (id?: ITask["id"]) => void;
+	setGantt: (dateCentered: Date) => void;
+	setGanttTaskListOpen: (open: boolean) => void;
+	setHeaderMonth: (month: GanttStoreState["headerMonth"]) => void;
+	setHeaderTaskRange: (start: TaskDate, end: TaskDate) => void;
 	setTask: (id: string, partialTask: ITask) => void;
-	setTaskEditing: (id: GanttStoreState["tasksEditingId"]) => void;
-	setTaskStart: (id: string, start: Date) => void;
-	setTaskEnd: (id: string, end: Date) => void;
+	setTaskDateEnd: (id: string, end: Date) => void;
+	setTaskDateStart: (id: string, start: Date) => void;
+	setTaskEditing: (id: GanttStoreState["taskEditingId"]) => void;
+	setTaskFocused: (task: ITaskWithDate) => void;
+	setTaskNewStart: (id: string, start: Date) => void;
+	setTaskPositions: (id: string, options: Partial<ITaskViewportPosition>) => void;
 	setTaskRange: (id: string, start: Date, end: Date) => void;
-	// Maintins the current tasks duration
-	setTaskNewStart: (id: string, newStart: Date) => void;
 	setTaskTitle: (id: string, title: string | undefined) => void;
-	setTaskTableOpen: (open: boolean) => void;
+	setTasks: (tasks: GanttStoreState["tasks"]) => void;
 };
 
 export type IGanttStore = GanttStoreState & GanttStoreActions;
@@ -54,31 +58,32 @@ const dodgyGuid = () => Math.floor(Math.random() * 1000000).toString();
 const today = Object.freeze(new Date());
 
 const store = create<IGanttStore>((set, get) => ({
-	tasks: mockTasks,
-	tasksPositions: {},
-	tasksFocusedId: null,
-	tasksEditingId: null,
-	taskTableOpen: true,
+	gantDateCentered: today,
+	ganttDateEnd: add(today, { months: GANTT_WIDTH_MONTHS }),
+	ganttDateStart: sub(today, { months: GANTT_WIDTH_MONTHS }),
 	headerMonth: null,
-	dateCentered: today,
-	dateEnd: add(today, { months: GANTT_WIDTH_MONTHS }),
-	dateStart: sub(today, { months: GANTT_WIDTH_MONTHS }),
-	dateFocusedRange: [null, null],
+	headerTaskRange: [null, null],
+	tasks: mockTasks,
+	taskEditingId: null,
+	taskFocusedId: null,
+	tasksPosition: {},
+	ganttTaskListOpen: false,
+	ganttSchedulingTaskPosition: null,
 	setGantt: (dateCentered) => {
 		set({
-			dateCentered: Object.freeze(dateCentered),
-			dateEnd: Object.freeze(add(dateCentered, { months: GANTT_WIDTH_MONTHS })),
-			dateStart: Object.freeze(sub(dateCentered, { months: GANTT_WIDTH_MONTHS })),
+			gantDateCentered: Object.freeze(dateCentered),
+			ganttDateEnd: Object.freeze(add(dateCentered, { months: GANTT_WIDTH_MONTHS })),
+			ganttDateStart: Object.freeze(sub(dateCentered, { months: GANTT_WIDTH_MONTHS })),
 		});
 	},
 
 	setHeaderMonth: (headerMonth) => set({ headerMonth }),
 
 	setTaskPositions: (id, options) => {
-		const tasksPositions = get().tasksPositions;
+		const { tasksPosition } = get();
 
 		set({
-			tasksPositions: produce(tasksPositions, (draft) => {
+			tasksPosition: produce(tasksPosition, (draft) => {
 				if (draft[id]) {
 					draft[id] = { ...draft[id], ...options };
 				} else {
@@ -101,27 +106,22 @@ const store = create<IGanttStore>((set, get) => ({
 
 	setTaskFocused: (task) => {
 		set({
-			dateFocusedRange: [task.start, task.end],
-			tasksFocusedId: task.id,
+			headerTaskRange: [task.start, task.end],
+			taskFocusedId: task.id,
 		});
 	},
 
-	setTaskEditing: (id) => set({ tasksEditingId: id }),
+	setTaskEditing: (id) => set({ taskEditingId: id }),
 
-	setDateRangeFocused: (start, end) => {
+	setHeaderTaskRange: (start, end) => {
 		set({
-			dateFocusedRange: [start, end],
-		});
-	},
-
-	clearDateRangeFocused: () => {
-		set({
-			dateFocusedRange: [null, null],
+			headerTaskRange: [start, end],
 		});
 	},
 
 	createTask: (start, end) => {
-		const tasks = get().tasks;
+		const { tasks } = get();
+
 		const newTask: ITask = {
 			id: dodgyGuid(),
 			creating: true,
@@ -139,7 +139,8 @@ const store = create<IGanttStore>((set, get) => ({
 	},
 
 	createTaskAtIndex: (index) => {
-		const tasks = get().tasks;
+		const { tasks } = get();
+
 		const newTask: ITask = {
 			id: dodgyGuid(),
 			creating: true,
@@ -149,7 +150,7 @@ const store = create<IGanttStore>((set, get) => ({
 		};
 
 		set({
-			tasksEditingId: newTask.id,
+			taskEditingId: newTask.id,
 			tasks: produce(tasks, (draft) => {
 				draft.splice(index, 0, newTask);
 				return draft;
@@ -157,8 +158,54 @@ const store = create<IGanttStore>((set, get) => ({
 		});
 	},
 
+	createTaskAtEnd: () => {
+		const { tasks, createTaskAtIndex } = get();
+		const index = tasks.length;
+		createTaskAtIndex(index);
+	},
+
+	scheduleTask: (id, offsetX) => {
+		const { ganttDateStart, ganttSchedulingTaskPosition } = get();
+
+		const [start, end] = getDateRangeFromOffset(offsetX, ganttDateStart, GANTT_NEW_TASK_SIZE_DAYS);
+		const nextX = getOffsetFromDate(start, ganttDateStart);
+
+		if (nextX === ganttSchedulingTaskPosition?.x) {
+			return;
+		}
+
+		set({
+			ganttSchedulingTaskPosition: { id, x: nextX },
+			headerTaskRange: [start, end],
+		});
+	},
+
+	scheduleTaskClear: () => {
+		set({
+			ganttSchedulingTaskPosition: null,
+			headerTaskRange: [null, null],
+		});
+	},
+
+	scheduleTaskConfirm: (taskId) => {
+		const { ganttSchedulingTaskPosition: taskPosition, ganttDateStart, setTaskRange, createTask } = get();
+
+		if (taskPosition === null) {
+			return;
+		}
+
+		const [start, end] = getDateRangeFromOffset(taskPosition.x, ganttDateStart, GANTT_NEW_TASK_SIZE_DAYS);
+
+		if (taskId) {
+			setTaskRange(taskId, start, end);
+		} else {
+			createTask(start, end);
+		}
+	},
+
 	setTask: (id, data) => {
-		const tasks = get().tasks;
+		const { tasks } = get();
+
 		set({
 			tasks: produce(tasks, (draft) => {
 				const taskIndex = draft.findIndex((task) => task.id === id);
@@ -174,13 +221,14 @@ const store = create<IGanttStore>((set, get) => ({
 
 				return draft;
 			}),
-			dateFocusedRange: [data.start, data.end],
+			headerTaskRange: [data.start, data.end],
 		});
 	},
 
 	setTaskRange: (id, start, end) => {
-		const setTask = get().setTask;
-		const current = get().tasks.find((task) => task.id === id);
+		const { tasks, setTask } = get();
+
+		const current = tasks.find((task) => task.id === id);
 
 		if (!current) {
 			throw new Error("No task found to update");
@@ -194,8 +242,9 @@ const store = create<IGanttStore>((set, get) => ({
 	},
 
 	setTaskNewStart: (id, newStart) => {
-		const setTask = get().setTask;
-		const current = get().tasks.find((task) => task.id === id);
+		const { tasks, setTask } = get();
+
+		const current = tasks.find((task) => task.id === id);
 
 		if (!current?.start || !current?.end) {
 			throw new Error("Task must have start and end date");
@@ -208,9 +257,10 @@ const store = create<IGanttStore>((set, get) => ({
 	},
 
 	// TODO: Merge task setters into single method
-	setTaskEnd: (id, end) => {
-		const setTask = get().setTask;
-		const current = get().tasks.find((task) => task.id === id);
+	setTaskDateEnd: (id, end) => {
+		const { tasks, setTask } = get();
+
+		const current = tasks.find((task) => task.id === id);
 
 		if (!current) {
 			throw new Error("No task found to update");
@@ -223,9 +273,10 @@ const store = create<IGanttStore>((set, get) => ({
 		setTask(id, { ...current, end });
 	},
 
-	setTaskStart: (id, start) => {
-		const setTask = get().setTask;
-		const current = get().tasks.find((task) => task.id === id);
+	setTaskDateStart: (id, start) => {
+		const { tasks, setTask } = get();
+
+		const current = tasks.find((task) => task.id === id);
 
 		if (!current) {
 			throw new Error("No task found to update");
@@ -239,8 +290,9 @@ const store = create<IGanttStore>((set, get) => ({
 	},
 
 	setTaskTitle: (id, title) => {
-		const setTask = get().setTask;
-		const current = get().tasks.find((task) => task.id === id);
+		const { tasks, setTask } = get();
+
+		const current = tasks.find((task) => task.id === id);
 
 		if (!current) {
 			throw new Error("No task found to update");
@@ -255,8 +307,8 @@ const store = create<IGanttStore>((set, get) => ({
 		setTask(id, { ...current, title: nextTitle });
 	},
 
-	setTaskTableOpen: (open) => {
-		set({ taskTableOpen: open });
+	setGanttTaskListOpen: (open) => {
+		set({ ganttTaskListOpen: open });
 	},
 }));
 

@@ -1,6 +1,6 @@
 import { useGanttStore } from "../store/ganttStore";
-import { ButtonTaskNew } from "./ButtonTaskNew";
 import { ButtonTaskTableOpen } from "./ButtonTaskTableOpen";
+import { NewTaskButton } from "./NewTaskButton";
 import "./TaskTable.css";
 import { TaskTableTask } from "./TaskTableTask";
 
@@ -19,7 +19,7 @@ export const TaskTable = () => {
 				{tasks.map((task, index) => (
 					<TaskTableTask task={task} index={index} key={task.id} />
 				))}
-				<ButtonTaskNew hide="onClose" />
+				<NewTaskButton hide="onClose" />
 			</div>
 		</div>
 	);
