@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 
 import { Header } from "./components/Header";
-import { Tasks } from "./components/Tasks";
+import { TasksTimeline } from "./components/TasksTimeline";
 import { TaskTable } from "./components/TaskTable";
 import "./Gantt.css";
 import { getGanttCurrentOffset } from "./queries/getGanttCurrentOffset";
@@ -31,7 +31,7 @@ function Gantt() {
 				<div className="gantt__scrollable" ref={elTimeline}>
 					<div className="gantt__wrapper">
 						<Header containerRef={elTimeline} />
-						<Tasks containerRef={elTimeline} />
+						<TasksTimeline containerRef={elTimeline} />
 					</div>
 				</div>
 			</div>

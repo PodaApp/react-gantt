@@ -14,6 +14,7 @@ import {
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 
 import { GRID_WIDTH } from "../constants";
+import { useTrackTaskPositions } from "../hooks/useTrackTaskPositions";
 import { useGanttStore } from "../store/ganttStore";
 import { ITask, ITaskWithDate } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
@@ -26,12 +27,15 @@ const activationConstraint = {
 };
 
 type Props = {
-	tasks: ITask[];
 	containerRef: RefObject<HTMLDivElement>;
 };
 
-export const TasksSortable: React.FC<Props> = ({ tasks, containerRef }) => {
+export const TasksSortable: React.FC<Props> = ({ containerRef }) => {
+	useTrackTaskPositions(containerRef);
+
 	const dateStart = useGanttStore.use.dateStart();
+	const tasks = useGanttStore.use.tasks();
+
 	const setTaskNewStart = useGanttStore.use.setTaskNewStart();
 	const setTasks = useGanttStore.use.setTasks();
 

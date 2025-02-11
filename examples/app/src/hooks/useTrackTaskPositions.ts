@@ -2,26 +2,10 @@ import { RefObject, useEffect } from "react";
 
 import { useGanttStore } from "../store/ganttStore";
 import { ITaskViewportPosition } from "../types";
-import { TaskNew } from "./TaskNew";
-import "./Tasks.css";
-import { TasksSortable } from "./TasksSortable";
-import { Today } from "./Today";
-import { Weekends } from "./Weekends";
 
-type Props = {
-	containerRef: RefObject<HTMLDivElement>;
-};
-
-/**
- * TODO:
- * - Move intersection obeserver logic into a hook
- * - Remove dependency on tasks
- * - Ensure that Weekends/Today don't re render when tasks are updated
- */
-export const Tasks = ({ containerRef }: Props) => {
-	const setOffscreenTasks = useGanttStore.use.setTaskPositions();
-
+export const useTrackTaskPositions = (containerRef: RefObject<HTMLDivElement>) => {
 	const tasks = useGanttStore.use.tasks();
+	const setOffscreenTasks = useGanttStore.use.setTaskPositions();
 
 	useEffect(() => {
 		if (!containerRef.current) {
@@ -97,15 +81,4 @@ export const Tasks = ({ containerRef }: Props) => {
 			observer.disconnect();
 		};
 	}, [tasks, containerRef, setOffscreenTasks]);
-
-	return (
-		<div className="tasks">
-			<TasksSortable tasks={tasks} containerRef={containerRef} />
-			<Today />
-			<Weekends />
-			<div className="tasks__addNew">
-				<TaskNew containerRef={containerRef} />
-			</div>
-		</div>
-	);
 };
