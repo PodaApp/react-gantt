@@ -1,3 +1,4 @@
+import { arrayMove } from "@dnd-kit/sortable";
 import { add, differenceInDays, sub } from "date-fns";
 import { produce } from "immer";
 import { create } from "zustand";
@@ -6,6 +7,7 @@ import { tasks as mockTasks } from "../__fixtures__/tasks";
 import { GANTT_NEW_TASK_SIZE_DAYS, GANTT_WIDTH_MONTHS } from "../constants";
 import { createSelectors } from "../shared/zustand/createSelectors";
 import { ITask, ITaskViewportPosition, ITaskWithDate } from "../types";
+import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { getDateRangeFromOffset } from "../utils/getDateRangeFromOffset";
 import { getOffsetFromDate } from "../utils/getOffsetFromDate";
 
@@ -23,15 +25,13 @@ export type GanttStoreState = {
 
 	taskEditingId: ITask["id"] | null;
 	taskFocusedId: ITask["id"] | null;
+	taskOverPosition: { id: string | undefined; position: "before" | "after" } | null;
 
 	tasks: ITask[];
 	tasksPosition: Record<string, ITaskViewportPosition>;
 };
 
 type GanttStoreActions = {
-	createTask: (start: Date, end: Date) => void;
-	createTaskAtIndex: (index: number) => void;
-	createTaskAtEnd: () => void;
 	scheduleTask: (id: ITask["id"] | undefined, offsetX: number) => void;
 	scheduleTaskClear: () => void;
 	scheduleTaskConfirm: (id?: ITask["id"]) => void;
@@ -44,11 +44,15 @@ type GanttStoreActions = {
 	setTaskDateStart: (id: string, start: Date) => void;
 	setTaskEditing: (id: GanttStoreState["taskEditingId"]) => void;
 	setTaskFocused: (task: ITaskWithDate) => void;
-	setTaskNewStart: (id: string, start: Date) => void;
 	setTaskPositions: (id: string, options: Partial<ITaskViewportPosition>) => void;
 	setTaskRange: (id: string, start: Date, end: Date) => void;
-	setTaskTitle: (id: string, title: string | undefined) => void;
 	setTasks: (tasks: GanttStoreState["tasks"]) => void;
+	setTaskTitle: (id: string, title: string | undefined) => void;
+	taskCreate: (start: Date, end: Date) => void;
+	taskCreateAtEnd: () => void;
+	taskCreateAtIndex: (index: number) => void;
+	taskUpdateSchedule: (id: string, offset: number) => void;
+	taskUpdateRank: (id: string, overId: string) => void;
 };
 
 export type IGanttStore = GanttStoreState & GanttStoreActions;
@@ -67,6 +71,7 @@ const store = create<IGanttStore>((set, get) => ({
 	taskEditingId: null,
 	taskFocusedId: null,
 	tasksPosition: {},
+	taskOverPosition: null,
 	ganttTaskListOpen: false,
 	ganttSchedulingTaskPosition: null,
 	setGantt: (dateCentered) => {
@@ -119,7 +124,7 @@ const store = create<IGanttStore>((set, get) => ({
 		});
 	},
 
-	createTask: (start, end) => {
+	taskCreate: (start, end) => {
 		const { tasks } = get();
 
 		const newTask: ITask = {
@@ -138,7 +143,7 @@ const store = create<IGanttStore>((set, get) => ({
 		});
 	},
 
-	createTaskAtIndex: (index) => {
+	taskCreateAtIndex: (index) => {
 		const { tasks } = get();
 
 		const newTask: ITask = {
@@ -158,10 +163,23 @@ const store = create<IGanttStore>((set, get) => ({
 		});
 	},
 
-	createTaskAtEnd: () => {
-		const { tasks, createTaskAtIndex } = get();
+	taskCreateAtEnd: () => {
+		const { tasks, taskCreateAtIndex: createTaskAtIndex } = get();
 		const index = tasks.length;
 		createTaskAtIndex(index);
+	},
+
+	taskUpdateRank: (id, overId) => {
+		const { tasks, setTasks } = get();
+
+		const activeIndex = tasks.findIndex((task) => task.id === id);
+		const overIndex = tasks.findIndex((task) => task.id === overId);
+
+		if (activeIndex === overIndex) {
+			return;
+		}
+
+		setTasks(arrayMove(tasks, activeIndex, overIndex));
 	},
 
 	scheduleTask: (id, offsetX) => {
@@ -188,7 +206,7 @@ const store = create<IGanttStore>((set, get) => ({
 	},
 
 	scheduleTaskConfirm: (taskId) => {
-		const { ganttSchedulingTaskPosition: taskPosition, ganttDateStart, setTaskRange, createTask } = get();
+		const { ganttSchedulingTaskPosition: taskPosition, ganttDateStart, setTaskRange, taskCreate: createTask } = get();
 
 		if (taskPosition === null) {
 			return;
@@ -241,19 +259,29 @@ const store = create<IGanttStore>((set, get) => ({
 		setTask(id, { ...current, start, end });
 	},
 
-	setTaskNewStart: (id, newStart) => {
-		const { tasks, setTask } = get();
+	taskUpdateSchedule: (id, offset) => {
+		const { ganttDateStart, tasks, setTask } = get();
 
-		const current = tasks.find((task) => task.id === id);
+		const task = tasks.find((task) => task.id === id);
 
-		if (!current?.start || !current?.end) {
-			throw new Error("Task must have start and end date");
+		if (!task) {
+			throw new Error("Task not found");
 		}
 
-		const deltaDays = differenceInDays(newStart, current.start);
-		const newEnd = add(current.end, { days: deltaDays });
+		if (!task.start || !task.end) {
+			throw new Error(`Task ${id} must have start and end date`);
+		}
 
-		setTask(id, { ...current, start: newStart, end: newEnd });
+		const newStart = getDateFromOffset(offset, ganttDateStart);
+
+		if (newStart.getTime() === task.start.getTime()) {
+			return;
+		}
+
+		const deltaDays = differenceInDays(newStart, task.start);
+		const newEnd = add(task.end, { days: deltaDays });
+
+		setTask(id, { ...task, start: newStart, end: newEnd });
 	},
 
 	// TODO: Merge task setters into single method

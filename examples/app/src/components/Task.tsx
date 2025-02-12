@@ -3,11 +3,12 @@ import { RefObject } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import classNames from "classnames";
 
-import { ITask, ITaskWithDate } from "../types";
-import { NewTask } from "./NewTask";
+import { useTrackTaskPositions } from "../hooks/useTrackTaskPositions";
+import { ITask } from "../types";
+import { isTaskWithDate } from "../utils/isTaskWithDate";
 import "./Task.css";
 import { TaskWithDate } from "./TaskWithDate";
-import "./TaskWithDate.css";
+import { TaskWithoutDate } from "./TaskWithoutDate";
 
 type Props = {
 	task: ITask;
@@ -16,6 +17,8 @@ type Props = {
 };
 
 export const Task = ({ task, activeIndex, containerRef }: Props) => {
+	useTrackTaskPositions(containerRef);
+
 	const { over, index, attributes, isDragging, listeners, setNodeRef } = useSortable({ id: task.id, data: task });
 
 	const markerPosition = _calculateMarkerPosition(task.id, over?.id.toString(), index, activeIndex);
@@ -29,17 +32,13 @@ export const Task = ({ task, activeIndex, containerRef }: Props) => {
 		"taskWithDate__marker--before": markerPosition === "before",
 	});
 
-	const isOnTimeline = task.start !== null && task.end !== null;
-	const isCreating = task.creating;
-
-	const showAddToTimeline = !isOnTimeline && !isCreating;
 	return (
 		<div className="task" ref={setNodeRef}>
-			{showAddToTimeline ? (
-				<NewTask taskId={task.id} />
+			{!isTaskWithDate(task) ? (
+				<TaskWithoutDate task={task} />
 			) : (
 				<div {...attributes} {...listeners} className={draggableContainerClassName}>
-					<TaskWithDate task={task as ITaskWithDate} activeIndex={activeIndex} containerRef={containerRef} />
+					<TaskWithDate task={task} activeIndex={activeIndex} containerRef={containerRef} />
 				</div>
 			)}
 			<div className={draggableMarkerClassName} />

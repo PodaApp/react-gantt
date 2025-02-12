@@ -49,7 +49,7 @@ export const TaskContent = ({ task, containerRef }: TaskProps) => {
 	const cordoinantesEnd = stickyPosition ? { x: stickyPosition?.right - 30, y: stickyPosition?.top } : null;
 
 	const showTitleStatic = !isOverflowLeft && !task.creating;
-	const showTitleInput = task.creating && task.start && task.end;
+	const showTitleInput = task.creating;
 
 	return (
 		<>

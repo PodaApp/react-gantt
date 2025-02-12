@@ -18,7 +18,7 @@ export const TaskTableTask = ({ task, index }: Props) => {
 	const taskEditingId = useGanttStore.use.taskEditingId();
 
 	const setTaskEditing = useGanttStore.use.setTaskEditing();
-	const createTaskAtIndex = useGanttStore.use.createTaskAtIndex();
+	const createTaskAtIndex = useGanttStore.use.taskCreateAtIndex();
 
 	const handleSetEditing = useCallback(() => {
 		setTaskEditing(task.id);
