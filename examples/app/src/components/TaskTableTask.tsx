@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import { useSortable } from "@dnd-kit/sortable";
 import classNames from "classnames";
 
 import IconGrip from "../assets/grip-vertical.svg?react";
@@ -7,6 +8,7 @@ import IconPlus from "../assets/plus.svg?react";
 import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
 import "./TaskTableTask.css";
+import { TaskTableTaskTitle } from "./TaskTableTaskTitle";
 import { TaskTitleInline } from "./TaskTitleInline";
 
 type Props = {
@@ -32,6 +34,8 @@ export const TaskTableTask = ({ task, index }: Props) => {
 		createTaskAtIndex(index + 1);
 	}, [createTaskAtIndex, index]);
 
+	const { active, attributes, listeners, setNodeRef } = useSortable({ id: task.id, data: task });
+
 	// TODO: This caauses all the tasks in the task table to re render. Current this is used
 	// to hide the action buttons so that they don't render when a tasks is being created.
 	const isEditing = taskEditingId !== null;
@@ -42,25 +46,22 @@ export const TaskTableTask = ({ task, index }: Props) => {
 	});
 
 	const showInput = isEditingSelf || (task.creating && !task.end && !task.start);
+	const showActions = !active && !isEditing;
 
 	return (
-		<div className={taskClassName}>
-			{!showInput && (
-				<div className="taskTableTask__title" onClick={handleSetEditing}>
-					<span>{task.title}</span>
-				</div>
-			)}
+		<div className={taskClassName} ref={setNodeRef}>
+			{!showInput && <TaskTableTaskTitle title={task.title} onClick={handleSetEditing} />}
 			{showInput && (
 				<div className="taskTableTask__textarea">
 					<TaskTitleInline id={task.id} title={task.title} onComplete={handleFinishEditing} />
 				</div>
 			)}
-			{!isEditing && (
+			{showActions && (
 				<div className="taskTableTask__actions">
 					<button className="taskTableTask__action action" onClick={handleAddTask}>
 						<IconPlus />
 					</button>
-					<button className="taskTableTask__action action">
+					<button className="taskTableTask__action action" {...attributes} {...listeners}>
 						<IconGrip />
 					</button>
 				</div>

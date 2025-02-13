@@ -14,6 +14,10 @@ import { getOffsetFromDate } from "../utils/getOffsetFromDate";
 type TaskDate = Date | null;
 
 export type GanttStoreState = {
+	draggingActiveIndex: number | null;
+	draggingOverId: string | null;
+	draggingTask: ITask | null;
+
 	gantDateCentered: Date;
 	ganttDateEnd: Date;
 	ganttDateStart: Date;
@@ -35,24 +39,26 @@ type GanttStoreActions = {
 	scheduleTask: (id: ITask["id"] | undefined, offsetX: number) => void;
 	scheduleTaskClear: () => void;
 	scheduleTaskConfirm: (id?: ITask["id"]) => void;
+	setDragActive: (task: ITask | null) => void;
+	setDragOverId: (overId: ITask["id"] | null) => void;
 	setGantt: (dateCentered: Date) => void;
 	setGanttTaskListOpen: (open: boolean) => void;
 	setHeaderMonth: (month: GanttStoreState["headerMonth"]) => void;
 	setHeaderTaskRange: (start: TaskDate, end: TaskDate) => void;
-	setTask: (id: string, partialTask: ITask) => void;
-	setTaskDateEnd: (id: string, end: Date) => void;
-	setTaskDateStart: (id: string, start: Date) => void;
-	setTaskEditing: (id: GanttStoreState["taskEditingId"]) => void;
+	setTask: (id: ITask["id"], partialTask: ITask) => void;
+	setTaskDateEnd: (id: ITask["id"], end: Date) => void;
+	setTaskDateStart: (id: ITask["id"], start: Date) => void;
+	setTaskEditing: (id: ITask["id"] | null) => void;
 	setTaskFocused: (task: ITaskWithDate) => void;
-	setTaskPositions: (id: string, options: Partial<ITaskViewportPosition>) => void;
-	setTaskRange: (id: string, start: Date, end: Date) => void;
+	setTaskPositions: (id: ITask["id"], options: Partial<ITaskViewportPosition>) => void;
+	setTaskRange: (id: ITask["id"], start: Date, end: Date) => void;
 	setTasks: (tasks: GanttStoreState["tasks"]) => void;
-	setTaskTitle: (id: string, title: string | undefined) => void;
+	setTaskTitle: (id: ITask["id"], title: string | undefined) => void;
 	taskCreate: (start: Date, end: Date) => void;
 	taskCreateAtEnd: () => void;
 	taskCreateAtIndex: (index: number) => void;
-	taskUpdateSchedule: (id: string, offset: number) => void;
-	taskUpdateRank: (id: string, overId: string) => void;
+	taskUpdateRank: (id: ITask["id"], overId: string) => void;
+	taskUpdateSchedule: (id: ITask["id"], offset: number) => void;
 };
 
 export type IGanttStore = GanttStoreState & GanttStoreActions;
@@ -62,18 +68,21 @@ const dodgyGuid = () => Math.floor(Math.random() * 1000000).toString();
 const today = Object.freeze(new Date());
 
 const store = create<IGanttStore>((set, get) => ({
+	draggingActiveIndex: null,
+	draggingOverId: null,
+	draggingTask: null,
 	gantDateCentered: today,
 	ganttDateEnd: add(today, { months: GANTT_WIDTH_MONTHS }),
 	ganttDateStart: sub(today, { months: GANTT_WIDTH_MONTHS }),
+	ganttSchedulingTaskPosition: null,
+	ganttTaskListOpen: true,
 	headerMonth: null,
 	headerTaskRange: [null, null],
-	tasks: mockTasks,
 	taskEditingId: null,
 	taskFocusedId: null,
-	tasksPosition: {},
 	taskOverPosition: null,
-	ganttTaskListOpen: false,
-	ganttSchedulingTaskPosition: null,
+	tasks: mockTasks,
+	tasksPosition: {},
 	setGantt: (dateCentered) => {
 		set({
 			gantDateCentered: Object.freeze(dateCentered),
@@ -81,6 +90,14 @@ const store = create<IGanttStore>((set, get) => ({
 			ganttDateStart: Object.freeze(sub(dateCentered, { months: GANTT_WIDTH_MONTHS })),
 		});
 	},
+
+	setDragActive: (task) => {
+		const { tasks } = get();
+		const index = tasks.findIndex((t) => t.id === task?.id);
+
+		set({ draggingActiveIndex: index, draggingTask: task, ...(task === null && { draggingOverId: null }) });
+	},
+	setDragOverId: (id) => set({ draggingOverId: id }),
 
 	setHeaderMonth: (headerMonth) => set({ headerMonth }),
 

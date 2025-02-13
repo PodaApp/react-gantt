@@ -9,7 +9,7 @@ import "./TaskWithDate.css";
 
 type Props = {
 	task: ITaskWithDate;
-	activeIndex: number;
+	activeIndex: number | null;
 	containerRef: RefObject<HTMLDivElement>;
 };
 

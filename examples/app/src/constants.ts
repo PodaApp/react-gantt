@@ -9,3 +9,9 @@ export const GANTT_JUMP_TO_TASK_PADDING_DAYS = 5;
 
 export const DATE_FORMAT_SHORT_MONTH = "MMM dd, yyyy";
 export const DATE_FORMAT_SHORT_MONTH_NO_YEAR = "MMM dd";
+
+export const DRAG_SENSOR_CONFIG = {
+	activationConstraint: {
+		distance: 5,
+	},
+};

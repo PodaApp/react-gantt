@@ -4,6 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import classNames from "classnames";
 
 import { useTrackTaskPositions } from "../hooks/useTrackTaskPositions";
+import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
 import { isTaskWithDate } from "../utils/isTaskWithDate";
 import "./Task.css";
@@ -12,16 +13,18 @@ import { TaskWithoutDate } from "./TaskWithoutDate";
 
 type Props = {
 	task: ITask;
-	activeIndex: number;
 	containerRef: RefObject<HTMLDivElement>;
 };
 
-export const Task = ({ task, activeIndex, containerRef }: Props) => {
+export const Task = ({ task, containerRef }: Props) => {
 	useTrackTaskPositions(containerRef);
 
-	const { over, index, attributes, isDragging, listeners, setNodeRef } = useSortable({ id: task.id, data: task });
+	const draggingIndex = useGanttStore.use.draggingActiveIndex();
+	const overId = useGanttStore.use.draggingOverId();
 
-	const markerPosition = _calculateMarkerPosition(task.id, over?.id.toString(), index, activeIndex);
+	const { index, attributes, isDragging, listeners, setNodeRef } = useSortable({ id: task.id, data: task });
+
+	const markerPosition = _calculateMarkerPosition(task.id, index, overId, draggingIndex);
 
 	const draggableContainerClassName = classNames({
 		"taskWithDate__draggable--dragging": isDragging,
@@ -38,7 +41,7 @@ export const Task = ({ task, activeIndex, containerRef }: Props) => {
 				<TaskWithoutDate task={task} />
 			) : (
 				<div {...attributes} {...listeners} className={draggableContainerClassName}>
-					<TaskWithDate task={task} activeIndex={activeIndex} containerRef={containerRef} />
+					<TaskWithDate task={task} activeIndex={draggingIndex} containerRef={containerRef} />
 				</div>
 			)}
 			<div className={draggableMarkerClassName} />
@@ -46,9 +49,9 @@ export const Task = ({ task, activeIndex, containerRef }: Props) => {
 	);
 };
 
-const _calculateMarkerPosition = (taskId: string, overId: string | undefined, currentIndex: number, activeIndex: number) => {
-	if (taskId !== overId || !overId || currentIndex === activeIndex) {
-		return undefined;
+const _calculateMarkerPosition = (currentId: string, currentIndex: number, overId: string | null, activeIndex: number | null) => {
+	if (activeIndex === null || currentId !== overId || overId === null || currentIndex === activeIndex) {
+		return "";
 	}
 
 	return currentIndex > activeIndex ? "after" : "before";

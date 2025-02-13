@@ -1,0 +1,4 @@
+.taskTableDragOverlay {
+	border-bottom: none !important;
+	opacity: 0.4;
+}

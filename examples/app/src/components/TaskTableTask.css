@@ -17,7 +17,6 @@
 }
 
 .taskTableTask__actions {
-	visibility: hidden;
 	position: absolute;
 	top: auto;
 	left: 0;
@@ -29,8 +28,8 @@
 	transition: opacity 200ms ease-in-out;
 }
 
+.taskTableTask__actions:hover,
 .taskTableTask:hover .taskTableTask__actions {
-	visibility: visible;
 	opacity: 1;
 }
 
