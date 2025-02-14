@@ -1,5 +1,6 @@
 import { MouseEvent, useCallback, useRef } from "react";
 
+import { TASK_ID_UNCOMMITED } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
 import { NewTaskPlaceholder } from "./NewTaskPlaceholder";
@@ -12,6 +13,8 @@ type Props = {
 export const TaskWithoutDate = ({ task }: Props) => {
 	const taskNewRef = useRef<HTMLDivElement>(null);
 
+	const taskId = task?.id || TASK_ID_UNCOMMITED;
+
 	const scheduleTask = useGanttStore.use.scheduleTask();
 	const scheduleTaskClear = useGanttStore.use.scheduleTaskClear();
 	const scheduleTaskConfirm = useGanttStore.use.scheduleTaskConfirm();
@@ -22,10 +25,10 @@ export const TaskWithoutDate = ({ task }: Props) => {
 				const rectTask = taskNewRef.current.getBoundingClientRect();
 				const offsetX = event.clientX - rectTask.left;
 
-				scheduleTask(task?.id, offsetX);
+				scheduleTask(taskId, offsetX);
 			}
 		},
-		[scheduleTask, task?.id],
+		[scheduleTask, taskId],
 	);
 
 	const handleMouseLeave = useCallback(() => {
@@ -33,8 +36,8 @@ export const TaskWithoutDate = ({ task }: Props) => {
 	}, [scheduleTaskClear]);
 
 	const handleClick = useCallback(() => {
-		scheduleTaskConfirm(task?.id);
-	}, [scheduleTaskConfirm, task?.id]);
+		scheduleTaskConfirm(taskId);
+	}, [scheduleTaskConfirm, taskId]);
 
 	if (task && task.creating) {
 		return null;
@@ -42,7 +45,7 @@ export const TaskWithoutDate = ({ task }: Props) => {
 
 	return (
 		<div className="taskWithoutDate" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} onClick={handleClick} ref={taskNewRef}>
-			<NewTaskPlaceholder taskId={task?.id} />
+			<NewTaskPlaceholder taskId={taskId} />
 		</div>
 	);
 };

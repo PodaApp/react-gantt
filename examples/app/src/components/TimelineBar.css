@@ -1,0 +1,4 @@
+.timelineBar {
+	width: var(--task-width);
+	transform: translateX(var(--task-x));
+}

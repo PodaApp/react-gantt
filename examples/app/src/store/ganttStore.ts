@@ -4,12 +4,11 @@ import { produce } from "immer";
 import { create } from "zustand";
 
 import { tasks as mockTasks } from "../__fixtures__/tasks";
-import { GANTT_NEW_TASK_SIZE_DAYS, GANTT_WIDTH_MONTHS } from "../constants";
+import { GANTT_NEW_TASK_SIZE_DAYS, GANTT_WIDTH_MONTHS, TASK_ID_UNCOMMITED } from "../constants";
 import { createSelectors } from "../shared/zustand/createSelectors";
 import { ITask, ITaskViewportPosition, ITaskWithDate } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { getDateRangeFromOffset } from "../utils/getDateRangeFromOffset";
-import { getOffsetFromDate } from "../utils/getOffsetFromDate";
 
 type TaskDate = Date | null;
 
@@ -22,7 +21,7 @@ export type GanttStoreState = {
 	ganttDateEnd: Date;
 	ganttDateStart: Date;
 	ganttTaskListOpen: boolean;
-	ganttSchedulingTaskPosition: { id: string | undefined; x: number } | null;
+	ganttSchedulingTask: string | null;
 
 	headerMonth: string | null;
 	headerTaskRange: [TaskDate, TaskDate];
@@ -38,7 +37,7 @@ export type GanttStoreState = {
 type GanttStoreActions = {
 	scheduleTask: (id: ITask["id"] | undefined, offsetX: number) => void;
 	scheduleTaskClear: () => void;
-	scheduleTaskConfirm: (id?: ITask["id"]) => void;
+	scheduleTaskConfirm: (id: ITask["id"]) => void;
 	setDragActive: (task: ITask | null) => void;
 	setDragOverId: (overId: ITask["id"] | null) => void;
 	setGantt: (dateCentered: Date) => void;
@@ -74,7 +73,7 @@ const store = create<IGanttStore>((set, get) => ({
 	gantDateCentered: today,
 	ganttDateEnd: add(today, { months: GANTT_WIDTH_MONTHS }),
 	ganttDateStart: sub(today, { months: GANTT_WIDTH_MONTHS }),
-	ganttSchedulingTaskPosition: null,
+	ganttSchedulingTask: null,
 	ganttTaskListOpen: true,
 	headerMonth: null,
 	headerTaskRange: [null, null],
@@ -200,38 +199,36 @@ const store = create<IGanttStore>((set, get) => ({
 	},
 
 	scheduleTask: (id, offsetX) => {
-		const { ganttDateStart, ganttSchedulingTaskPosition } = get();
+		const { ganttDateStart, headerTaskRange } = get();
 
 		const [start, end] = getDateRangeFromOffset(offsetX, ganttDateStart, GANTT_NEW_TASK_SIZE_DAYS);
-		const nextX = getOffsetFromDate(start, ganttDateStart);
 
-		if (nextX === ganttSchedulingTaskPosition?.x) {
+		if (start === headerTaskRange[0]) {
 			return;
 		}
 
 		set({
-			ganttSchedulingTaskPosition: { id, x: nextX },
+			ganttSchedulingTask: id || null,
 			headerTaskRange: [start, end],
 		});
 	},
 
 	scheduleTaskClear: () => {
 		set({
-			ganttSchedulingTaskPosition: null,
+			ganttSchedulingTask: null,
 			headerTaskRange: [null, null],
 		});
 	},
 
 	scheduleTaskConfirm: (taskId) => {
-		const { ganttSchedulingTaskPosition: taskPosition, ganttDateStart, setTaskRange, taskCreate: createTask } = get();
+		const { ganttSchedulingTask, headerTaskRange, setTaskRange, taskCreate: createTask } = get();
+		const [start, end] = headerTaskRange;
 
-		if (taskPosition === null) {
+		if (!ganttSchedulingTask || !start || !end) {
 			return;
 		}
 
-		const [start, end] = getDateRangeFromOffset(taskPosition.x, ganttDateStart, GANTT_NEW_TASK_SIZE_DAYS);
-
-		if (taskId) {
+		if (taskId !== TASK_ID_UNCOMMITED) {
 			setTaskRange(taskId, start, end);
 		} else {
 			createTask(start, end);

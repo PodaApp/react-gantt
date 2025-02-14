@@ -1,11 +1,11 @@
 import { differenceInDays } from "date-fns";
 
 import { GRID_WIDTH } from "../constants";
-import { ITaskOffset, ITaskWithDate } from "../types";
+import { ITaskOffset } from "../types";
 
-export const getTaskPosition = (ganttStart: Date, task: ITaskWithDate): ITaskOffset => {
-	const rangeOffset = differenceInDays(task.start, ganttStart);
-	const rangeLength = differenceInDays(task.end, task.start) + 1;
+export const getTaskPosition = (ganttStart: Date, start: Date, end: Date): ITaskOffset => {
+	const rangeOffset = differenceInDays(start, ganttStart);
+	const rangeLength = differenceInDays(end, start) + 1;
 
 	return { width: rangeLength * GRID_WIDTH, x: rangeOffset * GRID_WIDTH };
 };

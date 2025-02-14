@@ -1,6 +1,6 @@
 import { RefObject, useCallback, useState } from "react";
 
-import { DndContext, DragEndEvent, DragMoveEvent, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragMoveEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 
 import { DRAG_SENSOR_CONFIG, GANTT_SNAP_LEFT_MIN, GRID_WIDTH } from "../constants";
@@ -86,7 +86,7 @@ export const Tasks: React.FC<Props> = ({ containerRef }) => {
 					<Task task={task} containerRef={containerRef} key={task.id} />
 				))}
 			</SortableContext>
-			<TaskDragOverlay task={dragging} dateStart={dateStart} />
+			<DragOverlay dropAnimation={null}>{dragging && <TaskDragOverlay task={dragging} />}</DragOverlay>
 		</DndContext>
 	);
 };

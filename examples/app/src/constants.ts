@@ -15,3 +15,5 @@ export const DRAG_SENSOR_CONFIG = {
 		distance: 5,
 	},
 };
+
+export const TASK_ID_UNCOMMITED = "scheduling";
