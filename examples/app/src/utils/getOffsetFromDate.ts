@@ -1,8 +1,8 @@
 import { differenceInDays } from "date-fns";
 
-import { GRID_WIDTH } from "../constants";
+import { getWidthFromDays } from "./getWidthFromDays";
 
 export const getOffsetFromDate = (taskStart: Date, ganttStart: Date): number => {
-	const difference = differenceInDays(taskStart, ganttStart);
-	return difference * GRID_WIDTH;
+	const daysToDate = differenceInDays(taskStart, ganttStart);
+	return getWidthFromDays(daysToDate);
 };

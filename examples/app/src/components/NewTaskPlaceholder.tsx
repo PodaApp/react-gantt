@@ -1,9 +1,6 @@
-import { GANTT_NEW_TASK_SIZE_DAYS, GRID_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
 import { TimelineBar } from "./TimelineBar";
-
-export const mockWidth = GANTT_NEW_TASK_SIZE_DAYS * GRID_WIDTH;
 
 type Props = {
 	taskId?: ITask["id"];

@@ -3,68 +3,58 @@ import { ReactNode, useCallback, useState } from "react";
 import { DndContext, DragMoveEvent, DragStartEvent } from "@dnd-kit/core";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
-import { GRID_WIDTH } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
-import { ITaskOffset, ITaskWithDate } from "../types";
+import { ITaskWithDate } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
+import { getRangeWidth } from "../utils/getRangeWidth";
 import { TaskDraggableHandle } from "./TaskDraggableHandle";
 
 type Props = {
 	task: ITaskWithDate;
-	position: ITaskOffset;
 	children: ReactNode;
 };
 
-export const TaskDraggable = ({ task, position, children }: Props) => {
+const ERROR_MISSING_DATA = "Drag handler missing required information";
+
+export const TaskDraggable = ({ task, children }: Props) => {
 	const dateStart = useGanttStore.use.ganttDateStart();
 	const setTaskStart = useGanttStore.use.setTaskDateStart();
 	const setTaskEnd = useGanttStore.use.setTaskDateEnd();
 
-	const [initialPosition, setInitialPosition] = useState<Props["position"] | null>(null);
-
-	const { width, x } = position;
+	const [initialWidth, setInitialWidth] = useState<number>(0);
 
 	const handleDragStart = useCallback(
 		(event: DragStartEvent) => {
 			event.activatorEvent.preventDefault();
-			setInitialPosition({ width, x });
+			setInitialWidth(getRangeWidth(task.start, task.end));
 		},
-		[width, x],
+		[task],
 	);
 
 	const handleDragTask = useCallback(
 		(event: DragMoveEvent) => {
-			event.activatorEvent.preventDefault();
+			const activatorEvent = event.activatorEvent as PointerEvent;
+			activatorEvent.preventDefault();
 			const direction = event.active.data.current?.direction;
 
 			if (!direction) {
-				throw new Error("TaskDraggableHandle missing direction data");
+				throw new Error(ERROR_MISSING_DATA);
 			}
 
-			if (!initialPosition) {
-				throw new Error("TaskDraggableHandle missing cached position");
-			}
-
-			// TODO: use new util method getDateFromOffset
-			// Calculate the left position of the element relative to the container
-			const relativeLeft = initialPosition.x + event.delta.x;
-			const draggedPosition = Math.ceil(relativeLeft / GRID_WIDTH) * GRID_WIDTH;
-			const delta = direction === "left" ? initialPosition.x - draggedPosition : draggedPosition - initialPosition.x;
-
-			const leftEdge = initialPosition.x - delta;
-			const edgeRight = initialPosition.x + initialPosition.width + delta - GRID_WIDTH;
-
-			const start = getDateFromOffset(leftEdge, dateStart);
-			const end = getDateFromOffset(edgeRight, dateStart);
+			/**
+			 * LayerX is condidered a non standard property and may not behave consistently in all
+			 * browsers https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/layerX
+			 */
 
 			if (direction === "left") {
-				setTaskStart(task.id, start);
-				return;
+				const x = activatorEvent.layerX + event.delta.x;
+				setTaskStart(task.id, getDateFromOffset(x, dateStart));
+			} else {
+				const x = activatorEvent.layerX + initialWidth + event.delta.x;
+				setTaskEnd(task.id, getDateFromOffset(x, dateStart));
 			}
-
-			setTaskEnd(task.id, end);
 		},
-		[dateStart, initialPosition, setTaskEnd, setTaskStart, task.id],
+		[dateStart, initialWidth, setTaskEnd, setTaskStart, task.id],
 	);
 
 	return (

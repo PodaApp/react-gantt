@@ -1,4 +1,4 @@
-import { GRID_WIDTH } from "../constants";
+import { getWidthFromDays } from "../utils/getWidthFromDays";
 import "./weekend.css";
 
 type Props = {
@@ -6,7 +6,7 @@ type Props = {
 };
 
 export const Weekend = ({ daysOffset = 0 }: Props) => {
-	const x = daysOffset * GRID_WIDTH;
+	const x = getWidthFromDays(daysOffset);
 
 	return <div className="weekend" style={{ transform: `translateX(${x}px)` }} />;
 };

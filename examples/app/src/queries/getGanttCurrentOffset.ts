@@ -1,9 +1,7 @@
-import { differenceInDays } from "date-fns";
-
-import { GRID_WIDTH } from "../constants";
 import { GanttStoreState } from "../store/ganttStore";
+import { getOffsetFromDate } from "../utils/getOffsetFromDate";
 
 export const getGanttCurrentOffset = (store: GanttStoreState) => {
-	const daysToCurrent = differenceInDays(store.gantDateCentered, store.ganttDateStart) + 1;
-	return daysToCurrent * GRID_WIDTH;
+	const { gantDateCentered, ganttDateStart } = store;
+	return getOffsetFromDate(gantDateCentered, ganttDateStart);
 };

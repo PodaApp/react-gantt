@@ -1,4 +1,3 @@
-import { TASK_ID_UNCOMMITED } from "../constants";
 import { GanttStoreState, useGanttStore } from "../store/ganttStore";
 import { NewTaskButton } from "./NewTaskButton";
 
@@ -13,5 +12,5 @@ export const TasksTimelineNewTask = () => {
 };
 
 const _isVisible = (state: GanttStoreState) => {
-	return state.ganttSchedulingTask === null || state.ganttSchedulingTask !== TASK_ID_UNCOMMITED;
+	return state.ganttSchedulingTask === null;
 };

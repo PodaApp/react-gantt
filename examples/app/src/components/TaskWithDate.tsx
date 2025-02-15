@@ -14,15 +14,10 @@ type Props = {
 
 export const TaskWithDate = ({ task, containerRef }: Props) => {
 	return (
-		<TimelineBar
-			className="taskWithDate__bar"
-			start={task.start}
-			end={task.end}
-			render={(taskPosition) => (
-				<TaskDraggable task={task} position={taskPosition}>
-					<TaskContent task={task} containerRef={containerRef} />
-				</TaskDraggable>
-			)}
-		/>
+		<TimelineBar className="taskWithDate__bar" start={task.start} end={task.end}>
+			<TaskDraggable task={task}>
+				<TaskContent task={task} containerRef={containerRef} />
+			</TaskDraggable>
+		</TimelineBar>
 	);
 };

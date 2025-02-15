@@ -3,9 +3,10 @@ import { RefObject, useCallback, useRef } from "react";
 import classNames from "classnames";
 import { createPortal } from "react-dom";
 
-import { GANTT_JUMP_TO_TASK_PADDING_DAYS, GRID_WIDTH } from "../constants";
+import { GANTT_JUMP_TO_TASK_PADDING_DAYS } from "../constants";
 import { GanttStoreState, useGanttStore } from "../store/ganttStore";
 import { ITaskWithDate } from "../types";
+import { getWidthFromDays } from "../utils/getWidthFromDays";
 import "./TaskContent.css";
 import { TaskOverflow, TaskOverflowDirection, TaskOverflowOnClick } from "./TaskOverflow";
 import { TaskStatic } from "./TaskStatic";
@@ -93,9 +94,11 @@ const _scrollToPosition = (direction: TaskOverflowDirection, container: HTMLElem
 	const containerRect = container.getBoundingClientRect();
 	const taskRect = task.getBoundingClientRect();
 
+	const paddingWidth = getWidthFromDays(GANTT_JUMP_TO_TASK_PADDING_DAYS);
+
 	const xPosition: { left: number; right: number } = {
-		left: taskRect.left - containerRect.left + container.scrollLeft - GANTT_JUMP_TO_TASK_PADDING_DAYS * GRID_WIDTH,
-		right: taskRect.right - containerRect.left - containerRect.width + container.scrollLeft + GANTT_JUMP_TO_TASK_PADDING_DAYS * GRID_WIDTH,
+		left: taskRect.left - containerRect.left + container.scrollLeft - paddingWidth,
+		right: taskRect.right - containerRect.left - containerRect.width + container.scrollLeft + paddingWidth,
 	};
 
 	container.scrollTo({
