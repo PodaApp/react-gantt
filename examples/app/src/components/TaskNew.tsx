@@ -1,10 +1,9 @@
 import { MouseEvent, useCallback, useRef, useState } from "react";
 
 import { GANTT_NEW_TASK_SIZE_DAYS } from "../constants";
+import { useTaskPosition } from "../hooks/useTaskPosition";
 import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
-import { getDateRangeFromOffset } from "../utils/getDateRangeFromOffset";
-import { getOffsetFromDate } from "../utils/getOffsetFromDate";
 import { NewTaskPlaceholder } from "./NewTaskPlaceholder";
 import "./TaskNew.css";
 
@@ -15,7 +14,7 @@ type Props = {
 export const TaskNew = ({ taskId }: Props) => {
 	const taskNewRef = useRef<HTMLDivElement>(null);
 
-	const dateStart = useGanttStore.use.ganttDateStart();
+	const { getRangeFromOffset, getX } = useTaskPosition();
 
 	const taskCreate = useGanttStore.use.taskCreate();
 	const setDateRangeFocused = useGanttStore.use.setHeaderTaskRange();
@@ -32,13 +31,13 @@ export const TaskNew = ({ taskId }: Props) => {
 			const rectTask = taskNewRef.current.getBoundingClientRect();
 			const offsetX = event.clientX - rectTask.left;
 
-			const [start, end] = getDateRangeFromOffset(offsetX, dateStart, GANTT_NEW_TASK_SIZE_DAYS);
-			const x = getOffsetFromDate(start, dateStart);
+			const [start, end] = getRangeFromOffset(offsetX, GANTT_NEW_TASK_SIZE_DAYS);
+			const x = getX(start);
 
 			_setTimelineX(x);
 			setDateRangeFocused(start, end);
 		},
-		[setDateRangeFocused, dateStart],
+		[getRangeFromOffset, getX, setDateRangeFocused],
 	);
 
 	const handleMouseLeave = useCallback(() => {
@@ -51,14 +50,14 @@ export const TaskNew = ({ taskId }: Props) => {
 			return;
 		}
 
-		const dateRange = getDateRangeFromOffset(timelineX, dateStart, GANTT_NEW_TASK_SIZE_DAYS);
+		const dateRange = getRangeFromOffset(timelineX, GANTT_NEW_TASK_SIZE_DAYS);
 
 		if (taskId) {
 			setTaskRange(taskId, ...dateRange);
 		} else {
 			taskCreate(...dateRange);
 		}
-	}, [timelineX, dateStart, taskId, setTaskRange, taskCreate]);
+	}, [timelineX, getRangeFromOffset, taskId, setTaskRange, taskCreate]);
 
 	const showTaskbar = timelineX !== null;
 

@@ -2,9 +2,8 @@ import { ReactNode } from "react";
 
 import classNames from "classnames";
 
-import { useGanttStore } from "../store/ganttStore";
+import { useTaskPosition } from "../hooks/useTaskPosition";
 import { ITaskOffset } from "../types";
-import { getTaskPosition } from "../utils/getTaskPosition";
 import "./TimelineBar.css";
 
 type Props = {
@@ -16,9 +15,9 @@ type Props = {
 };
 
 export const TimelineBar = ({ start, end, children, className, render }: Props) => {
-	const dateStart = useGanttStore.use.ganttDateStart();
+	const { getTaskPosition } = useTaskPosition();
 
-	const timelinePosition = getTaskPosition(dateStart, start, end);
+	const timelinePosition = getTaskPosition(start, end);
 	const timelineClassName = classNames("timelineBar", className);
 
 	const timelineStyles = {

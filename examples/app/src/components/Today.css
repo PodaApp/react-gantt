@@ -1,20 +1,42 @@
 .today {
-    position:absolute;
-    top: -2px;
-    height: 30vh;
-    width: 1px;
-    height: calc(100% + 2px);
-    background: rgb(180, 65, 60);
+	position: absolute;
+	top: -2px;
+	height: 30vh;
+	width: 1px;
+	height: calc(100% + 2px);
+	background: rgb(180, 65, 60);
+	color: #ffffff;
 }
 
 .today::before {
-    content: " ";
-    position: absolute;
-    top: 0;
-    right: 0;
-    transform: translate(3px, -3px);
-    background: rgb(180, 65, 60);
-    width: 6px;
-    height: 6px;
-    border-radius: 6px;
+	content: " ";
+	position: absolute;
+	top: 0;
+	right: 0;
+	transform: translate(3px, -3px);
+	background: rgb(180, 65, 60);
+	width: 6px;
+	height: 6px;
+	border-radius: 6px;
+}
+
+.today__day {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	transform: translate(calc(-50% + 0.5px), calc(-100% + -6px));
+	background: rgb(180, 65, 60);
+	width: 22px;
+	height: 22px;
+	border-radius: 24px;
+	z-index: -1;
+	color: #ffffff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 1;
+	font-weight: 600;
+	font-size: 12px;
 }

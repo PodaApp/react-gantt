@@ -3,10 +3,9 @@ import { ReactNode, useCallback, useState } from "react";
 import { DndContext, DragMoveEvent, DragStartEvent } from "@dnd-kit/core";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
+import { useTaskPosition } from "../hooks/useTaskPosition";
 import { useGanttStore } from "../store/ganttStore";
 import { ITaskWithDate } from "../types";
-import { getDateFromOffset } from "../utils/getDateFromOffset";
-import { getRangeWidth } from "../utils/getRangeWidth";
 import { TaskDraggableHandle } from "./TaskDraggableHandle";
 
 type Props = {
@@ -17,18 +16,19 @@ type Props = {
 const ERROR_MISSING_DATA = "Drag handler missing required information";
 
 export const TaskDraggable = ({ task, children }: Props) => {
-	const dateStart = useGanttStore.use.ganttDateStart();
 	const setTaskStart = useGanttStore.use.setTaskDateStart();
 	const setTaskEnd = useGanttStore.use.setTaskDateEnd();
+
+	const { getDateFromOffset, getWidthFromRange } = useTaskPosition();
 
 	const [initialWidth, setInitialWidth] = useState<number>(0);
 
 	const handleDragStart = useCallback(
 		(event: DragStartEvent) => {
 			event.activatorEvent.preventDefault();
-			setInitialWidth(getRangeWidth(task.start, task.end));
+			setInitialWidth(getWidthFromRange(task.start, task.end));
 		},
-		[task],
+		[getWidthFromRange, task.end, task.start],
 	);
 
 	const handleDragTask = useCallback(
@@ -48,13 +48,13 @@ export const TaskDraggable = ({ task, children }: Props) => {
 
 			if (direction === "left") {
 				const x = activatorEvent.layerX + event.delta.x;
-				setTaskStart(task.id, getDateFromOffset(x, dateStart));
+				setTaskStart(task.id, getDateFromOffset(x));
 			} else {
 				const x = activatorEvent.layerX + initialWidth + event.delta.x;
-				setTaskEnd(task.id, getDateFromOffset(x, dateStart));
+				setTaskEnd(task.id, getDateFromOffset(x));
 			}
 		},
-		[dateStart, initialWidth, setTaskEnd, setTaskStart, task.id],
+		[getDateFromOffset, initialWidth, setTaskEnd, setTaskStart, task.id],
 	);
 
 	return (

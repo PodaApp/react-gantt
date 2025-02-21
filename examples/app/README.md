@@ -2,10 +2,10 @@
 
 ## Notion Features
 
-[x] Sidebar task view
+- [x] Sidebar task view
+- [x] Different scales (Week, Month, Quarter, Year)
 
 - Materialised view / infinate scroll
-- Different scales (Week, Month, Quarter, Year)
 - Prev, Today, Next navigation
 
 - Simple task details

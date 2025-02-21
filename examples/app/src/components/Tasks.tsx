@@ -4,8 +4,8 @@ import { DndContext, DragEndEvent, DragMoveEvent, DragOverlay, DragStartEvent, P
 import { SortableContext } from "@dnd-kit/sortable";
 
 import { DRAG_SENSOR_CONFIG, GANTT_SNAP_LEFT_MIN, GRID_WIDTH } from "../constants";
+import { useTaskPosition } from "../hooks/useTaskPosition";
 import { useGanttStore } from "../store/ganttStore";
-import { getOffsetFromDate } from "../utils/getOffsetFromDate";
 import { isTaskWithDate } from "../utils/isTaskWithDate";
 import { Task } from "./Task";
 import { TaskDragOverlay } from "./TaskDragOverlay";
@@ -19,7 +19,8 @@ type Props = {
 export const Tasks: React.FC<Props> = ({ containerRef }) => {
 	const [initialOffset, setInitialOffset] = useState<number | null>(null);
 
-	const dateStart = useGanttStore.use.ganttDateStart();
+	const { getX } = useTaskPosition();
+
 	const tasks = useGanttStore.use.tasks();
 	const dragging = useGanttStore.use.draggingTask();
 	const setDragActive = useGanttStore.use.setDragActive();
@@ -38,10 +39,10 @@ export const Tasks: React.FC<Props> = ({ containerRef }) => {
 				throw new Error(ERROR_MISSING_DATA);
 			}
 
-			setInitialOffset(getOffsetFromDate(task.start, dateStart));
+			setInitialOffset(getX(task.start));
 			setDragActive(task);
 		},
-		[dateStart, setDragActive],
+		[getX, setDragActive],
 	);
 
 	const handleDragMove = useCallback(

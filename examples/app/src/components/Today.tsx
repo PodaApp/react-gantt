@@ -1,12 +1,22 @@
-import { GRID_WIDTH } from "../constants";
-import { useGanttStore } from "../store/ganttStore";
-import { getOffsetFromDate } from "../utils/getOffsetFromDate";
+import { format } from "date-fns";
+
+import { useTaskPosition } from "../hooks/useTaskPosition";
 import "./Today.css";
 
 export const Today = () => {
-	const dateStart = useGanttStore.use.ganttDateStart();
+	const { gridWidth, getX } = useTaskPosition();
 
-	const x = getOffsetFromDate(new Date(), dateStart) + GRID_WIDTH / 2;
+	const today = new Date();
 
-	return <div className="today" style={{ transform: `translateX(${x}px)` }} />;
+	const MID_POINT = gridWidth / 2;
+	const BORDER_WIDTH = 1;
+
+	const x = getX(today) + MID_POINT - BORDER_WIDTH;
+	const day = format(today, "d");
+
+	return (
+		<div className="today" style={{ transform: `translateX(${x}px)` }}>
+			<div className="today__day">{day}</div>
+		</div>
+	);
 };

@@ -10,6 +10,7 @@
 .gantt__scrollableContainer {
 	position: relative;
 	min-width: 0;
+	flex: 1;
 }
 
 .gantt__wrapper {

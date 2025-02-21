@@ -1,8 +1,6 @@
 import { addDays } from "date-fns";
 
-import { GRID_WIDTH } from "../constants";
-
-export const getDateFromOffset = (offset: number, dateStart: Date) => {
-	const daysFromStart = offset / GRID_WIDTH;
+export const getDateFromOffset = (offset: number, dateStart: Date, zoomGridWidth: number) => {
+	const daysFromStart = offset / zoomGridWidth;
 	return addDays(dateStart, daysFromStart);
 };

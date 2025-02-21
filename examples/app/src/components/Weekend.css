@@ -1,8 +1,9 @@
 .weekend {
-    position: absolute;
-    left: 0px;
-    bottom: 0;
-    width: 80px;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.03);
+	position: absolute;
+	left: 0px;
+	bottom: 0;
+	width: var(--weekend-width, 80px);
+	transform: translateX(var(--weekend-x, 0));
+	height: 100%;
+	background: rgba(255, 255, 255, 0.03);
 }

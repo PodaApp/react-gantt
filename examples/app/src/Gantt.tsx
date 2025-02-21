@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 
+import { GanttActions } from "./components/GanttActions";
 import { Header } from "./components/Header";
 import { TasksTimeline } from "./components/TasksTimeline";
 import { TasksTimelineNewTask } from "./components/TasksTimelineNewTask";
@@ -12,34 +13,42 @@ function Gantt() {
 	const elTimeline = useRef<HTMLDivElement>(null);
 
 	const taskTableOpen = useGanttStore.use.ganttTaskListOpen();
-
+	const ganttDateCentered = useGanttStore.use.ganttDateCentered();
 	const ganttCurrentOffset = useGanttStore(getGanttCurrentOffset);
 
+	/**
+	 * Requires ganttDateCentered to be a new instance of date, otherwise it will not trigger the useEffect
+	 * if the centered date hasn't changed. Currently, the ganttDateCentered is only changed when the zoom
+	 * is updated.
+	 */
 	useLayoutEffect(() => {
 		if (elTimeline.current) {
 			elTimeline.current.scrollLeft = ganttCurrentOffset - elTimeline.current.offsetWidth / 2;
 		}
-	}, [ganttCurrentOffset]);
+	}, [elTimeline, ganttCurrentOffset, ganttDateCentered]);
 
 	return (
-		<div className="gantt">
-			{taskTableOpen && (
-				<div className="gantt__tasksTable">
-					<TaskTable />
-				</div>
-			)}
-			<div className="gantt__scrollableContainer">
-				<div className="gantt__scrollable" ref={elTimeline}>
-					<div className="gantt__wrapper">
-						<Header containerRef={elTimeline} />
-						<TasksTimeline containerRef={elTimeline} />
+		<>
+			<GanttActions containerRef={elTimeline} />
+			<div className="gantt">
+				{taskTableOpen && (
+					<div className="gantt__tasksTable">
+						<TaskTable />
 					</div>
-					<div className="gantt__newTask">
-						<TasksTimelineNewTask />
+				)}
+				<div className="gantt__scrollableContainer">
+					<div className="gantt__scrollable" ref={elTimeline}>
+						<div className="gantt__wrapper">
+							<Header containerRef={elTimeline} />
+							<TasksTimeline containerRef={elTimeline} />
+						</div>
+						<div className="gantt__newTask">
+							<TasksTimelineNewTask />
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 

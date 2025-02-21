@@ -21,21 +21,23 @@
 }
 
 .header__week {
+	position: relative;
 	display: flex;
 }
 
 .header__day {
-	position: relative;
 	opacity: 0.6;
-	width: 40px;
-	line-height: 28px;
-	font-size: 14px;
+	width: var(--grid-width);
+	font-size: 12px;
+	height: 28px;
 	text-align: center;
 }
 
-.header__day--today {
-	font-weight: 600;
-	opacity: 1;
+.header__date {
+	position: absolute;
+	left: var(--date-x);
+	line-height: 28px;
+	transform: translateX(-50%);
 }
 
 .header__day--range {
@@ -45,14 +47,4 @@
 .header__day--range-start,
 .header__day--range-end {
 	opacity: 1;
-}
-
-.header__today {
-	position: absolute;
-	transform: translate(8px, 2px);
-	background: rgb(180, 65, 60);
-	width: 24px;
-	height: 24px;
-	border-radius: 24px;
-	z-index: -1;
 }

@@ -1,9 +1,10 @@
 import { RefObject, useEffect, useRef } from "react";
 
 import classNames from "classnames";
-import { format, isToday } from "date-fns";
+import { format } from "date-fns";
 
 import { useCalendar } from "../hooks/useCalendar";
+import { useTimelineConfig } from "../hooks/useTimelineConfig";
 import { useGanttStore } from "../store/ganttStore";
 import "./Header.css";
 import { HeaderRange } from "./HeaderRange";
@@ -16,7 +17,10 @@ type Props = {
 export const Header = ({ containerRef }: Props) => {
 	const elsMonth = useRef<(HTMLDivElement | null)[]>([]);
 
+	const { showAllDays } = useTimelineConfig();
+
 	const setHeaderMonth = useGanttStore.use.setHeaderMonth();
+	const gridWidth = useGanttStore.use.zoomGridWidth();
 
 	const calendar = useCalendar();
 
@@ -74,10 +78,14 @@ export const Header = ({ containerRef }: Props) => {
 		};
 	}, [containerRef, setHeaderMonth]);
 
+	const timelineStyles = {
+		"--grid-width": `${gridWidth}px`,
+	} as React.CSSProperties;
+
 	return (
 		<>
 			<HeaderSticky />
-			<div className="header" ref={containerRef}>
+			<div className="header" style={timelineStyles} ref={containerRef}>
 				<HeaderRange />
 				{calendar.map((month, index) => {
 					const nextMonth = calendar[index + 1] || month;
@@ -92,19 +100,24 @@ export const Header = ({ containerRef }: Props) => {
 								{month.month}
 							</div>
 							<div className="header__week">
-								{month.weeks.map((dayOfTheWeek) => {
-									const day = new Date(dayOfTheWeek);
-									const today = isToday(day);
+								{month.weeks.map((dayOfTheWeek, dayIndex) => {
+									const showDate = showAllDays || month.mondays.includes(dayIndex);
 
 									const rootClass = classNames({
 										header__day: true,
-										"header__day--today": today,
 									});
+
+									const dateStyle = {
+										"--date-x": `${dayIndex * gridWidth + gridWidth / 2}px`,
+									} as React.CSSProperties;
 
 									return (
 										<div className={rootClass} key={`week-${dayOfTheWeek}`}>
-											{today ? <div className="header__today" /> : null}
-											{format(dayOfTheWeek, "d")}
+											{showDate && (
+												<div className="header__date" style={dateStyle}>
+													{format(dayOfTheWeek, "d")}
+												</div>
+											)}
 										</div>
 									);
 								})}

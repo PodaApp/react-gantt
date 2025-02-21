@@ -1,10 +1,10 @@
 import { arrayMove } from "@dnd-kit/sortable";
-import { add, differenceInDays, sub } from "date-fns";
+import { add, differenceInDays, isWithinInterval, startOfMonth, sub } from "date-fns";
 import { produce } from "immer";
 import { create } from "zustand";
 
 import { tasks as mockTasks } from "../__fixtures__/tasks";
-import { GANTT_NEW_TASK_SIZE_DAYS, GANTT_WIDTH_MONTHS, TASK_ID_UNCOMMITED } from "../constants";
+import { DEFAULT_ZOOM, GANTT_NEW_TASK_SIZE_DAYS, GRID_WIDTH, TASK_ID_UNCOMMITED, TIMELINE_CONFIG, TimelineZoomLevels } from "../constants";
 import { createSelectors } from "../shared/zustand/createSelectors";
 import { ITask, ITaskViewportPosition, ITaskWithDate } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
@@ -17,7 +17,7 @@ export type GanttStoreState = {
 	draggingOverId: string | null;
 	draggingTask: ITask | null;
 
-	gantDateCentered: Date;
+	ganttDateCentered: Date;
 	ganttDateEnd: Date;
 	ganttDateStart: Date;
 	ganttTaskListOpen: boolean;
@@ -32,6 +32,10 @@ export type GanttStoreState = {
 
 	tasks: ITask[];
 	tasksPosition: Record<string, ITaskViewportPosition>;
+
+	zoom: TimelineZoomLevels;
+	zoomGridWidth: number;
+	zoomOffsetRatio: number | null;
 };
 
 type GanttStoreActions = {
@@ -40,7 +44,7 @@ type GanttStoreActions = {
 	scheduleTaskConfirm: (id: ITask["id"]) => void;
 	setDragActive: (task: ITask | null) => void;
 	setDragOverId: (overId: ITask["id"] | null) => void;
-	setGantt: (dateCentered: Date) => void;
+	setGanttCenter: (dateCentered: Date) => void;
 	setGanttTaskListOpen: (open: boolean) => void;
 	setHeaderMonth: (month: GanttStoreState["headerMonth"]) => void;
 	setHeaderTaskRange: (start: TaskDate, end: TaskDate) => void;
@@ -58,6 +62,7 @@ type GanttStoreActions = {
 	taskCreateAtIndex: (index: number) => void;
 	taskUpdateRank: (id: ITask["id"], overId: string) => void;
 	taskUpdateSchedule: (id: ITask["id"], offset: number) => void;
+	zoomUpdate: (zoom: GanttStoreState["zoom"], currentLeft: number | undefined, width: number | undefined) => void;
 };
 
 export type IGanttStore = GanttStoreState & GanttStoreActions;
@@ -70,9 +75,9 @@ const store = create<IGanttStore>((set, get) => ({
 	draggingActiveIndex: null,
 	draggingOverId: null,
 	draggingTask: null,
-	gantDateCentered: today,
-	ganttDateEnd: add(today, { months: GANTT_WIDTH_MONTHS }),
-	ganttDateStart: sub(today, { months: GANTT_WIDTH_MONTHS }),
+	ganttDateCentered: today,
+	ganttDateEnd: add(today, { months: TIMELINE_CONFIG[DEFAULT_ZOOM].monthsPadding }),
+	ganttDateStart: sub(today, { months: TIMELINE_CONFIG[DEFAULT_ZOOM].monthsPadding }),
 	ganttSchedulingTask: null,
 	ganttTaskListOpen: true,
 	headerMonth: null,
@@ -82,12 +87,27 @@ const store = create<IGanttStore>((set, get) => ({
 	taskOverPosition: null,
 	tasks: mockTasks,
 	tasksPosition: {},
-	setGantt: (dateCentered) => {
-		set({
-			gantDateCentered: Object.freeze(dateCentered),
-			ganttDateEnd: Object.freeze(add(dateCentered, { months: GANTT_WIDTH_MONTHS })),
-			ganttDateStart: Object.freeze(sub(dateCentered, { months: GANTT_WIDTH_MONTHS })),
-		});
+	zoom: "week",
+	zoomGridWidth: GRID_WIDTH,
+	zoomOffsetRatio: null,
+
+	setGanttCenter: (date) => {
+		const { zoom, ganttDateStart, ganttDateEnd } = get();
+
+		const monthsPadding = TIMELINE_CONFIG[zoom].monthsPadding;
+
+		const dateIsInRange = isWithinInterval(date, { start: ganttDateStart, end: ganttDateEnd });
+
+		const next: Partial<Pick<GanttStoreState, "ganttDateCentered" | "ganttDateEnd" | "ganttDateStart">> = {
+			ganttDateCentered: Object.freeze(date),
+		};
+
+		if (!dateIsInRange) {
+			next.ganttDateEnd = Object.freeze(add(date, { months: monthsPadding }));
+			next.ganttDateStart = Object.freeze(sub(date, { months: monthsPadding }));
+		}
+
+		set(next);
 	},
 
 	setDragActive: (task) => {
@@ -199,9 +219,9 @@ const store = create<IGanttStore>((set, get) => ({
 	},
 
 	scheduleTask: (id, offsetX) => {
-		const { ganttDateStart, headerTaskRange } = get();
+		const { ganttDateStart, zoomGridWidth, headerTaskRange } = get();
 
-		const [start, end] = getDateRangeFromOffset(offsetX, ganttDateStart, GANTT_NEW_TASK_SIZE_DAYS);
+		const [start, end] = getDateRangeFromOffset(offsetX, GANTT_NEW_TASK_SIZE_DAYS, ganttDateStart, zoomGridWidth);
 
 		if (start === headerTaskRange[0]) {
 			return;
@@ -274,7 +294,7 @@ const store = create<IGanttStore>((set, get) => ({
 	},
 
 	taskUpdateSchedule: (id, offset) => {
-		const { ganttDateStart, tasks, setTask } = get();
+		const { ganttDateStart, zoomGridWidth, tasks, setTask } = get();
 
 		const task = tasks.find((task) => task.id === id);
 
@@ -286,7 +306,7 @@ const store = create<IGanttStore>((set, get) => ({
 			throw new Error(`Task ${id} must have start and end date`);
 		}
 
-		const newStart = getDateFromOffset(offset, ganttDateStart);
+		const newStart = getDateFromOffset(offset, ganttDateStart, zoomGridWidth);
 
 		if (newStart.getTime() === task.start.getTime()) {
 			return;
@@ -351,6 +371,29 @@ const store = create<IGanttStore>((set, get) => ({
 
 	setGanttTaskListOpen: (open) => {
 		set({ ganttTaskListOpen: open });
+	},
+
+	zoomUpdate: (zoomLevel, currentLeft, ganttWidth) => {
+		if (currentLeft === undefined || ganttWidth === undefined) {
+			throw new Error("ScrollLeft and offsetWidth must be defined");
+		}
+
+		const { zoom: currentZoom, ganttDateStart } = get();
+
+		const currentWidth = TIMELINE_CONFIG[currentZoom].gridWidth;
+		const currentCenter = currentLeft + ganttWidth / 2 - currentWidth;
+
+		const nextDate = getDateFromOffset(currentCenter, ganttDateStart, currentWidth);
+		const nextWidth = TIMELINE_CONFIG[zoomLevel].gridWidth;
+		const nextPadding = TIMELINE_CONFIG[zoomLevel].monthsPadding;
+
+		set({
+			zoom: zoomLevel,
+			zoomGridWidth: nextWidth,
+			ganttDateCentered: Object.freeze(nextDate),
+			ganttDateEnd: Object.freeze(add(nextDate, { months: nextPadding })),
+			ganttDateStart: Object.freeze(startOfMonth(sub(nextDate, { months: nextPadding }))),
+		});
 	},
 }));
 

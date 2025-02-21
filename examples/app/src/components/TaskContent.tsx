@@ -4,9 +4,9 @@ import classNames from "classnames";
 import { createPortal } from "react-dom";
 
 import { GANTT_JUMP_TO_TASK_PADDING_DAYS } from "../constants";
+import { useTaskPosition } from "../hooks/useTaskPosition";
 import { GanttStoreState, useGanttStore } from "../store/ganttStore";
 import { ITaskWithDate } from "../types";
-import { getWidthFromDays } from "../utils/getWidthFromDays";
 import "./TaskContent.css";
 import { TaskOverflow, TaskOverflowDirection, TaskOverflowOnClick } from "./TaskOverflow";
 import { TaskStatic } from "./TaskStatic";
@@ -30,11 +30,17 @@ export const TaskContent = ({ task, containerRef }: TaskProps) => {
 	const isTaskFocused = useGanttStore(_getIsFocused(task.id));
 	const setTaskFocused = useGanttStore.use.setTaskFocused();
 
+	const { getWidthFromDays } = useTaskPosition();
+
 	const handleHover = useCallback(() => setTaskFocused(task), [setTaskFocused, task]);
 
 	const handleOverflowClick: TaskOverflowOnClick = useCallback(
-		(direction) => _scrollToPosition(direction, containerRef.current, taskRef.current),
-		[containerRef],
+		(direction) => {
+			const paddingWidth = getWidthFromDays(GANTT_JUMP_TO_TASK_PADDING_DAYS);
+
+			_scrollToPosition(direction, containerRef.current, taskRef.current, paddingWidth);
+		},
+		[containerRef, getWidthFromDays],
 	);
 
 	const taskClass = classNames({
@@ -86,15 +92,13 @@ export const TaskContent = ({ task, containerRef }: TaskProps) => {
 	);
 };
 
-const _scrollToPosition = (direction: TaskOverflowDirection, container: HTMLElement | null, task: HTMLElement | null): void => {
+const _scrollToPosition = (direction: TaskOverflowDirection, container: HTMLElement | null, task: HTMLElement | null, paddingWidth: number): void => {
 	if (!container || !task) {
 		throw new Error("Can't find a required element");
 	}
 
 	const containerRect = container.getBoundingClientRect();
 	const taskRect = task.getBoundingClientRect();
-
-	const paddingWidth = getWidthFromDays(GANTT_JUMP_TO_TASK_PADDING_DAYS);
 
 	const xPosition: { left: number; right: number } = {
 		left: taskRect.left - containerRect.left + container.scrollLeft - paddingWidth,
