@@ -9,9 +9,9 @@ type Props = {
 export const TaskStatic = ({ task, showTitle = true, showBeacons = true }: Props) => {
 	return (
 		<>
-			{showBeacons && <div className="taskContent__beacon" data-position="start" data-id={task.id} />}
+			{showBeacons && <div className="taskContent__beacon" data-beacon data-position="start" data-id={task.id} />}
 			<div className="taskContent__bar" data-id={task.id}></div>
-			{showBeacons && <div className="taskContent__beacon" data-position="end" data-id={task.id} />}
+			{showBeacons && <div className="taskContent__beacon" data-beacon data-position="end" data-id={task.id} />}
 			{showTitle && (
 				<div className="taskContent__content">
 					<div className="taskContent__title">{task.title}</div>

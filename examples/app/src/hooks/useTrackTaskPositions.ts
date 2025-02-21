@@ -69,8 +69,7 @@ export const useTrackTaskPositions = (containerRef: RefObject<HTMLDivElement>) =
 			threshold: [0, 1],
 		});
 
-		// TODO: Use refs
-		const elements = Array.from(containerRef.current.querySelectorAll(".taskContent__beacon"));
+		const elements = Array.from(containerRef.current.querySelectorAll("[data-beacon]"));
 
 		elements.forEach((element) => {
 			observer.observe(element);
