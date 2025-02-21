@@ -14,6 +14,5 @@ export const useTimelineConfig = () => {
 		showFirstOfTheMonths,
 		showWeekends,
 		showAllDays,
-		headerIntervalModulo: timelineConfig.headerModulo,
 	};
 };
