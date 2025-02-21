@@ -67,11 +67,6 @@ export const TaskContent = ({ task, containerRef }: TaskProps) => {
 						<TaskTitleInline id={task.id} placeholder="Type a name..." title={task.title} />
 					</div>
 				)}
-				{isTaskFocused && (
-					<div className="taskContent__dependencyHandle">
-						<div className="taskContent__dependencyHandle__tag" />
-					</div>
-				)}
 			</div>
 			{containerRef.current &&
 				createPortal(
