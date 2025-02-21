@@ -1,6 +1,6 @@
 import { MouseEvent, useCallback, useRef, useState } from "react";
 
-import { GANTT_NEW_TASK_SIZE_DAYS } from "../constants";
+import { TIMELINE_CONFIG } from "../constants";
 import { useTaskPosition } from "../hooks/useTaskPosition";
 import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
@@ -19,6 +19,9 @@ export const TaskNew = ({ taskId }: Props) => {
 	const taskCreate = useGanttStore.use.taskCreate();
 	const setDateRangeFocused = useGanttStore.use.setHeaderTaskRange();
 	const setTaskRange = useGanttStore.use.setTaskRange();
+	const zoom = useGanttStore.use.zoom();
+
+	const taskSize = TIMELINE_CONFIG[zoom].defaultTaskSizeDays;
 
 	const [timelineX, _setTimelineX] = useState<number | null>(null);
 
@@ -31,13 +34,13 @@ export const TaskNew = ({ taskId }: Props) => {
 			const rectTask = taskNewRef.current.getBoundingClientRect();
 			const offsetX = event.clientX - rectTask.left;
 
-			const [start, end] = getRangeFromOffset(offsetX, GANTT_NEW_TASK_SIZE_DAYS);
+			const [start, end] = getRangeFromOffset(offsetX, taskSize);
 			const x = getX(start);
 
 			_setTimelineX(x);
 			setDateRangeFocused(start, end);
 		},
-		[getRangeFromOffset, getX, setDateRangeFocused],
+		[getRangeFromOffset, getX, setDateRangeFocused, taskSize],
 	);
 
 	const handleMouseLeave = useCallback(() => {
@@ -50,14 +53,14 @@ export const TaskNew = ({ taskId }: Props) => {
 			return;
 		}
 
-		const dateRange = getRangeFromOffset(timelineX, GANTT_NEW_TASK_SIZE_DAYS);
+		const dateRange = getRangeFromOffset(timelineX, taskSize);
 
 		if (taskId) {
 			setTaskRange(taskId, ...dateRange);
 		} else {
 			taskCreate(...dateRange);
 		}
-	}, [timelineX, getRangeFromOffset, taskId, setTaskRange, taskCreate]);
+	}, [timelineX, getRangeFromOffset, taskSize, taskId, setTaskRange, taskCreate]);
 
 	const showTaskbar = timelineX !== null;
 

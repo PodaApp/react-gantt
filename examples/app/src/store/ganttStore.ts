@@ -4,7 +4,7 @@ import { produce } from "immer";
 import { create } from "zustand";
 
 import { tasks as mockTasks } from "../__fixtures__/tasks";
-import { DEFAULT_ZOOM, GANTT_NEW_TASK_SIZE_DAYS, GRID_WIDTH, TASK_ID_UNCOMMITED, TIMELINE_CONFIG, TimelineZoomLevels } from "../constants";
+import { DEFAULT_ZOOM, GRID_WIDTH, TASK_ID_UNCOMMITED, TIMELINE_CONFIG, TimelineZoomLevels } from "../constants";
 import { createSelectors } from "../shared/zustand/createSelectors";
 import { ITask, ITaskViewportPosition, ITaskWithDate } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
@@ -219,9 +219,11 @@ const store = create<IGanttStore>((set, get) => ({
 	},
 
 	scheduleTask: (id, offsetX) => {
-		const { ganttDateStart, zoomGridWidth, headerTaskRange } = get();
+		const { ganttDateStart, zoom, zoomGridWidth, headerTaskRange } = get();
 
-		const [start, end] = getDateRangeFromOffset(offsetX, GANTT_NEW_TASK_SIZE_DAYS, ganttDateStart, zoomGridWidth);
+		const taskSize = TIMELINE_CONFIG[zoom].defaultTaskSizeDays;
+
+		const [start, end] = getDateRangeFromOffset(offsetX, taskSize, ganttDateStart, zoomGridWidth);
 
 		if (start === headerTaskRange[0]) {
 			return;
