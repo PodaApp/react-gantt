@@ -1,12 +1,13 @@
 import { ChangeEvent, RefObject, useCallback } from "react";
 
 import { GanttStoreState, useGanttStore } from "../store/ganttStore";
+import "./HeaderActions.css";
 
 type Props = {
 	containerRef: RefObject<HTMLDivElement>;
 };
 
-export const GanttActions = ({ containerRef }: Props) => {
+export const HeaderActions = ({ containerRef }: Props) => {
 	const zoom = useGanttStore.use.zoom();
 	const zoomUpdate = useGanttStore.use.zoomUpdate();
 	const setCenter = useGanttStore.use.setGanttCenter();
@@ -24,15 +25,17 @@ export const GanttActions = ({ containerRef }: Props) => {
 	}, [setCenter]);
 
 	return (
-		<div>
-			<button onClick={handleToday}>Today</button>
+		<div className="headerActions">
 			{/* TODO: Build list from config */}
-			<select onChange={handleChange} value={zoom}>
+			<select className="headerActions__zoom" onChange={handleChange} value={zoom}>
 				<option value="week">Week</option>
 				<option value="month">Month</option>
 				<option value="quarter">Quarter</option>
 				<option value="year">Year</option>
 			</select>
+			<button className="headerActions__today" onClick={handleToday}>
+				Today
+			</button>
 		</div>
 	);
 };

@@ -1,6 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
 
-import { GanttActions } from "./components/GanttActions";
 import { Header } from "./components/Header";
 import { TasksTimeline } from "./components/TasksTimeline";
 import { TasksTimelineNewTask } from "./components/TasksTimelineNewTask";
@@ -28,27 +27,24 @@ function Gantt() {
 	}, [elTimeline, ganttCurrentOffset, ganttDateCentered]);
 
 	return (
-		<>
-			<GanttActions containerRef={elTimeline} />
-			<div className="gantt">
-				{taskTableOpen && (
-					<div className="gantt__tasksTable">
-						<TaskTable />
+		<div className="gantt">
+			{taskTableOpen && (
+				<div className="gantt__tasksTable">
+					<TaskTable />
+				</div>
+			)}
+			<div className="gantt__scrollableContainer">
+				<div className="gantt__scrollable" ref={elTimeline}>
+					<div className="gantt__wrapper">
+						<Header containerRef={elTimeline} />
+						<TasksTimeline containerRef={elTimeline} />
 					</div>
-				)}
-				<div className="gantt__scrollableContainer">
-					<div className="gantt__scrollable" ref={elTimeline}>
-						<div className="gantt__wrapper">
-							<Header containerRef={elTimeline} />
-							<TasksTimeline containerRef={elTimeline} />
-						</div>
-						<div className="gantt__newTask">
-							<TasksTimelineNewTask />
-						</div>
+					<div className="gantt__newTask">
+						<TasksTimelineNewTask />
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }
 
