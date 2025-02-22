@@ -12,5 +12,5 @@ export const TasksTimelineNewTask = () => {
 };
 
 const _isVisible = (state: GanttStoreState) => {
-	return state.ganttSchedulingTask === null;
+	return state.ganttSchedulingTaskId === null;
 };

@@ -21,7 +21,7 @@ export type GanttStoreState = {
 	ganttDateEnd: Date;
 	ganttDateStart: Date;
 	ganttTaskListOpen: boolean;
-	ganttSchedulingTask: string | null;
+	ganttSchedulingTaskId: string | null;
 
 	headerMonth: string | null;
 	headerTaskRange: [TaskDate, TaskDate];
@@ -63,6 +63,7 @@ type GanttStoreActions = {
 	taskUpdateRank: (id: ITask["id"], overId: string) => void;
 	taskUpdateSchedule: (id: ITask["id"], offset: number) => void;
 	zoomUpdate: (zoom: GanttStoreState["zoom"], currentLeft: number | undefined, width: number | undefined) => void;
+	clearTaskFocused: () => void;
 };
 
 export type IGanttStore = GanttStoreState & GanttStoreActions;
@@ -78,7 +79,7 @@ const store = create<IGanttStore>((set, get) => ({
 	ganttDateCentered: today,
 	ganttDateEnd: add(today, { months: TIMELINE_CONFIG[DEFAULT_ZOOM].monthsPadding }),
 	ganttDateStart: sub(today, { months: TIMELINE_CONFIG[DEFAULT_ZOOM].monthsPadding }),
-	ganttSchedulingTask: null,
+	ganttSchedulingTaskId: null,
 	ganttTaskListOpen: true,
 	headerMonth: null,
 	headerTaskRange: [null, null],
@@ -149,6 +150,13 @@ const store = create<IGanttStore>((set, get) => ({
 		set({
 			headerTaskRange: [task.start, task.end],
 			taskFocusedId: task.id,
+		});
+	},
+
+	clearTaskFocused: () => {
+		set({
+			taskFocusedId: null,
+			headerTaskRange: [null, null],
 		});
 	},
 
@@ -230,20 +238,20 @@ const store = create<IGanttStore>((set, get) => ({
 		}
 
 		set({
-			ganttSchedulingTask: id || null,
+			ganttSchedulingTaskId: id || null,
 			headerTaskRange: [start, end],
 		});
 	},
 
 	scheduleTaskClear: () => {
 		set({
-			ganttSchedulingTask: null,
+			ganttSchedulingTaskId: null,
 			headerTaskRange: [null, null],
 		});
 	},
 
 	scheduleTaskConfirm: (taskId) => {
-		const { ganttSchedulingTask, headerTaskRange, setTaskRange, taskCreate: createTask } = get();
+		const { ganttSchedulingTaskId: ganttSchedulingTask, headerTaskRange, setTaskRange, taskCreate: createTask } = get();
 		const [start, end] = headerTaskRange;
 
 		if (!ganttSchedulingTask || !start || !end) {

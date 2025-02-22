@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 import { Header } from "./components/Header";
 import { TasksTimeline } from "./components/TasksTimeline";
@@ -14,6 +14,15 @@ function Gantt() {
 	const taskTableOpen = useGanttStore.use.ganttTaskListOpen();
 	const ganttDateCentered = useGanttStore.use.ganttDateCentered();
 	const ganttCurrentOffset = useGanttStore(getGanttCurrentOffset);
+	const clearTaskFocused = useGanttStore.use.clearTaskFocused();
+
+	useEffect(() => {
+		document.addEventListener("click", clearTaskFocused);
+
+		return () => {
+			document.removeEventListener("click", clearTaskFocused);
+		};
+	}, [clearTaskFocused]);
 
 	/**
 	 * Requires ganttDateCentered to be a new instance of date, otherwise it will not trigger the useEffect
