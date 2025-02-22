@@ -5,11 +5,8 @@
 - [x] Sidebar task view
 - [x] Different scales (Week, Month, Quarter, Year)
 
-- Materialised view / infinate scroll
-- Prev, Today, Next navigation
+- Materialised view / infinate scroll (react-virtual)
 
-- Simple task details
-- Today marker based on time of day
 - Loose focus on board click
 
 - Task context menu
@@ -20,6 +17,7 @@
 - Current cursor position
 - Tasks with no end date
 - Task milestones
+- Today marker based on time of day
 
 ## React Gantt
 
@@ -64,3 +62,13 @@ Two potential algorithims
 Variable month width COL_WIDTH = scaleMap[value] / 32;
 
 Fixed unit width COLW_WIDTh = $unitWidth / $unitCount
+
+## Good open source repositories
+
+- react-flow
+- tip-tap
+- dnd-kit
+- react-hook-form
+- zustand
+- tansack projects
+- radix
