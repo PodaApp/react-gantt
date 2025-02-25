@@ -3,10 +3,10 @@ import { useCallback } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import classNames from "classnames";
 
-import IconGrip from "../assets/grip-vertical.svg?react";
-import IconPlus from "../assets/plus.svg?react";
 import { useGanttStore } from "../store/ganttStore";
 import { ITask } from "../types";
+import { GripVertical } from "./icons/GripVertical";
+import { Plus } from "./icons/Plus";
 import "./TaskTableTask.css";
 import { TaskTableTaskTitle } from "./TaskTableTaskTitle";
 import { TaskTitleInline } from "./TaskTitleInline";
@@ -59,10 +59,10 @@ export const TaskTableTask = ({ task, index }: Props) => {
 			{showActions && (
 				<div className="taskTableTask__actions">
 					<button className="taskTableTask__action action" onClick={handleAddTask}>
-						<IconPlus />
+						<Plus />
 					</button>
 					<button className="taskTableTask__action action" {...attributes} {...listeners}>
-						<IconGrip />
+						<GripVertical />
 					</button>
 				</div>
 			)}

@@ -2,9 +2,9 @@ import { useCallback } from "react";
 
 import classNames from "classnames";
 
-import IconChevronsRight from "../assets/chevrons-right.svg?react";
 import { useGanttStore } from "../store/ganttStore";
 import "./ButtonTaskTableOpen.css";
+import { ChevronsRight } from "./icons/ChevronsRight";
 
 type Props = {
 	hide: "onOpen" | "onClose";
@@ -28,7 +28,7 @@ export const ButtonTaskTableOpen = ({ hide }: Props) => {
 
 	return (
 		<button className={actionClassname} onClick={handleClick}>
-			<IconChevronsRight />
+			<ChevronsRight />
 		</button>
 	);
 };

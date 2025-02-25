@@ -23,8 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
+.turbo
+.rollup.cache
 
 examples/build
-cypress/videos
-cypress/screenshots
-dist

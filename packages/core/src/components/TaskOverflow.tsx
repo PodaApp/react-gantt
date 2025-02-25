@@ -3,11 +3,11 @@ import { useCallback } from "react";
 import classNames from "classnames";
 import { format } from "date-fns";
 
-import IconArrorRight from "../assets/arrow-right.svg?react";
 import left from "../assets/move-left.svg";
 import right from "../assets/move-right.svg";
 import { DATE_FORMAT_SHORT_MONTH } from "../constants";
 import { ITaskWithDate } from "../types";
+import { ArrowRight } from "./icons/ArrowRight";
 import "./TaskOverflow.css";
 import { Tooltip } from "./Tooltip";
 
@@ -43,7 +43,8 @@ export const TaskOverflow: React.FC<Props> = ({ task, direction, position, isVis
 
 	const tip = (
 		<div className="taskOverflow__tooltip">
-			{startDate} <IconArrorRight /> {endDate}
+			{" "}
+			{startDate} <ArrowRight /> {endDate}
 		</div>
 	);
 

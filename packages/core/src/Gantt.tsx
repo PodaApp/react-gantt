@@ -5,6 +5,7 @@ import { TasksTimeline } from "./components/TasksTimeline";
 import { TasksTimelineNewTask } from "./components/TasksTimelineNewTask";
 import { TaskTable } from "./components/TaskTable";
 import "./Gantt.css";
+import "./index.css";
 import { getGanttCurrentOffset } from "./queries/getGanttCurrentOffset";
 import { useGanttStore } from "./store/ganttStore";
 

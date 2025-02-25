@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
-import IconPlus from "../assets/plus.svg?react";
 import { useGanttStore } from "../store/ganttStore";
+import { Plus } from "./icons/Plus";
 import "./NewTaskButton.css";
 
 type Props = {
@@ -22,7 +22,7 @@ export const NewTaskButton = ({ hide }: Props) => {
 
 	return (
 		<div className="newTaskButton" onClick={handleClick}>
-			<IconPlus /> New
+			<Plus /> New
 		</div>
 	);
 };
