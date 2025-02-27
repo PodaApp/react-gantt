@@ -43,7 +43,6 @@ export const TaskOverflow: React.FC<Props> = ({ task, direction, position, isVis
 
 	const tip = (
 		<div className="taskOverflow__tooltip">
-			{" "}
 			{startDate} <ArrowRight /> {endDate}
 		</div>
 	);
