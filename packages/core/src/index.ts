@@ -1,3 +1,3 @@
-export { default as Gantt } from "./Gantt.tsx";
+export { default as Gantt } from "./Gantt";
 
 export * from "./types";
