@@ -12,6 +12,9 @@ export default defineConfig([
 		output: {
 			dir: "dist",
 		},
-		external: [...Object.keys(packageJson.dependencies), ...Object.keys(packageJson.peerDependencies)],
+		external: [
+			...(packageJson.dependencies ? Object.keys(packageJson.dependencies) : []),
+			...(packageJson.peerDependencies ? Object.keys(packageJson.peerDependencies) : []),
+		],
 	},
 ]);
