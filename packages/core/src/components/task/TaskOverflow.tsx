@@ -8,7 +8,7 @@ import { ITaskWithDate } from "../../types";
 import { ArrowRight } from "../icons/ArrowRight";
 import { MoveLeft } from "../icons/MoveLeft";
 import { MoveRight } from "../icons/MoveRight";
-import { Tooltip } from "../Tooltip";
+import { Tooltip } from "../timeline/Tooltip";
 
 import "./TaskOverflow.css";
 

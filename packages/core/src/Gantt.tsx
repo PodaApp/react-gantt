@@ -1,9 +1,9 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 
 import { Header } from "./components/header/Header";
-import { TasksTimeline } from "./components/TasksTimeline";
-import { TasksTimelineNewTask } from "./components/TasksTimelineNewTask";
 import { TaskTable } from "./components/taskTable/TaskTable";
+import { TasksTimeline } from "./components/timeline/TasksTimeline";
+import { TasksTimelineNewTask } from "./components/timeline/TasksTimelineNewTask";
 import { getGanttCurrentOffset } from "./queries/getGanttCurrentOffset";
 import { useGanttStore } from "./store/ganttStore";
 

@@ -1,4 +1,4 @@
-import { NewTaskButton } from "../NewTaskButton";
+import { NewTaskButton } from "../timeline/NewTaskButton";
 import { ButtonTaskTableOpen } from "./ButtonTaskTableOpen";
 import { TaskTableTasks } from "./TaskTableTasks";
 
