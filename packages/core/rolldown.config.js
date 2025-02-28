@@ -11,6 +11,7 @@ export default defineConfig([
 		input: packageJson.source,
 		output: {
 			dir: "dist",
+			sourcemap: true,
 		},
 		external: [
 			/^react($|\/)/,
