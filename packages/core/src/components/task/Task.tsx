@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { MouseEvent, RefObject, useCallback } from "react";
 
 import { useSortable } from "@dnd-kit/sortable";
 import classNames from "classnames";
@@ -36,8 +36,12 @@ export const Task = ({ task, containerRef }: Props) => {
 		"taskWithDate__marker--before": markerPosition === "before",
 	});
 
+	const handleClick = useCallback((event: MouseEvent<HTMLDivElement>) => {
+		event?.stopPropagation();
+	}, []);
+
 	return (
-		<div className="task" ref={setNodeRef}>
+		<div className="task" onClick={handleClick} ref={setNodeRef}>
 			{!isTaskWithDate(task) ? (
 				<TaskWithoutDate task={task} />
 			) : (
