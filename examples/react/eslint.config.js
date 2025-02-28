@@ -1,5 +1,3 @@
-import { createConfig } from "@poda/eslint-config";
+import config from "@poda/eslint-config";
 
-export default createConfig({
-	root: true,
-});
+export default config;

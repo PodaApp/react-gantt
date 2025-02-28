@@ -3,6 +3,7 @@
 	"version": "0.0.0",
 	"description": "A Gantt component library",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"preinstall": "npx only-allow pnpm",
 		"dev": "turbo run dev --parallel --concurrency 12",

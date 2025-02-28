@@ -1,5 +1,5 @@
-import { createConfig } from "@poda/eslint-config";
+import config from "@poda/eslint-config";
 
-export default createConfig({
-	root: true,
-});
+console.log("🚀 ~ config:", config);
+
+export default config;
