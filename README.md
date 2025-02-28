@@ -4,10 +4,11 @@
 
 - [x] Sidebar task view
 - [x] Different scales (Week, Month, Quarter, Year)
+- [x] Loose focus on board click
 
 - Materialised view / infinate scroll (react-virtual)
 
-- Loose focus on board click
+
 
 - Task context menu
 - Task dependencies
