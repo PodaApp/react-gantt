@@ -1,5 +1,5 @@
-import { useGanttStore } from "../store/ganttStore";
-import { ButtonTaskTableOpen } from "./ButtonTaskTableOpen";
+import { useGanttStore } from "../../store/ganttStore";
+import { ButtonTaskTableOpen } from "../ButtonTaskTableOpen";
 import "./HeaderSticky.css";
 
 export const HeaderSticky = () => {

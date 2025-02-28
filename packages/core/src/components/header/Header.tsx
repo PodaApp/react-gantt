@@ -3,10 +3,10 @@ import { RefObject, useRef } from "react";
 import classNames from "classnames";
 import { format } from "date-fns";
 
-import { useCalendar } from "../hooks/useCalendar";
-import { useTimelineConfig } from "../hooks/useTimelineConfig";
-import { useTrackCurrentMonth } from "../hooks/useTrackCurrentMonth";
-import { useGanttStore } from "../store/ganttStore";
+import { useCalendar } from "../../hooks/useCalendar";
+import { useTimelineConfig } from "../../hooks/useTimelineConfig";
+import { useTrackCurrentMonth } from "../../hooks/useTrackCurrentMonth";
+import { useGanttStore } from "../../store/ganttStore";
 import "./Header.css";
 import { HeaderActions } from "./HeaderActions";
 import { HeaderRange } from "./HeaderRange";

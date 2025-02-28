@@ -1,6 +1,6 @@
-import { useGanttStore } from "../store/ganttStore";
+import { useGanttStore } from "../../store/ganttStore";
+import { TimelineBar } from "../TimelineBar";
 import "./HeaderRange.css";
-import { TimelineBar } from "./TimelineBar";
 
 export const HeaderRange = () => {
 	const dateRange = useGanttStore.use.headerTaskRange();

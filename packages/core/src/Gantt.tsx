@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 
-import { Header } from "./components/Header";
+import { Header } from "./components/header/Header";
 import { TasksTimeline } from "./components/TasksTimeline";
 import { TasksTimelineNewTask } from "./components/TasksTimelineNewTask";
 import { TaskTable } from "./components/TaskTable";
