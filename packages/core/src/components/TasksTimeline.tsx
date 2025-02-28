@@ -2,9 +2,9 @@ import { RefObject } from "react";
 
 import { useTimelineConfig } from "../hooks/useTimelineConfig";
 import { FirstOfTheMonths } from "./FirstOfTheMonths";
+import { TaskWithoutDate } from "./task/TaskWithoutDate";
 import { Tasks } from "./Tasks";
 import "./TasksTimeline.css";
-import { TaskWithoutDate } from "./TaskWithoutDate";
 import { Today } from "./Today";
 import { Weekends } from "./Weekends";
 

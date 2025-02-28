@@ -1,9 +1,9 @@
 import { MouseEvent, useCallback, useRef, useState } from "react";
 
-import { TIMELINE_CONFIG } from "../constants";
-import { useTaskPosition } from "../hooks/useTaskPosition";
-import { useGanttStore } from "../store/ganttStore";
-import { ITask } from "../types";
+import { TIMELINE_CONFIG } from "../../constants";
+import { useTaskPosition } from "../../hooks/useTaskPosition";
+import { useGanttStore } from "../../store/ganttStore";
+import { ITask } from "../../types";
 import { NewTaskPlaceholder } from "./NewTaskPlaceholder";
 import "./TaskNew.css";
 

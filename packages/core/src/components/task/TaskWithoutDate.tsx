@@ -1,8 +1,8 @@
 import { MouseEvent, useCallback, useRef } from "react";
 
-import { TASK_ID_UNCOMMITED } from "../constants";
-import { useGanttStore } from "../store/ganttStore";
-import { ITask } from "../types";
+import { TASK_ID_UNCOMMITED } from "../../constants";
+import { useGanttStore } from "../../store/ganttStore";
+import { ITask } from "../../types";
 import { NewTaskPlaceholder } from "./NewTaskPlaceholder";
 import "./TaskWithoutDate.css";
 

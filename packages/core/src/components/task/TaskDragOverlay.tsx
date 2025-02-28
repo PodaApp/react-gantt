@@ -1,5 +1,5 @@
-import { ITask } from "../types";
-import { isTaskWithDate } from "../utils/isTaskWithDate";
+import { ITask } from "../../types";
+import { isTaskWithDate } from "../../utils/isTaskWithDate";
 import { TaskStatic } from "./TaskStatic";
 import { TimelineBar } from "./TimelineBar";
 

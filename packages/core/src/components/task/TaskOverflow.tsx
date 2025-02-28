@@ -3,13 +3,13 @@ import { useCallback } from "react";
 import classNames from "classnames";
 import { format } from "date-fns";
 
-import { DATE_FORMAT_SHORT_MONTH } from "../constants";
-import { ITaskWithDate } from "../types";
-import { ArrowRight } from "./icons/ArrowRight";
-import { MoveLeft } from "./icons/MoveLeft";
-import { MoveRight } from "./icons/MoveRight";
+import { DATE_FORMAT_SHORT_MONTH } from "../../constants";
+import { ITaskWithDate } from "../../types";
+import { ArrowRight } from "../icons/ArrowRight";
+import { MoveLeft } from "../icons/MoveLeft";
+import { MoveRight } from "../icons/MoveRight";
+import { Tooltip } from "../Tooltip";
 import "./TaskOverflow.css";
-import { Tooltip } from "./Tooltip";
 
 export type TaskOverflowDirection = "left" | "right";
 export type TaskOverflowOnClick = (position: TaskOverflowDirection) => void;
