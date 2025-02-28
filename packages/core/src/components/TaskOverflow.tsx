@@ -28,7 +28,7 @@ export const TaskOverflow: React.FC<Props> = ({ task, direction, position, isVis
 		onClick(direction);
 	}, [direction, onClick]);
 
-	if (!position) {
+	if (!position || !isVisible) {
 		return null;
 	}
 
@@ -55,7 +55,7 @@ export const TaskOverflow: React.FC<Props> = ({ task, direction, position, isVis
 				</button>
 			</Tooltip>
 
-			{isInViewport && isVisible && <div className="task__title">{task.title}</div>}
+			{isInViewport && <div className="task__title">{task.title}</div>}
 		</div>
 	);
 };
