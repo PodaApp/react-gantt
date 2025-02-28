@@ -18,6 +18,7 @@ const ERROR_MISSING_DATA = "Drag handler missing required information";
 export const TaskDraggable = ({ task, children }: Props) => {
 	const setTaskStart = useGanttStore.use.setTaskDateStart();
 	const setTaskEnd = useGanttStore.use.setTaskDateEnd();
+	const setDragActive = useGanttStore.use.setDragActive();
 
 	const { getDateFromOffset, getWidthFromRange } = useTaskPosition();
 
@@ -26,9 +27,10 @@ export const TaskDraggable = ({ task, children }: Props) => {
 	const handleDragStart = useCallback(
 		(event: DragStartEvent) => {
 			event.activatorEvent.preventDefault();
+			setDragActive(task);
 			setInitialWidth(getWidthFromRange(task.start, task.end));
 		},
-		[getWidthFromRange, task.end, task.start],
+		[getWidthFromRange, setDragActive, task],
 	);
 
 	const handleDragTask = useCallback(
@@ -57,8 +59,12 @@ export const TaskDraggable = ({ task, children }: Props) => {
 		[getDateFromOffset, initialWidth, setTaskEnd, setTaskStart, task.id],
 	);
 
+	const handleDragEnd = useCallback(() => {
+		setDragActive(null);
+	}, [setDragActive]);
+
 	return (
-		<DndContext onDragStart={handleDragStart} onDragMove={handleDragTask} modifiers={[restrictToHorizontalAxis]}>
+		<DndContext onDragStart={handleDragStart} onDragMove={handleDragTask} onDragEnd={handleDragEnd} modifiers={[restrictToHorizontalAxis]}>
 			<TaskDraggableHandle taskId={task.id} date={task.start} direction="left" />
 			{children}
 			<TaskDraggableHandle taskId={task.id} date={task.end} direction="right" />

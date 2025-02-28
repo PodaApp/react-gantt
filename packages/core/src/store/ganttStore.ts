@@ -147,6 +147,12 @@ const store = create<IGanttStore>((set, get) => ({
 	setTasks: (tasks) => set({ tasks }),
 
 	setTaskFocused: (task) => {
+		const { draggingTask } = get();
+
+		if (draggingTask !== null) {
+			return;
+		}
+
 		set({
 			headerTaskRange: [task.start, task.end],
 			taskFocusedId: task.id,
@@ -346,6 +352,7 @@ const store = create<IGanttStore>((set, get) => ({
 	},
 
 	setTaskDateStart: (id, start) => {
+		console.log("🚀 ~ id:", id);
 		const { tasks, setTask } = get();
 
 		const current = tasks.find((task) => task.id === id);
