@@ -7,9 +7,9 @@ export const MoveRight = () => {
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="3"
-			stroke-linecap="round"
-			stroke-linejoin="round">
+			strokeWidth="3"
+			strokeLinecap="round"
+			strokeLinejoin="round">
 			<path d="M5 12h14" />
 			<path d="m12 5 7 7-7 7" />
 		</svg>
