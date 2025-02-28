@@ -1,14 +1,13 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 
-import { Header } from "./components/header/Header";
-import { TaskTable } from "./components/taskTable/TaskTable";
-import { TasksTimeline } from "./components/timeline/TasksTimeline";
-import { TasksTimelineNewTask } from "./components/timeline/TasksTimelineNewTask";
-import { getGanttCurrentOffset } from "./queries/getGanttCurrentOffset";
-import { useGanttStore } from "./store/ganttStore";
+import { getGanttCurrentOffset } from "../queries/getGanttCurrentOffset";
+import { useGanttStore } from "../store/ganttStore";
+import { Header } from "./header/Header";
+import { TaskTable } from "./taskTable/TaskTable";
+import { TasksTimeline } from "./timeline/TasksTimeline";
+import { TasksTimelineNewTask } from "./timeline/TasksTimelineNewTask";
 
 import "./Gantt.css";
-import "./index.css";
 
 function Gantt() {
 	const elTimeline = useRef<HTMLDivElement>(null);

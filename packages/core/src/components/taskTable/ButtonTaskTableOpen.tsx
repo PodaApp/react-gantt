@@ -19,7 +19,7 @@ export const ButtonTaskTableOpen = ({ hide }: Props) => {
 		setOpen(!isOpen);
 	}, [isOpen, setOpen]);
 
-	const actionClassname = classNames("buttonTaskTableOpen action", {
+	const actionClassname = classNames("buttonTaskTableOpen", {
 		"buttonTaskTableOpen--open": isOpen,
 	});
 
