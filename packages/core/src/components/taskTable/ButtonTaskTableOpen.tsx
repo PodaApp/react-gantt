@@ -2,9 +2,9 @@ import { useCallback } from "react";
 
 import classNames from "classnames";
 
-import { useGanttStore } from "../store/ganttStore";
+import { useGanttStore } from "../../store/ganttStore";
+import { ChevronsRight } from "../icons/ChevronsRight";
 import "./ButtonTaskTableOpen.css";
-import { ChevronsRight } from "./icons/ChevronsRight";
 
 type Props = {
 	hide: "onOpen" | "onClose";

@@ -3,9 +3,9 @@ import { useCallback } from "react";
 import { DndContext, DragEndEvent, DragMoveEvent, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 
-import { DRAG_SENSOR_CONFIG } from "../constants";
-import { useGanttStore } from "../store/ganttStore";
-import { ITask } from "../types";
+import { DRAG_SENSOR_CONFIG } from "../../constants";
+import { useGanttStore } from "../../store/ganttStore";
+import { ITask } from "../../types";
 import { TaskTableDragOverlay } from "./TaskTableDragOverlay";
 import { TaskTableTask } from "./TaskTableTask";
 

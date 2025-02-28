@@ -1,5 +1,5 @@
+import { NewTaskButton } from "../NewTaskButton";
 import { ButtonTaskTableOpen } from "./ButtonTaskTableOpen";
-import { NewTaskButton } from "./NewTaskButton";
 import "./TaskTable.css";
 import { TaskTableTasks } from "./TaskTableTasks";
 
