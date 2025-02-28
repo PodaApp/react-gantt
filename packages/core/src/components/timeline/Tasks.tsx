@@ -3,12 +3,12 @@ import { RefObject, useCallback, useState } from "react";
 import { DndContext, DragEndEvent, DragMoveEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 
-import { DRAG_SENSOR_CONFIG, GANTT_SNAP_LEFT_MIN, GRID_WIDTH } from "../constants";
-import { useTaskPosition } from "../hooks/useTaskPosition";
-import { useGanttStore } from "../store/ganttStore";
-import { isTaskWithDate } from "../utils/isTaskWithDate";
-import { Task } from "./task/Task";
-import { TaskDragOverlay } from "./task/TaskDragOverlay";
+import { DRAG_SENSOR_CONFIG, GANTT_SNAP_LEFT_MIN, GRID_WIDTH } from "../../constants";
+import { useTaskPosition } from "../../hooks/useTaskPosition";
+import { useGanttStore } from "../../store/ganttStore";
+import { isTaskWithDate } from "../../utils/isTaskWithDate";
+import { Task } from "../task/Task";
+import { TaskDragOverlay } from "../task/TaskDragOverlay";
 
 const ERROR_MISSING_DATA = "Drag handler missing required information";
 

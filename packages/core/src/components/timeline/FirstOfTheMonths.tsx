@@ -1,6 +1,6 @@
 import { eachDayOfInterval, isSameDay, startOfMonth } from "date-fns";
 
-import { useGanttStore } from "../store/ganttStore";
+import { useGanttStore } from "../../store/ganttStore";
 import { FirstOfTheMonth } from "./FirstOfTheMonth";
 
 export const FirstOfTheMonths = () => {

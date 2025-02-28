@@ -1,8 +1,8 @@
 import { RefObject } from "react";
 
-import { useTimelineConfig } from "../hooks/useTimelineConfig";
+import { useTimelineConfig } from "../../hooks/useTimelineConfig";
+import { TaskWithoutDate } from "../task/TaskWithoutDate";
 import { FirstOfTheMonths } from "./FirstOfTheMonths";
-import { TaskWithoutDate } from "./task/TaskWithoutDate";
 import { Tasks } from "./Tasks";
 import { Today } from "./Today";
 import { Weekends } from "./Weekends";

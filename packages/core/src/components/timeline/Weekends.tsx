@@ -1,6 +1,6 @@
 import { differenceInDays, getDay } from "date-fns";
 
-import { useGanttStore } from "../store/ganttStore";
+import { useGanttStore } from "../../store/ganttStore";
 import { Weekend } from "./Weekend";
 
 export const Weekends = () => {

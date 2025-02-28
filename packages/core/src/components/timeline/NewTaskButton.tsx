@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
-import { useGanttStore } from "../store/ganttStore";
-import { Plus } from "./icons/Plus";
+import { useGanttStore } from "../../store/ganttStore";
+import { Plus } from "../icons/Plus";
 
 import "./NewTaskButton.css";
 
