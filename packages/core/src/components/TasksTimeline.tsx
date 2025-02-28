@@ -4,9 +4,10 @@ import { useTimelineConfig } from "../hooks/useTimelineConfig";
 import { FirstOfTheMonths } from "./FirstOfTheMonths";
 import { TaskWithoutDate } from "./task/TaskWithoutDate";
 import { Tasks } from "./Tasks";
-import "./TasksTimeline.css";
 import { Today } from "./Today";
 import { Weekends } from "./Weekends";
+
+import "./TasksTimeline.css";
 
 type Props = {
 	containerRef: RefObject<HTMLDivElement>;

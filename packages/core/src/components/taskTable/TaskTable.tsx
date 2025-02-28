@@ -1,7 +1,8 @@
 import { NewTaskButton } from "../NewTaskButton";
 import { ButtonTaskTableOpen } from "./ButtonTaskTableOpen";
-import "./TaskTable.css";
 import { TaskTableTasks } from "./TaskTableTasks";
+
+import "./TaskTable.css";
 
 export const TaskTable = () => {
 	return (

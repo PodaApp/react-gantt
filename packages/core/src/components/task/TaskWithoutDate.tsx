@@ -4,6 +4,7 @@ import { TASK_ID_UNCOMMITED } from "../../constants";
 import { useGanttStore } from "../../store/ganttStore";
 import { ITask } from "../../types";
 import { NewTaskPlaceholder } from "./NewTaskPlaceholder";
+
 import "./TaskWithoutDate.css";
 
 type Props = {

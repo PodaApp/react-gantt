@@ -8,8 +8,9 @@ import { ITask } from "../../types";
 import { GripVertical } from "../icons/GripVertical";
 import { Plus } from "../icons/Plus";
 import { TaskTitleInline } from "../task/TaskTitleInline";
-import "./TaskTableTask.css";
 import { TaskTableTaskTitle } from "./TaskTableTaskTitle";
+
+import "./TaskTableTask.css";
 
 type Props = {
 	task: ITask;

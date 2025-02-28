@@ -1,30 +1,31 @@
 {
-    "name": "@poda/monorepo",
-    "version": "0.0.0",
-    "description": "A Gantt component library",
-    "private": true,
-    "scripts": {
-        "preinstall": "npx only-allow pnpm",
-        "dev": "turbo run dev --parallel --concurrency 12",
-        "build:all": "turbo run build",
-        "build": "turbo run build --filter=./packages/**",
-        "lint": "turbo run lint --filter=./packages/**",
-        "clean": "pnpm -r --parallel exec rimraf dist .turbo node_modules"
-    },
-    "devDependencies": {
-        "@trivago/prettier-plugin-sort-imports": "5.2.1",
-        "@types/react-dom": "^18.3.5",
-        "@types/react": "^18.3.18",
-        "eslint": "^9.21.0",
-        "prettier": "^3.5.2",
-        "react-dom": "^18.3.1",
-        "react": "^18.3.1",
-        "rimraf": "^6.0.1",
-        "rolldown": "^1.0.0-beta.3",
-        "turbo": "^2.4.2",
-        "typescript": "~5.7.3",
-        "concurrently": "^9.1.2",
-        "dts-bundle-generator": "^9.5.1"
-    },
-    "packageManager": "pnpm@9.7.1"
+	"name": "@poda/monorepo",
+	"version": "0.0.0",
+	"description": "A Gantt component library",
+	"private": true,
+	"scripts": {
+		"preinstall": "npx only-allow pnpm",
+		"dev": "turbo run dev --parallel --concurrency 12",
+		"build:all": "turbo run build",
+		"build": "turbo run build --filter=./packages/**",
+		"lint": "turbo run lint --filter=./packages/**",
+		"clean": "pnpm -r --parallel exec rimraf dist .turbo node_modules",
+		"format": "prettier --write \"**/*.{json,md,js,ts,tsx,jsx}\""
+	},
+	"devDependencies": {
+		"@trivago/prettier-plugin-sort-imports": "5.2.1",
+		"@types/react-dom": "^18.3.5",
+		"@types/react": "^18.3.18",
+		"eslint": "^9.21.0",
+		"prettier": "^3.5.2",
+		"react-dom": "^18.3.1",
+		"react": "^18.3.1",
+		"rimraf": "^6.0.1",
+		"rolldown": "^1.0.0-beta.3",
+		"turbo": "^2.4.2",
+		"typescript": "~5.7.3",
+		"concurrently": "^9.1.2",
+		"dts-bundle-generator": "^9.5.1"
+	},
+	"packageManager": "pnpm@9.7.1"
 }

@@ -3,11 +3,12 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import { Header } from "./components/header/Header";
 import { TasksTimeline } from "./components/TasksTimeline";
 import { TasksTimelineNewTask } from "./components/TasksTimelineNewTask";
-import { TaskTable } from "./components/TaskTable";
-import "./Gantt.css";
-import "./index.css";
+import { TaskTable } from "./components/taskTable/TaskTable";
 import { getGanttCurrentOffset } from "./queries/getGanttCurrentOffset";
 import { useGanttStore } from "./store/ganttStore";
+
+import "./Gantt.css";
+import "./index.css";
 
 function Gantt() {
 	const elTimeline = useRef<HTMLDivElement>(null);

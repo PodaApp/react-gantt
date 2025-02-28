@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { format } from "date-fns";
 
 import { DATE_FORMAT_SHORT_MONTH_NO_YEAR } from "../../constants";
+
 import "./TaskDraggableHandle.css";
 
 type Props = {

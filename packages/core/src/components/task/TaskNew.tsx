@@ -5,6 +5,7 @@ import { useTaskPosition } from "../../hooks/useTaskPosition";
 import { useGanttStore } from "../../store/ganttStore";
 import { ITask } from "../../types";
 import { NewTaskPlaceholder } from "./NewTaskPlaceholder";
+
 import "./TaskNew.css";
 
 type Props = {

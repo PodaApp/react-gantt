@@ -7,9 +7,10 @@ import { useTrackTaskPositions } from "../../hooks/useTrackTaskPositions";
 import { useGanttStore } from "../../store/ganttStore";
 import { ITask } from "../../types";
 import { isTaskWithDate } from "../../utils/isTaskWithDate";
-import "./Task.css";
 import { TaskWithDate } from "./TaskWithDate";
 import { TaskWithoutDate } from "./TaskWithoutDate";
+
+import "./Task.css";
 
 type Props = {
 	task: ITask;

@@ -1,7 +1,7 @@
 import { Gantt } from "@poda/core";
-import "@poda/core/style.css";
 
 import "./App.css";
+import "@poda/core/style.css";
 
 function App() {
 	return <Gantt />;

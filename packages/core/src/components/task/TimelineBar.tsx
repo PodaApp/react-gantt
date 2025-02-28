@@ -4,6 +4,7 @@ import classNames from "classnames";
 
 import { useTaskPosition } from "../../hooks/useTaskPosition";
 import { ITaskOffset } from "../../types";
+
 import "./TimelineBar.css";
 
 type Props = {

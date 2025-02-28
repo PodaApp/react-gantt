@@ -4,6 +4,7 @@ import classNames from "classnames";
 
 import { useGanttStore } from "../../store/ganttStore";
 import { ChevronsRight } from "../icons/ChevronsRight";
+
 import "./ButtonTaskTableOpen.css";
 
 type Props = {

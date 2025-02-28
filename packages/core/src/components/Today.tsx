@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 
 import { useTaskPosition } from "../hooks/useTaskPosition";
+
 import "./Today.css";
 
 export const Today = () => {

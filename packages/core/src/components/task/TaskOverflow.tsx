@@ -9,6 +9,7 @@ import { ArrowRight } from "../icons/ArrowRight";
 import { MoveLeft } from "../icons/MoveLeft";
 import { MoveRight } from "../icons/MoveRight";
 import { Tooltip } from "../Tooltip";
+
 import "./TaskOverflow.css";
 
 export type TaskOverflowDirection = "left" | "right";

@@ -7,10 +7,11 @@ import { useCalendar } from "../../hooks/useCalendar";
 import { useTimelineConfig } from "../../hooks/useTimelineConfig";
 import { useTrackCurrentMonth } from "../../hooks/useTrackCurrentMonth";
 import { useGanttStore } from "../../store/ganttStore";
-import "./Header.css";
 import { HeaderActions } from "./HeaderActions";
 import { HeaderRange } from "./HeaderRange";
 import { HeaderSticky } from "./HeaderSticky";
+
+import "./Header.css";
 
 type Props = {
 	containerRef: RefObject<HTMLDivElement>;

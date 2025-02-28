@@ -3,8 +3,9 @@ import { RefObject } from "react";
 import { ITaskWithDate } from "../../types";
 import { TaskContent } from "./TaskContent";
 import { TaskDraggable } from "./TaskDraggable";
-import "./TaskWithDate.css";
 import { TimelineBar } from "./TimelineBar";
+
+import "./TaskWithDate.css";
 
 type Props = {
 	task: ITaskWithDate;

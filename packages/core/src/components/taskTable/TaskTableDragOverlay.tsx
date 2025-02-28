@@ -1,8 +1,9 @@
 import { DragOverlay } from "@dnd-kit/core";
 
 import { ITask } from "../../types";
-import "./TaskTableDragOverlay.css";
 import { TaskTableTaskTitle } from "./TaskTableTaskTitle";
+
+import "./TaskTableDragOverlay.css";
 
 type Props = {
 	task: ITask | null;
