@@ -19,8 +19,8 @@
     "*.css"
   ],
   "scripts": {
-    "dev": "concurrently \"rolldown --config @poda/rolldown-config --watch\" \"pnpm dev:dts\"",
-    "dev:dts": "tsc -w && build:dts",
+    "dev": "concurrently --raw \"rolldown --config ./rolldown.config.js --watch\" \"pnpm dev:dts\"",
+    "dev:dts": "tsc -w --preserveWatchOutput && build:dts",
     "build": "rolldown -c",
     "build:dts": "dts-bundle-generator -o dist/index.d.ts src/index.ts",
     "lint": "eslint .",
@@ -42,7 +42,6 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@poda/rolldown-config": "workspace:*",
     "@poda/eslint-config": "workspace:*",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.0.0",

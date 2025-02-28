@@ -13,6 +13,7 @@ export default defineConfig([
 			dir: "dist",
 		},
 		external: [
+			/^react($|\/)/,
 			...(packageJson.dependencies ? Object.keys(packageJson.dependencies) : []),
 			...(packageJson.peerDependencies ? Object.keys(packageJson.peerDependencies) : []),
 		],

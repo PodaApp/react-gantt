@@ -120,9 +120,6 @@ importers:
       '@poda/eslint-config':
         specifier: workspace:*
         version: link:../../shared/eslint-config
-      '@poda/rolldown-config':
-        specifier: workspace:*
-        version: link:../../shared/rolldown-config
       '@testing-library/dom':
         specifier: 10.4.0
         version: 10.4.0
@@ -165,8 +162,6 @@ importers:
       typescript-eslint:
         specifier: ^8.18.2
         version: 8.24.1(eslint@9.21.0)(typescript@5.7.3)
-
-  shared/rolldown-config: {}
 
 packages:
 
