@@ -17,7 +17,7 @@
 	background: var(--color-today);
 	width: 6px;
 	height: 6px;
-	border-radius: 6px;
+	border-radius: var(--radius-full);
 }
 
 .today__day {
@@ -30,7 +30,7 @@
 	background: var(--color-today);
 	width: 22px;
 	height: 22px;
-	border-radius: 24px;
+	border-radius: var(--radius-full);
 	z-index: -1;
 	color: var(--color-body);
 	display: flex;
@@ -38,5 +38,5 @@
 	justify-content: center;
 	opacity: 1;
 	font-weight: 600;
-	font-size: 12px;
+	font-size: var(--font-size-sm);
 }

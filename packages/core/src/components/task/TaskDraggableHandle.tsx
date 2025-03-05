@@ -30,7 +30,7 @@ export const TaskDraggableHandle: React.FC<Props> = ({ taskId, date, direction }
 
 	return (
 		<div className={handleClass} {...attributes} {...listeners} ref={setNodeRef}>
-			<div className="taskDraggableHandle__tooltip">
+			<div className="taskDraggableHandle__tooltip tooltip__tip">
 				<div>{tooltipDate}</div>
 			</div>
 			<div className="taskDraggableHandle__handle" />

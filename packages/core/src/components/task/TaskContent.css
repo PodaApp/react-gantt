@@ -20,7 +20,7 @@
 	height: 30px;
 	width: calc(100% - 3px);
 	margin: 0 1px 0 2px;
-	border-radius: 6px;
+	border-radius: var(--radius-md);
 	display: flex;
 	align-items: center;
 	background: var(--color-body);
@@ -67,7 +67,7 @@
 	position: relative;
 	width: 4px;
 	height: 4px;
-	border-radius: 50%;
+	border-radius: var(--radius-full);
 	border: 2px solid coral;
 	box-shadow: var(--box-shadow);
 }

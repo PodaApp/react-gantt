@@ -11,9 +11,9 @@
 .headerActions__today {
 	background: var(--color-body);
 	border: var(--border);
-	border-radius: 4px;
+	border-radius: var(--radius-sm);
 	color: var(--color-text);
-	font-size: 12px;
+	font-size: var(--font-size-sm);
 	padding: 4px 8px;
 	height: 24px;
 }
@@ -21,9 +21,9 @@
 .headerActions__zoom {
 	background: var(--color-body);
 	border: var(--border);
-	border-radius: 4px;
+	border-radius: var(--radius-sm);
 	color: var(--color-text);
-	font-size: 12px;
+	font-size: var(--font-size-sm);
 	padding: 4px;
 	height: 24px;
 }

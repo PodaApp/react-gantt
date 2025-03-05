@@ -13,6 +13,12 @@
 
 	--color-today: rgb(180, 65, 60);
 
+	--font-size-sm: 0.75rem;
+
+	--radius-sm: 0.25rem;
+	--radius-md: 0.375rem;
+	--radius-full: 10rem;
+
 	--border: 1px solid var(--color-border);
 
 	--box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset, rgba(15, 15, 15, 0.1) 0px 1px 2px;

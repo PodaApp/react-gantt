@@ -1,22 +1,25 @@
 .tooltip__tip {
-	font-size: 11px;
+	--tooltip-gap: 26px;
+
+	font-size: var(--font-size-sm);
+	font-weight: 600;
 	color: var(--color-text-heading);
 	background: var(--color-body);
 	border: var(--border);
-	border-radius: 2px;
+	border-radius: var(--radius-sm);
 	padding: 0 4px;
 	line-height: 18px;
 	display: none;
 	align-items: center;
 	gap: 2px;
 	position: absolute;
-	left: 26px;
+	right: var(--tooltip-gap);
 	white-space: nowrap;
 }
 
 .tooltip__tip--right {
-	left: unset;
-	right: 26px;
+	right: unset;
+	left: var(--tooltip-gap);
 }
 
 .tooltip:hover + .tooltip__tip {

@@ -29,7 +29,7 @@
 
 .header__day {
 	width: var(--grid-width);
-	font-size: 12px;
+	font-size: var(--font-size-sm);
 	height: 28px;
 	text-align: center;
 }

@@ -42,6 +42,8 @@ export const TaskOverflow: React.FC<Props> = ({ task, direction, position, isVis
 	const startDate = format(task.start, DATE_FORMAT_SHORT_MONTH);
 	const endDate = format(task.end, DATE_FORMAT_SHORT_MONTH);
 
+	const tooltipDirection = direction === "left" ? "right" : "left";
+
 	const tip = (
 		<div className="taskOverflow__tooltip">
 			{startDate} <ArrowRight /> {endDate}
@@ -50,7 +52,7 @@ export const TaskOverflow: React.FC<Props> = ({ task, direction, position, isVis
 
 	return (
 		<div className="taskOverflow" style={{ [direction]: `${0}px`, top: `${position.y}px` }}>
-			<Tooltip direction={direction} tip={tip}>
+			<Tooltip direction={tooltipDirection} gap={26} tip={tip}>
 				<button className={buttonClass} onClick={handleOverflowClick}>
 					<Icon />
 				</button>

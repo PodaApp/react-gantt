@@ -3,6 +3,6 @@
 	bottom: 7px;
 	margin-top: 3px;
 	height: 22px;
-	border-radius: 11px;
+	border-radius: var(--radius-full);
 	background: var(--color-overlay);
 }
