@@ -4,8 +4,8 @@
 	height: 30vh;
 	width: 1px;
 	height: calc(100% + 2px);
-	background: rgb(180, 65, 60);
-	color: #ffffff;
+	background: var(--color-today);
+	color: var(--color-text);
 }
 
 .today::before {
@@ -14,7 +14,7 @@
 	top: 0;
 	right: 0;
 	transform: translate(3px, -3px);
-	background: rgb(180, 65, 60);
+	background: var(--color-today);
 	width: 6px;
 	height: 6px;
 	border-radius: 6px;
@@ -27,12 +27,12 @@
 	right: 0;
 	margin: auto;
 	transform: translate(calc(-50% + 0.5px), calc(-100% + -6px));
-	background: rgb(180, 65, 60);
+	background: var(--color-today);
 	width: 22px;
 	height: 22px;
 	border-radius: 24px;
 	z-index: -1;
-	color: #ffffff;
+	color: var(--color-body);
 	display: flex;
 	align-items: center;
 	justify-content: center;

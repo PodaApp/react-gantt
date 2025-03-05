@@ -3,14 +3,14 @@
 	align-items: center;
 	gap: 4px;
 	font-size: 15px;
-	color: #ffffff71;
+	color: var(--color-text);
 	height: 34px;
 	padding: 0 8px;
 	cursor: default;
 }
 
 .newTaskButton:hover {
-	background: rgba(255, 255, 255, 0.05);
+	background: var(--color-hover);
 }
 
 .newTaskButton svg {

@@ -5,5 +5,5 @@
 	width: 1px;
 	transform: translateX(var(--first-of-month-x, 0));
 	height: 100%;
-	background: rgba(255, 255, 255, 0.1);
+	background: var(--color-border);
 }

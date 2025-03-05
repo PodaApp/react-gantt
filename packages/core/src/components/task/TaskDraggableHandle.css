@@ -20,7 +20,7 @@
 	height: 100%;
 	width: 4px;
 	border-radius: 4px;
-	background: #ffffff;
+	background: var(--color-text-heading);
 }
 
 .taskDraggableHandle--dragging .taskDraggableHandle__handle,
@@ -40,8 +40,8 @@
 
 .taskDraggableHandle__tooltip div {
 	font-size: 11px;
-	color: white;
-	background: black;
+	color: var(--color-text-heading);
+	background: var(--color-body);
 	border-radius: 2px;
 	padding: 0 4px;
 	white-space: nowrap;

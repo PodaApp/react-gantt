@@ -1,6 +1,28 @@
+:root {
+	--color-accent: #8154f2;
+	--color-body: #fdfdfd;
+	--color-contrast: #000000;
+
+	--color-accent-hover: color-mix(in srgb, var(--color-accent), var(--color-contrast) 12%);
+	--color-text: color-mix(in srgb, var(--color-text-heading), var(--color-body) 33%);
+	--color-text-heading: color-mix(in srgb, var(--color-contrast) 75%, var(--color-body));
+	--color-text-secondary: color-mix(in srgb, var(--color-text), var(--color-body) 50%);
+	--color-border: color-mix(in srgb, var(--color-text), var(--color-body) 75%);
+	--color-hover: color-mix(in srgb, var(--color-text), var(--color-body) 95%);
+	--color-overlay: color-mix(in srgb, var(--color-contrast), transparent 95%);
+
+	--color-today: rgb(180, 65, 60);
+
+	--border: 1px solid var(--color-border);
+
+	--box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset, rgba(15, 15, 15, 0.1) 0px 1px 2px;
+	--box-shadow-l2: rgba(0, 0, 0, 0.1) 0px 14px 28px -6px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px, rgba(84, 72, 49, 0.08) 0px 0px 0px 1px;
+}
+
 .gantt {
 	display: flex;
 	width: 100%;
+	color: var(--color-text);
 }
 
 .gantt__tasksTable {

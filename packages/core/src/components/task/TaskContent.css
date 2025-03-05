@@ -1,10 +1,11 @@
 .taskContent {
 	width: 100%;
 	display: flex;
+	color: var(--color-text-heading);
 }
 
 .taskContent--focused .taskContent__bar {
-	background: rgb(80, 80, 80);
+	background: var(--color-hover);
 }
 
 .taskContent--focused .taskContent__title {
@@ -17,14 +18,13 @@
 
 .taskContent__bar {
 	height: 30px;
-	width: 100%;
+	width: calc(100% - 3px);
+	margin: 0 1px 0 2px;
 	border-radius: 6px;
 	display: flex;
 	align-items: center;
-	background: rgb(60, 60, 60);
-	box-shadow:
-		rgba(91, 91, 91, 0.2) 0px 0px 0px 1px,
-		rgba(15, 15, 15, 0.2) 0px 2px 4px;
+	background: var(--color-body);
+	box-shadow: var(--box-shadow);
 }
 
 .taskContent__content {
@@ -46,7 +46,7 @@
 
 .taskContent__title--behind {
 	display: none;
-	color: #ffffff75;
+	color: var(--color-text);
 	position: absolute;
 	left: 6px;
 	z-index: -1;
@@ -69,9 +69,7 @@
 	height: 4px;
 	border-radius: 50%;
 	border: 2px solid coral;
-	box-shadow:
-		rgba(91, 91, 91, 0.2) 0px 0px 0px 1px,
-		rgba(15, 15, 15, 0.2) 0px 2px 4px;
+	box-shadow: var(--box-shadow);
 }
 
 .taskContent__dependencyHandle:hover {

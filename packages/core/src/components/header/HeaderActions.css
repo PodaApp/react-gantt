@@ -3,26 +3,26 @@
 	right: 0;
 	display: flex;
 	gap: 8px;
-	background: linear-gradient(90deg, transparent 0%, rgb(36, 36, 36) 20%);
+	background: linear-gradient(90deg, transparent 0%, var(--color-body) 20%);
 	padding-left: 48px;
 	z-index: 4;
 }
 
 .headerActions__today {
-	background-color: #333;
-	border: 1px solid #ffffff10;
+	background: var(--color-body);
+	border: var(--border);
 	border-radius: 4px;
-	color: #fff;
+	color: var(--color-text);
 	font-size: 12px;
 	padding: 4px 8px;
 	height: 24px;
 }
 
 .headerActions__zoom {
-	background-color: #333;
-	border: 1px solid #ffffff10;
+	background: var(--color-body);
+	border: var(--border);
 	border-radius: 4px;
-	color: #fff;
+	color: var(--color-text);
 	font-size: 12px;
 	padding: 4px;
 	height: 24px;

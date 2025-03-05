@@ -1,7 +1,8 @@
 .tooltip__tip {
 	font-size: 11px;
-	color: white;
-	background: black;
+	color: var(--color-text-heading);
+	background: var(--color-body);
+	border: var(--border);
 	border-radius: 2px;
 	padding: 0 4px;
 	line-height: 18px;

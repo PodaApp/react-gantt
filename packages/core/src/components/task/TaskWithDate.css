@@ -3,7 +3,7 @@
 	left: 0;
 	right: 0;
 	height: 2px;
-	background: rgb(152, 204, 225);
+	background: var(--color-accent);
 	visibility: hidden;
 	opacity: 0;
 	transition: opacity 200ms ease-in-out;
