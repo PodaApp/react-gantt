@@ -1,11 +1,10 @@
 .newTaskButton {
 	display: flex;
 	align-items: center;
-	gap: 4px;
-	font-size: 15px;
+	gap: 0.25rem;
 	color: var(--color-text);
 	height: 34px;
-	padding: 0 8px;
+	padding: 0 0.5rem;
 	cursor: default;
 }
 

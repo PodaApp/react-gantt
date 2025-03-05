@@ -1,8 +1,8 @@
 .taskDraggableHandle {
 	position: absolute;
 	left: -6px;
-	top: 4px;
-	bottom: 4px;
+	top: 0.25rem;
+	bottom: 0.25rem;
 	width: 0.75rem;
 	display: flex;
 	justify-content: center;
@@ -18,7 +18,7 @@
 .taskDraggableHandle__handle {
 	visibility: hidden;
 	height: 100%;
-	width: 4px;
+	width: 0.25rem;
 	border-radius: var(--radius-sm);
 	background: var(--color-text-heading);
 }

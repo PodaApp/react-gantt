@@ -32,7 +32,7 @@
 	top: 0;
 	left: 0;
 	display: flex;
-	gap: 4px;
+	gap: 0.25rem;
 	align-items: center;
 	height: 30px;
 	padding-left: 6px;
@@ -65,8 +65,8 @@
 
 .taskContent__dependencyHandle__tag {
 	position: relative;
-	width: 4px;
-	height: 4px;
+	width: 0.25rem;
+	height: 0.25rem;
 	border-radius: var(--radius-full);
 	border: 2px solid coral;
 	box-shadow: var(--box-shadow);
@@ -80,8 +80,8 @@
 	content: "";
 	position: absolute;
 	top: calc(50% - 1px);
-	left: -8px;
-	width: 8px;
-	height: 2px;
+	left: -0.5rem;
+	width: 0.5rem;
+	height: 0.125rem;
 	background: coral;
 }

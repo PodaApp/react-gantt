@@ -7,11 +7,11 @@
 	background: var(--color-body);
 	border: var(--border);
 	border-radius: var(--radius-sm);
-	padding: 0 4px;
+	padding: 0 0.25rem;
 	line-height: 18px;
 	display: none;
 	align-items: center;
-	gap: 2px;
+	gap: 0.125rem;
 	position: absolute;
 	right: var(--tooltip-gap);
 	white-space: nowrap;

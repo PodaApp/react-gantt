@@ -1,7 +1,6 @@
 .taskTable {
 	display: flex;
 	flex-direction: column;
-	font-size: 15px;
 	width: 300px;
 	margin-left: 64px;
 	margin-bottom: 15px;
@@ -17,7 +16,7 @@
 	border-bottom: var(--border);
 	line-height: 28px;
 	font-weight: 500;
-	padding: 0 8px;
+	padding: 0 0.5rem;
 }
 
 .taskTable__headerClose {

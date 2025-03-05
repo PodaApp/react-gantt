@@ -3,8 +3,7 @@
 	display: flex;
 	align-items: center;
 	height: 34px;
-	padding: 0 8px;
-	font-size: 1rem;
+	padding: 0 0.5rem;
 	cursor: default;
 	text-align: left;
 	color: var(--color-text-heading);
@@ -25,7 +24,7 @@
 	bottom: auto;
 	display: flex;
 	transform: translateX(-100%);
-	padding-right: 2px;
+	padding-right: 0.125rem;
 	opacity: 0;
 	transition: opacity 200ms ease-in-out;
 }
@@ -41,8 +40,7 @@
 	place-items: center;
 	background: transparent;
 	border: 0;
-	padding: 2px;
-	font-size: 1em;
+	padding: 0.125rem;
 	font-weight: 500;
 	font-family: inherit;
 	border-radius: var(--radius-sm);

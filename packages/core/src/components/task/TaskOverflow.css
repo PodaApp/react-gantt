@@ -2,7 +2,7 @@
 	position: absolute;
 	z-index: 3;
 	display: flex;
-	gap: 4px;
+	gap: 0.25rem;
 	align-items: center;
 	height: 30px;
 	padding: 0 6px;
@@ -46,7 +46,7 @@
 .taskOverflow__tooltip {
 	display: flex;
 	align-items: center;
-	gap: 2px;
+	gap: 0.125rem;
 }
 
 .taskOverflow__tooltip svg {
