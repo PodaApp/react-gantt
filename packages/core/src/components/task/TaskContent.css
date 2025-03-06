@@ -4,10 +4,6 @@
 	color: var(--color-text-heading);
 }
 
-.taskContent--focused .taskContent__bar {
-	background: var(--color-hover);
-}
-
 .taskContent--focused .taskContent__title {
 	overflow: hidden;
 }
@@ -23,8 +19,12 @@
 	border-radius: var(--radius-md);
 	display: flex;
 	align-items: center;
-	background: var(--color-body);
+	background: var(--color-task);
 	box-shadow: var(--box-shadow);
+}
+
+.taskContent--focused .taskContent__bar {
+	background: var(--color-hover);
 }
 
 .taskContent__content {

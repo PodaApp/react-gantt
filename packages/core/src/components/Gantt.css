@@ -1,7 +1,7 @@
 :root {
 	--color-accent: #8154f2;
-	--color-body: #fdfdfd;
-	--color-contrast: #000000;
+	--color-body: #fff;
+	--color-contrast: #2d2d2d;
 
 	--color-accent-hover: color-mix(in srgb, var(--color-accent), var(--color-contrast) 12%);
 	--color-text: color-mix(in srgb, var(--color-text-heading), var(--color-body) 33%);
@@ -12,6 +12,7 @@
 	--color-overlay: color-mix(in srgb, var(--color-contrast), transparent 95%);
 
 	--color-today: rgb(180, 65, 60);
+	--color-task: color-mix(in srgb, var(--color-text), var(--color-body) 99%);
 
 	--font-size-sm: 0.75rem;
 
@@ -23,6 +24,10 @@
 
 	--box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset, rgba(15, 15, 15, 0.1) 0px 1px 2px;
 	--box-shadow-l2: rgba(0, 0, 0, 0.1) 0px 14px 28px -6px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px, rgba(84, 72, 49, 0.08) 0px 0px 0px 1px;
+}
+
+body {
+	background-color: var(--color-body);
 }
 
 .gantt {
