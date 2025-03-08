@@ -35,8 +35,9 @@ export const TaskDraggable = ({ task, children }: Props) => {
 
 	const handleDragTask = useCallback(
 		(event: DragMoveEvent) => {
+			event.activatorEvent.preventDefault();
+
 			const activatorEvent = event.activatorEvent as PointerEvent;
-			activatorEvent.preventDefault();
 			const direction = event.active.data.current?.direction;
 
 			if (!direction) {
@@ -47,13 +48,15 @@ export const TaskDraggable = ({ task, children }: Props) => {
 			 * LayerX is condidered a non standard property and may not behave consistently in all
 			 * browsers https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/layerX
 			 */
+			const deltaX = event.delta.x;
 
 			if (direction === "left") {
-				const x = activatorEvent.layerX + event.delta.x;
-				setTaskStart(task.id, getDateFromOffset(x));
+				const x = activatorEvent.layerX + deltaX;
+				setTaskStart(task.id, getDateFromOffset(x, true));
 			} else {
-				const x = activatorEvent.layerX + initialWidth + event.delta.x;
-				setTaskEnd(task.id, getDateFromOffset(x));
+				const x = activatorEvent.layerX + initialWidth + deltaX;
+
+				setTaskEnd(task.id, getDateFromOffset(x, true));
 			}
 		},
 		[getDateFromOffset, initialWidth, setTaskEnd, setTaskStart, task.id],

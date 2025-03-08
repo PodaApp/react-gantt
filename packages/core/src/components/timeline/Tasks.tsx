@@ -39,7 +39,7 @@ export const Tasks: React.FC<Props> = ({ containerRef }) => {
 				throw new Error(ERROR_MISSING_DATA);
 			}
 
-			setInitialOffset(getX(task.start));
+			setInitialOffset(getX(task.start, false));
 			setDragActive(task);
 		},
 		[getX, setDragActive],
@@ -49,7 +49,7 @@ export const Tasks: React.FC<Props> = ({ containerRef }) => {
 		(event: DragMoveEvent) => {
 			const task = event.active.data.current;
 
-			if (!isTaskWithDate(task) || !initialOffset) {
+			if (!isTaskWithDate(task) || initialOffset === null) {
 				throw new Error(ERROR_MISSING_DATA);
 			}
 

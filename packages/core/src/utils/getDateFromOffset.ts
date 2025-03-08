@@ -1,6 +1,18 @@
 import { addDays } from "date-fns";
 
-export const getDateFromOffset = (offset: number, dateStart: Date, zoomGridWidth: number) => {
-	const daysFromStart = offset / zoomGridWidth;
-	return addDays(dateStart, daysFromStart);
+interface DateCalculationOptions {
+	startsAtZero?: boolean;
+}
+
+export const getDateFromOffset = (startDate: Date, pixelOffset: number, pixelsPerDay: number, options: DateCalculationOptions = {}): Date => {
+	if (pixelsPerDay <= 0) {
+		throw new Error("pixelsPerDay must be greater than zero");
+	}
+
+	const { startsAtZero = true } = options;
+
+	const dayOffset = pixelOffset / pixelsPerDay;
+	const dayOffsetAdjusted = startsAtZero ? dayOffset : dayOffset - 1;
+
+	return addDays(startDate, Math.ceil(dayOffsetAdjusted));
 };

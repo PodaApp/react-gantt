@@ -18,7 +18,7 @@ type Props = {
 export const TimelineBar = ({ start, end, children, className, render }: Props) => {
 	const { getTaskPosition } = useTaskPosition();
 
-	const timelinePosition = getTaskPosition(start, end);
+	const timelinePosition = getTaskPosition(start, end, false);
 	const timelineClassName = classNames("timelineBar", className);
 
 	const timelineStyles = {

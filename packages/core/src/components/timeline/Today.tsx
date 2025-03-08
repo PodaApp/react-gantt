@@ -12,7 +12,7 @@ export const Today = () => {
 	const MID_POINT = gridWidth / 2;
 	const BORDER_WIDTH = 1;
 
-	const x = getX(today) + MID_POINT - BORDER_WIDTH;
+	const x = getX(today, true) + MID_POINT - BORDER_WIDTH;
 	const day = format(today, "d");
 
 	return (

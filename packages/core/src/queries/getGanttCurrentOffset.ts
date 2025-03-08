@@ -3,5 +3,5 @@ import { getOffsetFromDate } from "../utils/getOffsetFromDate";
 
 export const getGanttCurrentOffset = (store: GanttStoreState) => {
 	const { ganttDateCentered: gantDateCentered, ganttDateStart, zoomGridWidth } = store;
-	return getOffsetFromDate(gantDateCentered, ganttDateStart, zoomGridWidth);
+	return getOffsetFromDate(gantDateCentered, ganttDateStart, zoomGridWidth, false);
 };

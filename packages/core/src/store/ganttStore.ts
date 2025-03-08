@@ -1,5 +1,5 @@
 import { arrayMove } from "@dnd-kit/sortable";
-import { add, differenceInDays, isWithinInterval, startOfMonth, sub } from "date-fns";
+import { add, differenceInDays, isWithinInterval, startOfDay, startOfMonth, sub } from "date-fns";
 import { produce } from "immer";
 import { create } from "zustand";
 
@@ -70,7 +70,8 @@ export type IGanttStore = GanttStoreState & GanttStoreActions;
 
 // TODO Will need a way to specify a GUID generator;
 const dodgyGuid = () => Math.floor(Math.random() * 1000000).toString();
-const today = Object.freeze(new Date());
+// Need to strip time from this date
+const today = Object.freeze(startOfDay(new Date()));
 
 const store = create<IGanttStore>((set, get) => ({
 	draggingActiveIndex: null,
@@ -235,7 +236,7 @@ const store = create<IGanttStore>((set, get) => ({
 	scheduleTask: (id, offsetX) => {
 		const { ganttDateStart, zoom, zoomGridWidth, headerTaskRange } = get();
 
-		const taskSize = TIMELINE_CONFIG[zoom].defaultTaskSizeDays;
+		const taskSize = TIMELINE_CONFIG[zoom].defaultTaskSizeDays - 1;
 
 		const [start, end] = getDateRangeFromOffset(offsetX, taskSize, ganttDateStart, zoomGridWidth);
 
@@ -322,13 +323,13 @@ const store = create<IGanttStore>((set, get) => ({
 			throw new Error(`Task ${id} must have start and end date`);
 		}
 
-		const newStart = getDateFromOffset(offset, ganttDateStart, zoomGridWidth);
+		const newStart = getDateFromOffset(ganttDateStart, offset, zoomGridWidth);
 
 		if (newStart.getTime() === task.start.getTime()) {
 			return;
 		}
 
-		const deltaDays = differenceInDays(newStart, task.start);
+		const deltaDays = differenceInDays(startOfDay(newStart), startOfDay(task.start));
 		const newEnd = add(task.end, { days: deltaDays });
 
 		setTask(id, { ...task, start: newStart, end: newEnd });
@@ -352,7 +353,6 @@ const store = create<IGanttStore>((set, get) => ({
 	},
 
 	setTaskDateStart: (id, start) => {
-		console.log("🚀 ~ id:", id);
 		const { tasks, setTask } = get();
 
 		const current = tasks.find((task) => task.id === id);
@@ -400,7 +400,7 @@ const store = create<IGanttStore>((set, get) => ({
 		const currentWidth = TIMELINE_CONFIG[currentZoom].gridWidth;
 		const currentCenter = currentLeft + ganttWidth / 2 - currentWidth;
 
-		const nextDate = getDateFromOffset(currentCenter, ganttDateStart, currentWidth);
+		const nextDate = getDateFromOffset(ganttDateStart, currentCenter, currentWidth, { startsAtZero: false });
 		const nextWidth = TIMELINE_CONFIG[zoomLevel].gridWidth;
 		const nextPadding = TIMELINE_CONFIG[zoomLevel].monthsPadding;
 

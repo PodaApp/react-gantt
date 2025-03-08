@@ -36,7 +36,7 @@ export const TaskNew = ({ taskId }: Props) => {
 			const offsetX = event.clientX - rectTask.left;
 
 			const [start, end] = getRangeFromOffset(offsetX, taskSize);
-			const x = getX(start);
+			const x = getX(start, false);
 
 			_setTimelineX(x);
 			setDateRangeFocused(start, end);
