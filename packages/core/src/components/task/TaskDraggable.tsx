@@ -51,12 +51,11 @@ export const TaskDraggable = ({ task, children }: Props) => {
 			const deltaX = event.delta.x;
 
 			if (direction === "left") {
-				const x = activatorEvent.layerX + deltaX;
+				const x = Math.floor(activatorEvent.layerX + deltaX);
 				setTaskStart(task.id, getDateFromOffset(x, true));
 			} else {
-				const x = activatorEvent.layerX + initialWidth + deltaX;
-
-				setTaskEnd(task.id, getDateFromOffset(x, true));
+				const x = Math.floor(activatorEvent.layerX + initialWidth + deltaX);
+				setTaskEnd(task.id, getDateFromOffset(x));
 			}
 		},
 		[getDateFromOffset, initialWidth, setTaskEnd, setTaskStart, task.id],
@@ -67,7 +66,12 @@ export const TaskDraggable = ({ task, children }: Props) => {
 	}, [setDragActive]);
 
 	return (
-		<DndContext onDragStart={handleDragStart} onDragMove={handleDragTask} onDragEnd={handleDragEnd} modifiers={[restrictToHorizontalAxis]}>
+		<DndContext
+			autoScroll={false}
+			onDragStart={handleDragStart}
+			onDragMove={handleDragTask}
+			onDragEnd={handleDragEnd}
+			modifiers={[restrictToHorizontalAxis]}>
 			<TaskDraggableHandle taskId={task.id} date={task.start} direction="left" />
 			{children}
 			<TaskDraggableHandle taskId={task.id} date={task.end} direction="right" />

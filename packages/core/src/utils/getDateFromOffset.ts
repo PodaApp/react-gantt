@@ -11,8 +11,8 @@ export const getDateFromOffset = (startDate: Date, pixelOffset: number, pixelsPe
 
 	const { startsAtZero = true } = options;
 
-	const dayOffset = pixelOffset / pixelsPerDay;
+	const dayOffset = Math.round(pixelOffset / pixelsPerDay);
 	const dayOffsetAdjusted = startsAtZero ? dayOffset : dayOffset - 1;
 
-	return addDays(startDate, Math.ceil(dayOffsetAdjusted));
+	return addDays(startDate, dayOffsetAdjusted);
 };
