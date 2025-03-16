@@ -7,9 +7,9 @@ import { TaskTable } from "./taskTable/TaskTable";
 import { TasksTimeline } from "./timeline/TasksTimeline";
 import { TasksTimelineNewTask } from "./timeline/TasksTimelineNewTask";
 
-import "./Gantt.css";
+import "./GanttContainer.css";
 
-export const Wrapper = () => {
+export const GanttContainer = () => {
 	const elTimeline = useRef<HTMLDivElement>(null);
 
 	const taskTableOpen = useGanttStore((state) => state.ganttTaskListOpen);

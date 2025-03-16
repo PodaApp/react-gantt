@@ -1,10 +1,10 @@
 import { GanttProvider } from "../store/GanttProvider";
-import { Wrapper } from "./Wrapper";
+import { GanttContainer } from "./GanttContainer";
 
 function Gantt() {
 	return (
 		<GanttProvider>
-			<Wrapper />
+			<GanttContainer />
 		</GanttProvider>
 	);
 }
