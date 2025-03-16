@@ -1,7 +1,7 @@
 import { FocusEvent, useCallback, useLayoutEffect, useRef } from "react";
 
 import { useBindShortcut } from "../../hooks/useBindShortcut";
-import { useGanttStore } from "../../store/ganttStore";
+import { useGanttStore } from "../../hooks/useGanttStore";
 
 import "./TaskTitleInline.css";
 

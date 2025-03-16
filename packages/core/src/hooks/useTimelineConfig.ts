@@ -1,5 +1,5 @@
 import { TIMELINE_CONFIG } from "../constants";
-import { useGanttStore } from "../store/ganttStore";
+import { useGanttStore } from "./useGanttStore";
 
 export const useTimelineConfig = () => {
 	const zoomLevel = useGanttStore((state) => state.zoom);

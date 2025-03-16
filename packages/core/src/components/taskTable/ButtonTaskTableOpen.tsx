@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import classNames from "classnames";
 
-import { useGanttStore } from "../../store/ganttStore";
+import { useGanttStore } from "../../hooks/useGanttStore";
 import { ChevronsRight } from "../icons/ChevronsRight";
 
 import "./ButtonTaskTableOpen.css";

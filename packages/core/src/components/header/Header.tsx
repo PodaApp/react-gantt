@@ -4,9 +4,9 @@ import classNames from "classnames";
 import { format } from "date-fns";
 
 import { useCalendar } from "../../hooks/useCalendar";
+import { useGanttStore } from "../../hooks/useGanttStore";
 import { useTimelineConfig } from "../../hooks/useTimelineConfig";
 import { useTrackCurrentMonth } from "../../hooks/useTrackCurrentMonth";
-import { useGanttStore } from "../../store/ganttStore";
 import { HeaderActions } from "./HeaderActions";
 import { HeaderRange } from "./HeaderRange";
 import { HeaderSticky } from "./HeaderSticky";

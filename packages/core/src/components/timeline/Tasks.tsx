@@ -4,8 +4,8 @@ import { DndContext, DragEndEvent, DragMoveEvent, DragOverlay, DragStartEvent, P
 import { SortableContext } from "@dnd-kit/sortable";
 
 import { DRAG_SENSOR_CONFIG, GANTT_SNAP_LEFT_MIN, GRID_WIDTH } from "../../constants";
+import { useGanttStore } from "../../hooks/useGanttStore";
 import { useTaskPosition } from "../../hooks/useTaskPosition";
-import { useGanttStore } from "../../store/ganttStore";
 import { isTaskWithDate } from "../../utils/isTaskWithDate";
 import { Task } from "../task/Task";
 import { TaskDragOverlay } from "../task/TaskDragOverlay";

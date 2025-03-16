@@ -1,6 +1,6 @@
 import { RefObject, useEffect } from "react";
 
-import { useGanttStore } from "../store/ganttStore";
+import { useGanttStore } from "./useGanttStore";
 
 export const useTrackCurrentMonth = (containerRef: RefObject<HTMLDivElement>) => {
 	const setHeaderMonth = useGanttStore((state) => state.setHeaderMonth);

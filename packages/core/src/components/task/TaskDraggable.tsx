@@ -3,8 +3,8 @@ import { ReactNode, useCallback, useState } from "react";
 import { DndContext, DragMoveEvent, DragStartEvent } from "@dnd-kit/core";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
+import { useGanttStore } from "../../hooks/useGanttStore";
 import { useTaskPosition } from "../../hooks/useTaskPosition";
-import { useGanttStore } from "../../store/ganttStore";
 import { ITaskWithDate } from "../../types";
 import { TaskDraggableHandle } from "./TaskDraggableHandle";
 

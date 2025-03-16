@@ -1,4 +1,4 @@
-import { useGanttStore } from "../../store/ganttStore";
+import { useGanttStore } from "../../hooks/useGanttStore";
 import { ButtonTaskTableOpen } from "../taskTable/ButtonTaskTableOpen";
 
 import "./HeaderSticky.css";

@@ -1,4 +1,5 @@
-import { GanttStoreState, useGanttStore } from "../../store/ganttStore";
+import { useGanttStore } from "../../hooks/useGanttStore";
+import { GanttStoreState } from "../../store/ganttStore";
 import { NewTaskButton } from "./NewTaskButton";
 
 export const TasksTimelineNewTask = () => {

@@ -4,8 +4,9 @@ import classNames from "classnames";
 import { createPortal } from "react-dom";
 
 import { GANTT_JUMP_TO_TASK_PADDING_DAYS } from "../../constants";
+import { useGanttStore } from "../../hooks/useGanttStore";
 import { useTaskPosition } from "../../hooks/useTaskPosition";
-import { GanttStoreState, useGanttStore } from "../../store/ganttStore";
+import { GanttStoreState } from "../../store/ganttStore";
 import { ITaskWithDate } from "../../types";
 import { TaskOverflow, TaskOverflowDirection, TaskOverflowOnClick } from "./TaskOverflow";
 import { TaskStatic } from "./TaskStatic";

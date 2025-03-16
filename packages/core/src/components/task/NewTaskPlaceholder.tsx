@@ -1,4 +1,4 @@
-import { useGanttStore } from "../../store/ganttStore";
+import { useGanttStore } from "../../hooks/useGanttStore";
 import { ITask } from "../../types";
 import { TimelineBar } from "./TimelineBar";
 

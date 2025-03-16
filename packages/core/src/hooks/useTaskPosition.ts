@@ -1,11 +1,11 @@
 import { differenceInDays } from "date-fns";
 
-import { useGanttStore } from "../store/ganttStore";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { getDateRangeFromOffset } from "../utils/getDateRangeFromOffset";
 import { getRangeWidth } from "../utils/getRangeWidth";
 import { getTaskPosition } from "../utils/getTaskPosition";
 import { getWidthFromDays } from "../utils/getWidthFromDays";
+import { useGanttStore } from "./useGanttStore";
 
 // TODO: Review this closely, remove boolean agruments consider argument order etc
 export const useTaskPosition = () => {

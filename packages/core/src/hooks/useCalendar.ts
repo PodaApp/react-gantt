@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { eachDayOfInterval, getDay, Month } from "date-fns";
 import { enUS } from "date-fns/locale";
 
-import { useGanttStore } from "../store/ganttStore";
+import { useGanttStore } from "./useGanttStore";
 
 export type GanttData = { month: string; year: number; weeks: string[]; mondays: number[]; startOnDay: number }[];
 

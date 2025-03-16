@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import classNames from "classnames";
 
-import { useGanttStore } from "../../store/ganttStore";
+import { useGanttStore } from "../../hooks/useGanttStore";
 import { ITask } from "../../types";
 import { GripVertical } from "../icons/GripVertical";
 import { Plus } from "../icons/Plus";

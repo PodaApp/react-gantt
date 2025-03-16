@@ -1,6 +1,7 @@
 import { ChangeEvent, RefObject, useCallback } from "react";
 
-import { GanttStoreState, useGanttStore } from "../../store/ganttStore";
+import { useGanttStore } from "../../hooks/useGanttStore";
+import { GanttStoreState } from "../../store/ganttStore";
 
 import "./HeaderActions.css";
 

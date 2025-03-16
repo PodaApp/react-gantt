@@ -3,8 +3,8 @@ import { MouseEvent, RefObject, useCallback } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import classNames from "classnames";
 
+import { useGanttStore } from "../../hooks/useGanttStore";
 import { useTrackTaskPositions } from "../../hooks/useTrackTaskPositions";
-import { useGanttStore } from "../../store/ganttStore";
 import { ITask } from "../../types";
 import { isTaskWithDate } from "../../utils/isTaskWithDate";
 import { TaskWithDate } from "./TaskWithDate";

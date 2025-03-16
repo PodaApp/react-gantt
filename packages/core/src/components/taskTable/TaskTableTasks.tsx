@@ -4,7 +4,7 @@ import { DndContext, DragEndEvent, DragMoveEvent, DragStartEvent, PointerSensor,
 import { SortableContext } from "@dnd-kit/sortable";
 
 import { DRAG_SENSOR_CONFIG } from "../../constants";
-import { useGanttStore } from "../../store/ganttStore";
+import { useGanttStore } from "../../hooks/useGanttStore";
 import { ITask } from "../../types";
 import { TaskTableDragOverlay } from "./TaskTableDragOverlay";
 import { TaskTableTask } from "./TaskTableTask";
