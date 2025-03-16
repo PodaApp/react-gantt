@@ -22,7 +22,7 @@ export const Header = ({ containerRef }: Props) => {
 
 	const elsMonth = useRef<(HTMLDivElement | null)[]>([]);
 	const { showAllDays } = useTimelineConfig();
-	const gridWidth = useGanttStore.use.zoomGridWidth();
+	const gridWidth = useGanttStore((state) => state.zoomGridWidth);
 	const calendar = useCalendar();
 
 	const timelineStyles = {

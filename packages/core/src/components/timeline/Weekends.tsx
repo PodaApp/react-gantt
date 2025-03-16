@@ -4,8 +4,8 @@ import { useGanttStore } from "../../store/ganttStore";
 import { Weekend } from "./Weekend";
 
 export const Weekends = () => {
-	const dateStart = useGanttStore.use.ganttDateStart();
-	const dateEnd = useGanttStore.use.ganttDateEnd();
+	const dateStart = useGanttStore((state) => state.ganttDateStart);
+	const dateEnd = useGanttStore((state) => state.ganttDateEnd);
 
 	const weekends = _getWeekendOffsetDays(dateStart, dateEnd);
 

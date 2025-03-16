@@ -4,7 +4,7 @@ import { TimelineBar } from "../task/TimelineBar";
 import "./HeaderRange.css";
 
 export const HeaderRange = () => {
-	const dateRange = useGanttStore.use.headerTaskRange();
+	const dateRange = useGanttStore((state) => state.headerTaskRange);
 
 	const [start, end] = dateRange;
 

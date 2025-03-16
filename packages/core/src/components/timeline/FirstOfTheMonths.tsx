@@ -4,8 +4,8 @@ import { useGanttStore } from "../../store/ganttStore";
 import { FirstOfTheMonth } from "./FirstOfTheMonth";
 
 export const FirstOfTheMonths = () => {
-	const ganttStart = useGanttStore.use.ganttDateStart();
-	const ganttEnd = useGanttStore.use.ganttDateEnd();
+	const ganttStart = useGanttStore((state) => state.ganttDateStart);
+	const ganttEnd = useGanttStore((state) => state.ganttDateEnd);
 
 	const fistOfMonths = getFirstDayOfMonthIndices(ganttStart, ganttEnd);
 

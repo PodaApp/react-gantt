@@ -29,7 +29,7 @@ export const TaskContent = ({ task, containerRef }: TaskProps) => {
 
 	const stickyPosition = useGanttStore(_getPositionForTask(task.id));
 	const isTaskFocused = useGanttStore(_getIsFocused(task.id));
-	const setTaskFocused = useGanttStore.use.setTaskFocused();
+	const setTaskFocused = useGanttStore((state) => state.setTaskFocused);
 
 	const { getWidthFromDays } = useTaskPosition();
 

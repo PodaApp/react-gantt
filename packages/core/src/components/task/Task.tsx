@@ -20,8 +20,8 @@ type Props = {
 export const Task = ({ task, containerRef }: Props) => {
 	useTrackTaskPositions(containerRef);
 
-	const draggingIndex = useGanttStore.use.draggingActiveIndex();
-	const overId = useGanttStore.use.draggingOverId();
+	const draggingIndex = useGanttStore((state) => state.draggingActiveIndex);
+	const overId = useGanttStore((state) => state.draggingOverId);
 
 	const { index, attributes, isDragging, listeners, setNodeRef } = useSortable({ id: task.id, data: task });
 

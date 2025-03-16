@@ -10,11 +10,11 @@ import { TaskTableDragOverlay } from "./TaskTableDragOverlay";
 import { TaskTableTask } from "./TaskTableTask";
 
 export const TaskTableTasks = () => {
-	const tasks = useGanttStore.use.tasks();
-	const dragging = useGanttStore.use.draggingTask();
-	const setDragActive = useGanttStore.use.setDragActive();
-	const setDragOverId = useGanttStore.use.setDragOverId();
-	const taskUpdateRank = useGanttStore.use.taskUpdateRank();
+	const tasks = useGanttStore((state) => state.tasks);
+	const dragging = useGanttStore((state) => state.draggingTask);
+	const setDragActive = useGanttStore((state) => state.setDragActive);
+	const setDragOverId = useGanttStore((state) => state.setDragOverId);
+	const taskUpdateRank = useGanttStore((state) => state.taskUpdateRank);
 
 	const pointerSensor = useSensor(PointerSensor, DRAG_SENSOR_CONFIG);
 	const sensors = useSensors(pointerSensor);

@@ -2,7 +2,7 @@ import { TIMELINE_CONFIG } from "../constants";
 import { useGanttStore } from "../store/ganttStore";
 
 export const useTimelineConfig = () => {
-	const zoomLevel = useGanttStore.use.zoom();
+	const zoomLevel = useGanttStore((state) => state.zoom);
 	const timelineConfig = TIMELINE_CONFIG[zoomLevel];
 
 	const showFirstOfTheMonths = timelineConfig.components.includes("firstOfMonth");

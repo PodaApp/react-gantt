@@ -16,9 +16,9 @@ export const TaskWithoutDate = ({ task }: Props) => {
 
 	const taskId = task?.id || TASK_ID_UNCOMMITED;
 
-	const scheduleTask = useGanttStore.use.scheduleTask();
-	const scheduleTaskClear = useGanttStore.use.scheduleTaskClear();
-	const scheduleTaskConfirm = useGanttStore.use.scheduleTaskConfirm();
+	const scheduleTask = useGanttStore((state) => state.scheduleTask);
+	const scheduleTaskClear = useGanttStore((state) => state.scheduleTaskClear);
+	const scheduleTaskConfirm = useGanttStore((state) => state.scheduleTaskConfirm);
 
 	const handleMouseMove = useCallback(
 		(event: MouseEvent<HTMLDivElement>) => {

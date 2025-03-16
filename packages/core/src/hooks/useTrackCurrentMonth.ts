@@ -3,9 +3,9 @@ import { RefObject, useEffect } from "react";
 import { useGanttStore } from "../store/ganttStore";
 
 export const useTrackCurrentMonth = (containerRef: RefObject<HTMLDivElement>) => {
-	const setHeaderMonth = useGanttStore.use.setHeaderMonth();
-	const ganttDateStart = useGanttStore.use.ganttDateStart();
-	const ganttDateEnd = useGanttStore.use.ganttDateEnd();
+	const setHeaderMonth = useGanttStore((state) => state.setHeaderMonth);
+	const ganttDateStart = useGanttStore((state) => state.ganttDateStart);
+	const ganttDateEnd = useGanttStore((state) => state.ganttDateEnd);
 
 	useEffect(() => {
 		if (!containerRef.current) {

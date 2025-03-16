@@ -4,8 +4,8 @@ import { useGanttStore } from "../store/ganttStore";
 import { ITaskViewportPosition } from "../types";
 
 export const useTrackTaskPositions = (containerRef: RefObject<HTMLDivElement>) => {
-	const tasks = useGanttStore.use.tasks();
-	const setOffscreenTasks = useGanttStore.use.setTaskPositions();
+	const tasks = useGanttStore((state) => state.tasks);
+	const setOffscreenTasks = useGanttStore((state) => state.setTaskPositions);
 
 	useEffect(() => {
 		if (!containerRef.current) {

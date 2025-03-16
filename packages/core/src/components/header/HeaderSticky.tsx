@@ -4,7 +4,7 @@ import { ButtonTaskTableOpen } from "../taskTable/ButtonTaskTableOpen";
 import "./HeaderSticky.css";
 
 export const HeaderSticky = () => {
-	const currentMonth = useGanttStore.use.headerMonth();
+	const currentMonth = useGanttStore((state) => state.headerMonth);
 
 	return (
 		<div className="headerSticky">

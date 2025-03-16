@@ -23,7 +23,7 @@ type Props = {
 export const TaskTitleInline = ({ id, title, placeholder, onComplete }: Props) => {
 	const elInput = useRef<HTMLTextAreaElement>(null);
 
-	const setTaskTitle = useGanttStore.use.setTaskTitle();
+	const setTaskTitle = useGanttStore((state) => state.setTaskTitle);
 
 	useLayoutEffect(() => {
 		elInput.current?.select();

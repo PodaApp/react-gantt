@@ -16,9 +16,9 @@ type Props = {
 const ERROR_MISSING_DATA = "Drag handler missing required information";
 
 export const TaskDraggable = ({ task, children }: Props) => {
-	const setTaskStart = useGanttStore.use.setTaskDateStart();
-	const setTaskEnd = useGanttStore.use.setTaskDateEnd();
-	const setDragActive = useGanttStore.use.setDragActive();
+	const setTaskStart = useGanttStore((state) => state.setTaskDateStart);
+	const setTaskEnd = useGanttStore((state) => state.setTaskDateEnd);
+	const setDragActive = useGanttStore((state) => state.setDragActive);
 
 	const { getDateFromOffset, getWidthFromRange } = useTaskPosition();
 

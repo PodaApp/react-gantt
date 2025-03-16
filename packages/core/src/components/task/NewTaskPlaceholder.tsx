@@ -7,8 +7,8 @@ type Props = {
 };
 
 export const NewTaskPlaceholder = ({ taskId }: Props) => {
-	const ganttSchedulingTask = useGanttStore.use.ganttSchedulingTaskId();
-	const [start, end] = useGanttStore.use.headerTaskRange();
+	const ganttSchedulingTask = useGanttStore((state) => state.ganttSchedulingTaskId);
+	const [start, end] = useGanttStore((state) => state.headerTaskRange);
 
 	if (taskId !== ganttSchedulingTask || !start || !end) {
 		return null;

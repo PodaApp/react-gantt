@@ -12,8 +12,8 @@ type Props = {
 };
 
 export const ButtonTaskTableOpen = ({ hide }: Props) => {
-	const isOpen = useGanttStore.use.ganttTaskListOpen();
-	const setOpen = useGanttStore.use.setGanttTaskListOpen();
+	const isOpen = useGanttStore((state) => state.ganttTaskListOpen);
+	const setOpen = useGanttStore((state) => state.setGanttTaskListOpen);
 
 	const handleClick = useCallback(() => {
 		setOpen(!isOpen);

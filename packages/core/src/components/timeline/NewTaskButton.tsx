@@ -10,8 +10,8 @@ type Props = {
 };
 
 export const NewTaskButton = ({ hide }: Props) => {
-	const isOpen = useGanttStore.use.ganttTaskListOpen();
-	const createTaskAtEnd = useGanttStore.use.taskCreateAtEnd();
+	const isOpen = useGanttStore((state) => state.ganttTaskListOpen);
+	const createTaskAtEnd = useGanttStore((state) => state.taskCreateAtEnd);
 
 	const handleClick = useCallback(() => {
 		createTaskAtEnd();

@@ -21,12 +21,12 @@ export const Tasks: React.FC<Props> = ({ containerRef }) => {
 
 	const { getX } = useTaskPosition();
 
-	const tasks = useGanttStore.use.tasks();
-	const dragging = useGanttStore.use.draggingTask();
-	const setDragActive = useGanttStore.use.setDragActive();
-	const setDragOverId = useGanttStore.use.setDragOverId();
-	const taskUpdateSchedule = useGanttStore.use.taskUpdateSchedule();
-	const taskUpdateRank = useGanttStore.use.taskUpdateRank();
+	const tasks = useGanttStore((state) => state.tasks);
+	const dragging = useGanttStore((state) => state.draggingTask);
+	const setDragActive = useGanttStore((state) => state.setDragActive);
+	const setDragOverId = useGanttStore((state) => state.setDragOverId);
+	const taskUpdateSchedule = useGanttStore((state) => state.taskUpdateSchedule);
+	const taskUpdateRank = useGanttStore((state) => state.taskUpdateRank);
 
 	const pointerSensor = useSensor(PointerSensor, DRAG_SENSOR_CONFIG);
 	const sensors = useSensors(pointerSensor);

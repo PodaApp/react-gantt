@@ -9,8 +9,8 @@ import { getWidthFromDays } from "../utils/getWidthFromDays";
 
 // TODO: Review this closely, remove boolean agruments consider argument order etc
 export const useTaskPosition = () => {
-	const zoomGridWidth = useGanttStore.use.zoomGridWidth();
-	const dateStart = useGanttStore.use.ganttDateStart();
+	const zoomGridWidth = useGanttStore((state) => state.zoomGridWidth);
+	const dateStart = useGanttStore((state) => state.ganttDateStart);
 
 	return {
 		gridWidth: zoomGridWidth,

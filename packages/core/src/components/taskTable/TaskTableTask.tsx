@@ -18,10 +18,10 @@ type Props = {
 };
 
 export const TaskTableTask = ({ task, index }: Props) => {
-	const taskEditingId = useGanttStore.use.taskEditingId();
+	const taskEditingId = useGanttStore((state) => state.taskEditingId);
 
-	const setTaskEditing = useGanttStore.use.setTaskEditing();
-	const createTaskAtIndex = useGanttStore.use.taskCreateAtIndex();
+	const setTaskEditing = useGanttStore((state) => state.setTaskEditing);
+	const createTaskAtIndex = useGanttStore((state) => state.taskCreateAtIndex);
 
 	const handleSetEditing = useCallback(() => {
 		setTaskEditing(task.id);

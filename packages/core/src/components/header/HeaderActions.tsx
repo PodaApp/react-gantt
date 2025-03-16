@@ -9,9 +9,9 @@ type Props = {
 };
 
 export const HeaderActions = ({ containerRef }: Props) => {
-	const zoom = useGanttStore.use.zoom();
-	const zoomUpdate = useGanttStore.use.zoomUpdate();
-	const setCenter = useGanttStore.use.setGanttCenter();
+	const zoom = useGanttStore((state) => state.zoom);
+	const zoomUpdate = useGanttStore((state) => state.zoomUpdate);
+	const setCenter = useGanttStore((state) => state.setGanttCenter);
 
 	const handleChange = useCallback(
 		(event: ChangeEvent<HTMLSelectElement>) => {

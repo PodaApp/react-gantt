@@ -17,10 +17,10 @@ export const TaskNew = ({ taskId }: Props) => {
 
 	const { getRangeFromOffset, getX } = useTaskPosition();
 
-	const taskCreate = useGanttStore.use.taskCreate();
-	const setDateRangeFocused = useGanttStore.use.setHeaderTaskRange();
-	const setTaskRange = useGanttStore.use.setTaskRange();
-	const zoom = useGanttStore.use.zoom();
+	const taskCreate = useGanttStore((state) => state.taskCreate);
+	const setDateRangeFocused = useGanttStore((state) => state.setHeaderTaskRange);
+	const setTaskRange = useGanttStore((state) => state.setTaskRange);
+	const zoom = useGanttStore((state) => state.zoom);
 
 	const taskSize = TIMELINE_CONFIG[zoom].defaultTaskSizeDays;
 
