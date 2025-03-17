@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/experimental-ct-react";
 import { Gantt } from "@poda/core";
 
+import { tasksSingle, tasksWithUnscheduled } from "./__fixtures__/tasks";
+
 test.beforeEach(async ({ page }) => {
 	await page.evaluate(() => {
 		const cursor = document.createElement("div");
@@ -20,12 +22,12 @@ test.beforeEach(async ({ page }) => {
 });
 
 // TODO: Create a page object for easier assertions on tasks
-// - Fix end date adjustment errors
-// - Fix snapping when updating task durations
+
+export const ganttDateCentered = new Date(2025, 0, 1);
 
 test.describe("scheduling", () => {
 	test("edit a tasks start date", async ({ page, mount }) => {
-		const component = await mount(<Gantt />);
+		const component = await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 
 		const node = component.locator(`.taskDraggableHandle`).first();
 		await node.hover();
@@ -40,13 +42,13 @@ test.describe("scheduling", () => {
 
 		await node.hover();
 
-		const expectedStartDate = "Mar 09";
+		const expectedStartDate = "Dec 29";
 		const tooltip = node.locator(".taskDraggableHandle__tooltip");
 		await expect(tooltip).toHaveText(expectedStartDate);
 	});
 
 	test("edit a tasks end date", async ({ page, mount }) => {
-		const component = await mount(<Gantt />);
+		const component = await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 
 		const node = component.locator(`.taskDraggableHandle`).nth(1);
 		await node.hover();
@@ -61,14 +63,14 @@ test.describe("scheduling", () => {
 
 		await node.hover();
 
-		const expectedStartDate = "Mar 15";
+		const expectedStartDate = "Jan 04";
 		const tooltip = node.locator(".taskDraggableHandle__tooltip");
 
 		await expect(tooltip).toHaveText(expectedStartDate);
 	});
 
 	test("reschedule a task maintaining its duration", async ({ page, mount }) => {
-		const component = await mount(<Gantt />);
+		const component = await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 
 		const node = component.locator(`.taskContent`).first();
 		await node.hover();
@@ -94,19 +96,19 @@ test.describe("scheduling", () => {
 		await nodeStart.scrollIntoViewIfNeeded();
 		await nodeStart.hover();
 
-		const startDate = nodeStart.locator(`text=Mar 09`);
+		const startDate = nodeStart.locator(`text=Dec 29`);
 		await expect(startDate).toBeVisible();
 
 		const nodeEnd = component.locator(`.taskDraggableHandle`).nth(1);
 		await nodeEnd.scrollIntoViewIfNeeded();
 		await nodeEnd.hover();
 
-		const endDate = nodeEnd.locator(`text=Mar 13`);
+		const endDate = nodeEnd.locator(`text=Jan 02`);
 		await expect(endDate).toBeVisible();
 	});
 
 	test("reorder tasks from the timeline", async ({ page, mount }) => {
-		const component = await mount(<Gantt />);
+		const component = await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
 
 		const node = component.locator(`.taskContent`).first();
 		await node.hover();
@@ -143,7 +145,7 @@ test.describe("scheduling", () => {
 	// TODO: This test isn't idempotent as the center point of the chart is constantly changing
 	// So the asserted dates can't be accuratly determined
 	test("schedule a task with no date", async ({ page, mount }) => {
-		const component = await mount(<Gantt />);
+		const component = await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
 		const task = component.locator(".taskWithoutDate").first();
 
 		const box = await task.boundingBox();
@@ -164,13 +166,13 @@ test.describe("scheduling", () => {
 		const taskStartHandle = taskWithDate.locator(".taskDraggableHandle").nth(0);
 		await taskStartHandle.hover();
 
-		const startDate = taskStartHandle.locator(`text=Mar 17`);
+		const startDate = taskStartHandle.locator(`text=Dec 30`);
 		await expect(startDate).toBeVisible();
 
 		const taskEndHandle = taskWithDate.locator(".taskDraggableHandle").nth(1);
 		await taskEndHandle.hover();
 
-		const endDate = taskEndHandle.locator(`text=Mar 21`);
+		const endDate = taskEndHandle.locator(`text=Jan 03`);
 		await expect(endDate).toBeVisible();
 	});
 });

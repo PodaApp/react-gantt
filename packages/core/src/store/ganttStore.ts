@@ -3,7 +3,6 @@ import { add, differenceInDays, isWithinInterval, startOfDay, startOfMonth, sub 
 import { produce } from "immer";
 import { createStore } from "zustand";
 
-import { tasks as mockTasks } from "../__fixtures__/tasks";
 import { DEFAULT_ZOOM, GRID_WIDTH, TASK_ID_UNCOMMITED, TIMELINE_CONFIG, TimelineZoomLevels } from "../constants";
 import { ITask, ITaskViewportPosition, ITaskWithDate } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
@@ -87,7 +86,7 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 		taskEditingId: null,
 		taskFocusedId: null,
 		taskOverPosition: null,
-		tasks: mockTasks,
+		tasks: [],
 		tasksPosition: {},
 		zoom: "week",
 		zoomGridWidth: GRID_WIDTH,

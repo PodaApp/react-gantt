@@ -1,12 +1,17 @@
 import { GanttProvider } from "../store/GanttProvider";
 import { GanttContainer } from "./GanttContainer";
 
-function Gantt() {
+export type GanttProps = {
+	dateCentered: any;
+	tasks: any;
+};
+
+export const Gantt = (props: GanttProps) => {
+	const { dateCentered, tasks } = props;
+
 	return (
-		<GanttProvider>
+		<GanttProvider dateCentered={dateCentered} tasks={tasks}>
 			<GanttContainer />
 		</GanttProvider>
 	);
-}
-
-export default Gantt;
+};
