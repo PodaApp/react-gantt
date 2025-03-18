@@ -3,6 +3,6 @@
 	"compilerOptions": {
 		"types": ["./types/global.d.ts", "jest"]
 	},
-	"include": ["src/index.ts"],
+	"include": ["**/*.ts", "**/*.tsx"],
 	"exclude": ["node_modules", "dist"]
 }
