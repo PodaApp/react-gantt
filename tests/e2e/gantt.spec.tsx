@@ -21,8 +21,6 @@ test.beforeEach(async ({ page }) => {
 	});
 });
 
-// TODO: Create a page object for easier assertions on tasks
-
 export const ganttDateCentered = new Date(2025, 0, 1);
 
 test.describe("scheduling", () => {

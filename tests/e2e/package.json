@@ -13,7 +13,7 @@
     "@poda/core": "workspace:*"
   },
   "devDependencies": {
-    "@playwright/experimental-ct-react": "^1.50.1",
+    "@playwright/experimental-ct-react": "1.51.1",
     "@types/node": "^22.13.9",
     "date-fns": "4.1.0",
     "playwright": "1.51.1"

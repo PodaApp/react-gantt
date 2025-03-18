@@ -1,8 +1,5 @@
+import { ITask } from "@poda/core";
 import { startOfDay } from "date-fns";
-
-import { ITask } from "../../../packages/core/src/types";
-
-// I need to strip all time and timezones from dates...
 
 export const tasksSingle: ITask[] = [
 	{

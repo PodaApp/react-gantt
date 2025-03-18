@@ -1,4 +1,3 @@
-import typescript from "@rollup/plugin-typescript";
 import { readFile } from "fs/promises";
 import path from "path";
 import { defineConfig } from "rolldown";
@@ -18,15 +17,6 @@ export default defineConfig([
 			/^react($|\/)/,
 			...(packageJson.dependencies ? Object.keys(packageJson.dependencies) : []),
 			...(packageJson.peerDependencies ? Object.keys(packageJson.peerDependencies) : []),
-		],
-		// TODO: https://github.com/rolldown/rolldown/issues/1388  Better type bundling, this is currently not supported in rolldown
-		plugins: [
-			typescript({
-				tsconfig: path.resolve(__dirname, "./tsconfig.json"),
-				declaration: true,
-				declarationDir: path.resolve(__dirname, "dist"),
-				emitDeclarationOnly: true,
-			}),
 		],
 	},
 ]);
