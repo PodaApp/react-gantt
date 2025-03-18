@@ -1,9 +1,10 @@
 import { GanttProvider } from "../store/GanttProvider";
+import { ITask } from "../types";
 import { GanttContainer } from "./GanttContainer";
 
 export type GanttProps = {
-	dateCentered: any;
-	tasks: any;
+	tasks: ITask[];
+	dateCentered?: Date;
 };
 
 export const Gantt = (props: GanttProps) => {
