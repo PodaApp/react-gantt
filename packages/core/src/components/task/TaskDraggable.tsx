@@ -20,6 +20,8 @@ export const TaskDraggable = ({ task, children }: Props) => {
 	const setTaskEnd = useGanttStore((state) => state.setTaskDateEnd);
 	const setDragActive = useGanttStore((state) => state.setDragActive);
 
+	const [directionActive, setDirectionActive] = useState<"left" | "right" | null>(null);
+
 	const { getDateFromOffset, getWidthFromRange } = useTaskPosition();
 
 	const [initialWidth, setInitialWidth] = useState<number>(0);
@@ -27,7 +29,15 @@ export const TaskDraggable = ({ task, children }: Props) => {
 	const handleDragStart = useCallback(
 		(event: DragStartEvent) => {
 			event.activatorEvent.preventDefault();
+
+			const direction = event.active.data.current?.direction;
+
+			if (!direction) {
+				throw new Error(ERROR_MISSING_DATA);
+			}
+
 			setDragActive(task);
+			setDirectionActive(direction);
 			setInitialWidth(getWidthFromRange(task.start, task.end));
 		},
 		[getWidthFromRange, setDragActive, task],
@@ -63,6 +73,7 @@ export const TaskDraggable = ({ task, children }: Props) => {
 
 	const handleDragEnd = useCallback(() => {
 		setDragActive(null);
+		setDirectionActive(null);
 	}, [setDragActive]);
 
 	return (
@@ -72,9 +83,9 @@ export const TaskDraggable = ({ task, children }: Props) => {
 			onDragMove={handleDragTask}
 			onDragEnd={handleDragEnd}
 			modifiers={[restrictToHorizontalAxis]}>
-			<TaskDraggableHandle taskId={task.id} date={task.start} direction="left" />
+			<TaskDraggableHandle taskId={task.id} date={task.start} direction="left" directionActive={directionActive} />
 			{children}
-			<TaskDraggableHandle taskId={task.id} date={task.end} direction="right" />
+			<TaskDraggableHandle taskId={task.id} date={task.end} direction="right" directionActive={directionActive} />
 		</DndContext>
 	);
 };

@@ -349,6 +349,10 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 				return;
 			}
 
+			if (current.start && end <= current.start) {
+				end = current.start;
+			}
+
 			setTask(id, { ...current, end });
 		},
 
@@ -363,6 +367,10 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 
 			if (current.start === start) {
 				return;
+			}
+
+			if (current.end && start >= current.end) {
+				start = current.end;
 			}
 
 			setTask(id, { ...current, start });

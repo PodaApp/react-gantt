@@ -1,4 +1,5 @@
 import { Locator } from "playwright";
+import { expect } from "playwright/test";
 
 import { PlaywrightContext } from "./types";
 
@@ -18,9 +19,11 @@ const _getCenter = async (el: Locator) => {
 };
 
 export const dragElementX = async (el: Locator, x: number, { page }: PlaywrightContext) => {
+	expect(el).toHaveCount(1);
 	await el.hover();
 	await el.scrollIntoViewIfNeeded();
 	await page.mouse.down();
+	expect(el).toHaveCount(1);
 
 	const { x: boxCenterX, y: boxCenterY } = await _getCenter(el);
 

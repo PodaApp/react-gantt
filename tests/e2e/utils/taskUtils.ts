@@ -37,7 +37,7 @@ const _getTaskData = (el: Locator) => {
 		getHandleStart: () => _getTaskHandle(el, 0),
 		getHandleEnd: () => _getTaskHandle(el, 1),
 		getContent: () => el.locator(`.taskContent`).nth(0),
-		getTaskBar: () => el.locator(`.taskContent__bar`),
+		getTaskBar: () => el.locator(`.taskWithDate__bar`),
 		getTitle: () => el.locator(`.taskContent__title`).nth(0),
 		getTooltips: () => el.locator(`.taskDraggableHandle__tooltip`),
 		getDetails: () => _computeTaskMeta(el),

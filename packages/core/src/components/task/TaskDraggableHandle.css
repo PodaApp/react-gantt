@@ -15,6 +15,10 @@
 	right: -6px;
 }
 
+.taskDraggableHandle--hidden {
+	display: none;
+}
+
 .taskDraggableHandle__handle {
 	visibility: hidden;
 	height: 100%;

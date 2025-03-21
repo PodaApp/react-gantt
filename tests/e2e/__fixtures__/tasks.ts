@@ -11,6 +11,16 @@ export const tasksSingle: ITask[] = [
 	},
 ];
 
+export const tasksSingleLong: ITask[] = [
+	{
+		id: "0",
+		title: "This is a big task that is going to take 6 months to complete",
+		start: startOfDay(new Date("2024-09-01")),
+		end: startOfDay(new Date("2025-04-01")),
+		creating: false,
+	},
+];
+
 export const tasksWithUnscheduled: ITask[] = [
 	{
 		id: "0",
