@@ -136,7 +136,7 @@ importers:
         specifier: 1.6.15
         version: 1.6.15
       dts-bundle-generator:
-        specifier: ^9.5.1
+        specifier: 9.5.1
         version: 9.5.1
       jest:
         specifier: 29.7.0

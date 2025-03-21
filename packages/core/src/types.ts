@@ -11,7 +11,7 @@ export type ITaskWithDate = ITask & {
 	end: Date;
 };
 
-export type ITaskOffset = { x: number; width: number };
+export type ITaskOffset = { x: number; duration: number; width: number };
 
 export type ITaskViewportPosition = {
 	top: number;

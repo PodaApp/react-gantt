@@ -26,8 +26,16 @@ export const TimelineBar = ({ start, end, children, className, render }: Props) 
 		"--task-x": `${timelinePosition.x}px`,
 	} as React.CSSProperties;
 
+	const taskData = JSON.stringify({
+		dateStart: start.toISOString(),
+		dateEnd: end.toISOString(),
+		width: timelinePosition.width,
+		x: timelinePosition.x,
+		duration: timelinePosition.duration,
+	});
+
 	return (
-		<div className={timelineClassName} style={timelineStyles}>
+		<div className={timelineClassName} style={timelineStyles} data-computed={taskData}>
 			{render ? render(timelinePosition) : children}
 		</div>
 	);
