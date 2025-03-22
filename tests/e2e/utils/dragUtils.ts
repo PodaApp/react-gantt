@@ -1,5 +1,4 @@
 import { Locator } from "playwright";
-import { expect } from "playwright/test";
 
 import { PlaywrightContext } from "./types";
 
@@ -18,7 +17,11 @@ const _getCenter = async (el: Locator) => {
 	};
 };
 
-export const dragElementX = async (el: Locator, x: number, { page }: PlaywrightContext) => {
+type DragOptions = {
+	mouseUp?: boolean;
+} & PlaywrightContext;
+
+export const dragElementX = async (el: Locator, x: number, { page, mouseUp = true }: DragOptions) => {
 	await el.hover();
 	await el.scrollIntoViewIfNeeded();
 	await page.mouse.down();
@@ -28,10 +31,10 @@ export const dragElementX = async (el: Locator, x: number, { page }: PlaywrightC
 	await page.mouse.move(boxCenterX, boxCenterY + ACTIVATION_CONSTRAINT);
 	await page.mouse.move(boxCenterX + x, boxCenterY - ACTIVATION_CONSTRAINT);
 
-	await page.mouse.up();
+	if (mouseUp) await page.mouse.up();
 };
 
-export const dragElementTo = async (el: Locator, x: number, y: number, { page }: PlaywrightContext) => {
+export const dragElementTo = async (el: Locator, x: number, y: number, { page, mouseUp = true }: DragOptions) => {
 	await el.scrollIntoViewIfNeeded();
 	const { x: boxCenterX, y: boxCenterY } = await _getCenter(el);
 
@@ -41,9 +44,11 @@ export const dragElementTo = async (el: Locator, x: number, y: number, { page }:
 	await page.mouse.move(x, y + ACTIVATION_CONSTRAINT);
 	await page.mouse.move(x, y);
 	await page.waitForTimeout(100);
+
+	if (mouseUp) await page.mouse.up();
 };
 
-export const dragElementOver = async (el: Locator, overEl: Locator, { page }: PlaywrightContext) => {
+export const dragElementOver = async (el: Locator, overEl: Locator, { page, mouseUp = true }: DragOptions) => {
 	await el.hover();
 	await el.scrollIntoViewIfNeeded();
 	await page.mouse.down();
@@ -54,7 +59,7 @@ export const dragElementOver = async (el: Locator, overEl: Locator, { page }: Pl
 	const { x: overBoxCenterX, y: overBoxCenterY } = await _getCenter(overEl);
 	await page.mouse.move(overBoxCenterX, overBoxCenterY - ACTIVATION_CONSTRAINT);
 
-	await page.mouse.up();
+	if (mouseUp) await page.mouse.up();
 };
 
 export const clickElementCenter = async (el: Locator, { page }: PlaywrightContext) => {

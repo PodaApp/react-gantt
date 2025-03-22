@@ -15,3 +15,5 @@ export const getBoundingClientRect = async (el: Locator) => {
 		};
 	});
 };
+
+export const isTextTruncated = (el: Locator) => el.evaluate((el) => el.scrollWidth > el.clientWidth);

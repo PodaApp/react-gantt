@@ -13,7 +13,7 @@ export const TaskDragOverlay = ({ task }: Props) => {
 	}
 
 	return (
-		<TimelineBar start={task.start} end={task.end}>
+		<TimelineBar start={task.start} end={task.end} className="taskDragOverlay">
 			<TaskStatic task={task} showBeacons={false} />
 		</TimelineBar>
 	);

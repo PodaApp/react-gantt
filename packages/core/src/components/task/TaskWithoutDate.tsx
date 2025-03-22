@@ -20,6 +20,9 @@ export const TaskWithoutDate = ({ task }: Props) => {
 	const scheduleTaskClear = useGanttStore((state) => state.scheduleTaskClear);
 	const scheduleTaskConfirm = useGanttStore((state) => state.scheduleTaskConfirm);
 
+	const isEditingTask = useGanttStore((state) => state.taskEditingId !== null);
+	const isTaskCreating = task && task.creating;
+
 	const handleMouseMove = useCallback(
 		(event: MouseEvent<HTMLDivElement>) => {
 			if (taskNewRef.current) {
@@ -40,7 +43,7 @@ export const TaskWithoutDate = ({ task }: Props) => {
 		scheduleTaskConfirm(taskId);
 	}, [scheduleTaskConfirm, taskId]);
 
-	if (task && task.creating) {
+	if (isTaskCreating || isEditingTask) {
 		return null;
 	}
 

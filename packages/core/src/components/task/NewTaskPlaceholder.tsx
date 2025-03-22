@@ -15,7 +15,7 @@ export const NewTaskPlaceholder = ({ taskId }: Props) => {
 	}
 
 	return (
-		<TimelineBar start={start} end={end}>
+		<TimelineBar start={start} end={end} className="newTaskPlaceholder">
 			<div className="taskContent__bar"></div>
 		</TimelineBar>
 	);
