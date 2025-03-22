@@ -5,7 +5,7 @@ import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
 import { useGanttStore } from "../../hooks/useGanttStore";
 import { useTaskPosition } from "../../hooks/useTaskPosition";
-import { ITaskWithDate } from "../../types";
+import { ITaskOffset, ITaskWithDate } from "../../types";
 import { TaskDraggableHandle } from "./TaskDraggableHandle";
 
 type Props = {
@@ -22,9 +22,9 @@ export const TaskDraggable = ({ task, children }: Props) => {
 
 	const [directionActive, setDirectionActive] = useState<"left" | "right" | null>(null);
 
-	const { getDateFromOffset, getWidthFromRange } = useTaskPosition();
+	const { getTaskPosition } = useTaskPosition();
 
-	const [initialWidth, setInitialWidth] = useState<number>(0);
+	const [initialPosition, setTaskPosition] = useState<ITaskOffset | null>(null);
 
 	const handleDragStart = useCallback(
 		(event: DragStartEvent) => {
@@ -38,37 +38,36 @@ export const TaskDraggable = ({ task, children }: Props) => {
 
 			setDragActive(task);
 			setDirectionActive(direction);
-			setInitialWidth(getWidthFromRange(task.start, task.end));
+			setTaskPosition(getTaskPosition(task.start, task.end, false));
 		},
-		[getWidthFromRange, setDragActive, task],
+		[getTaskPosition, setDragActive, task],
 	);
 
 	const handleDragTask = useCallback(
 		(event: DragMoveEvent) => {
 			event.activatorEvent.preventDefault();
 
-			const activatorEvent = event.activatorEvent as PointerEvent;
 			const direction = event.active.data.current?.direction;
 
-			if (!direction) {
+			if (!direction || !initialPosition) {
 				throw new Error(ERROR_MISSING_DATA);
 			}
 
-			/**
-			 * LayerX is condidered a non standard property and may not behave consistently in all
-			 * browsers https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/layerX
-			 */
-			const deltaX = event.delta.x;
+			const offset = initialPosition.x + event.delta.x;
 
 			if (direction === "left") {
-				const x = Math.floor(activatorEvent.layerX + deltaX);
-				setTaskStart(task.id, getDateFromOffset(x, true));
+				setTaskStart(task.id, offset);
 			} else {
-				const x = Math.floor(activatorEvent.layerX + initialWidth + deltaX);
-				setTaskEnd(task.id, getDateFromOffset(x));
+				/**
+				 * **Important Note: Value of x**
+				 * When updating the end position, the offset is calculated by adding the full width of the task to the current offset.
+				 * This adjustment aligns the offset with the end date plus one unit.
+				 */
+				const x = offset + initialPosition.width;
+				setTaskEnd(task.id, x);
 			}
 		},
-		[getDateFromOffset, initialWidth, setTaskEnd, setTaskStart, task.id],
+		[initialPosition, setTaskEnd, setTaskStart, task.id],
 	);
 
 	const handleDragEnd = useCallback(() => {

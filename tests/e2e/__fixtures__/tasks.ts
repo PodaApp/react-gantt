@@ -5,6 +5,7 @@ export const tasksSingle: ITask[] = [
 	{
 		id: "0",
 		title: "More CMS Block Types",
+		// start: startOfDay(new Date(Date.UTC(2024, 11, 30))),
 		start: startOfDay(new Date("2024-12-30")),
 		end: startOfDay(new Date("2025-01-03")),
 		creating: false,

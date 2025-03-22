@@ -47,8 +47,8 @@ type GanttStoreActions = {
 	setHeaderMonth: (month: GanttStoreState["headerMonth"]) => void;
 	setHeaderTaskRange: (start: TaskDate, end: TaskDate) => void;
 	setTask: (id: ITask["id"], partialTask: ITask) => void;
-	setTaskDateEnd: (id: ITask["id"], end: Date) => void;
-	setTaskDateStart: (id: ITask["id"], start: Date) => void;
+	setTaskDateEnd: (id: ITask["id"], offset: number) => void;
+	setTaskDateStart: (id: ITask["id"], offset: number) => void;
 	setTaskEditing: (id: ITask["id"] | null) => void;
 	setTaskFocused: (task: ITaskWithDate) => void;
 	setTaskPositions: (id: ITask["id"], options: Partial<ITaskViewportPosition>) => void;
@@ -323,7 +323,7 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 				throw new Error(`Task ${id} must have start and end date`);
 			}
 
-			const newStart = getDateFromOffset(ganttDateStart, offset, zoomGridWidth);
+			const newStart = getDateFromOffset(ganttDateStart, offset, zoomGridWidth, { startsAtZero: true });
 
 			if (newStart.getTime() === task.start.getTime()) {
 				return;
@@ -336,14 +336,16 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 		},
 
 		// TODO: Merge task setters into single method
-		setTaskDateEnd: (id, end) => {
-			const { tasks, setTask } = get();
+		setTaskDateEnd: (id, offset) => {
+			const { tasks, setTask, zoomGridWidth, ganttDateStart } = get();
 
 			const current = tasks.find((task) => task.id === id);
 
 			if (!current) {
 				throw new Error("No task found to update");
 			}
+			const offsetAtStartOfEndDate = offset - zoomGridWidth;
+			let end = getDateFromOffset(ganttDateStart, offsetAtStartOfEndDate, zoomGridWidth, { startsAtZero: true });
 
 			if (current.end === end) {
 				return;
@@ -356,14 +358,16 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 			setTask(id, { ...current, end });
 		},
 
-		setTaskDateStart: (id, start) => {
-			const { tasks, setTask } = get();
+		setTaskDateStart: (id, offset) => {
+			const { tasks, setTask, zoomGridWidth, ganttDateStart } = get();
 
 			const current = tasks.find((task) => task.id === id);
 
 			if (!current) {
 				throw new Error("No task found to update");
 			}
+
+			let start = getDateFromOffset(ganttDateStart, offset, zoomGridWidth, { startsAtZero: true });
 
 			if (current.start === start) {
 				return;

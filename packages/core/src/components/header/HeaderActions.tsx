@@ -1,5 +1,7 @@
 import { ChangeEvent, RefObject, useCallback } from "react";
 
+import { startOfDay } from "date-fns";
+
 import { useGanttStore } from "../../hooks/useGanttStore";
 import { GanttStoreState } from "../../store/ganttStore";
 
@@ -23,7 +25,7 @@ export const HeaderActions = ({ containerRef }: Props) => {
 	);
 
 	const handleToday = useCallback(() => {
-		setCenter(new Date());
+		setCenter(startOfDay(new Date()));
 	}, [setCenter]);
 
 	return (

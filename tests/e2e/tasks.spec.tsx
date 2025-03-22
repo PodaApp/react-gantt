@@ -3,6 +3,7 @@ import { Gantt } from "@poda/core";
 
 import { tasksSingle, tasksSingleLong, tasksWithUnscheduled } from "./__fixtures__/tasks";
 import { getBoundingClientRect } from "./utils/domUtils";
+import { dragElementTo } from "./utils/dragUtils";
 import { tasksHelper } from "./utils/taskUtils";
 
 test.beforeEach(async ({ page }) => {
@@ -112,6 +113,23 @@ test.describe("tasks", () => {
 
 		// 5 Days @ 40px per day
 		expect(finalLeft).toBeGreaterThanOrEqual(200);
+	});
+
+	test("should not show jump to task buttons when dragging a task", async ({ mount, page }) => {
+		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+
+		const { getTaskAtIndex } = tasksHelper({ page });
+
+		const task = await getTaskAtIndex(0);
+		const timeLine = page.locator(".gantt__scrollable");
+
+		const timeLineRect = await getBoundingClientRect(timeLine);
+
+		await dragElementTo(task.getContent(), timeLineRect.right, timeLineRect.top, { page });
+		await expect(page.locator(".taskOverflow")).not.toBeVisible();
+
+		await dragElementTo(task.getContent(), timeLineRect.left, timeLineRect.top, { page });
+		await expect(page.locator(".taskOverflow")).not.toBeVisible();
 	});
 
 	test("shows a jump to task end button when the task leaves the viewport", async ({ mount, page }) => {

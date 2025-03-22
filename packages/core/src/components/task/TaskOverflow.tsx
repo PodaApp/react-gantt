@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { format } from "date-fns";
 
 import { DATE_FORMAT_SHORT_MONTH } from "../../constants";
+import { useGanttStore } from "../../hooks/useGanttStore";
 import { ITaskWithDate } from "../../types";
 import { ArrowRight } from "../icons/ArrowRight";
 import { MoveLeft } from "../icons/MoveLeft";
@@ -25,11 +26,13 @@ type Props = {
 };
 
 export const TaskOverflow: React.FC<Props> = ({ task, direction, position, isVisible, isInViewport = false, onClick }) => {
+	const isDragging = useGanttStore((state) => state.draggingTask?.id === task.id);
+
 	const handleOverflowClick = useCallback(() => {
 		onClick(direction);
 	}, [direction, onClick]);
 
-	if (!position || !isVisible) {
+	if (!position || !isVisible || isDragging) {
 		return null;
 	}
 

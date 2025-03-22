@@ -19,11 +19,9 @@ const _getCenter = async (el: Locator) => {
 };
 
 export const dragElementX = async (el: Locator, x: number, { page }: PlaywrightContext) => {
-	expect(el).toHaveCount(1);
 	await el.hover();
 	await el.scrollIntoViewIfNeeded();
 	await page.mouse.down();
-	expect(el).toHaveCount(1);
 
 	const { x: boxCenterX, y: boxCenterY } = await _getCenter(el);
 
@@ -31,6 +29,18 @@ export const dragElementX = async (el: Locator, x: number, { page }: PlaywrightC
 	await page.mouse.move(boxCenterX + x, boxCenterY - ACTIVATION_CONSTRAINT);
 
 	await page.mouse.up();
+};
+
+export const dragElementTo = async (el: Locator, x: number, y: number, { page }: PlaywrightContext) => {
+	await el.scrollIntoViewIfNeeded();
+	const { x: boxCenterX, y: boxCenterY } = await _getCenter(el);
+
+	await page.mouse.move(boxCenterX, boxCenterY);
+	await page.mouse.down();
+
+	await page.mouse.move(x, y + ACTIVATION_CONSTRAINT);
+	await page.mouse.move(x, y);
+	await page.waitForTimeout(100);
 };
 
 export const dragElementOver = async (el: Locator, overEl: Locator, { page }: PlaywrightContext) => {

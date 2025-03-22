@@ -1,10 +1,15 @@
 import { expect, test } from "@playwright/experimental-ct-react";
 import { Gantt } from "@poda/core";
 
+import { GRID_WIDTH } from "../../packages/core/src/constants";
 import { tasksSingle, tasksWithUnscheduled } from "./__fixtures__/tasks";
 import { getBoundingClientRect } from "./utils/domUtils";
 import { clickElementCenter, dragElementOver, dragElementX } from "./utils/dragUtils";
 import { tasksHelper } from "./utils/taskUtils";
+
+const halfGridUnit = GRID_WIDTH / 2;
+const dragDistanceNoChange = halfGridUnit - 1;
+const dragDistancePlusOne = halfGridUnit + 1;
 
 export const ganttDateCentered = new Date(2025, 0, 1);
 
@@ -39,7 +44,7 @@ test("edit a tasks start date", async ({ page, mount }) => {
 	expect(before.duration).toEqual(5);
 
 	const taskHandleStart = await task.getHandleStart();
-	await dragElementX(taskHandleStart, -42, { page });
+	await dragElementX(taskHandleStart, -dragDistancePlusOne, { page });
 
 	const after = await task.getDetails();
 	expect(after.dateStart).toEqual(new Date("2024-12-28T14:00:00.000Z"));
@@ -47,6 +52,24 @@ test("edit a tasks start date", async ({ page, mount }) => {
 	expect(after.duration).toEqual(6);
 
 	await expect(task.getTooltips().nth(0)).toHaveText("Dec 29");
+});
+
+test("task start date does not update until drag distance is greater than half a grid unit", async ({ page, mount }) => {
+	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+
+	const { getTaskAtIndex } = tasksHelper({ page });
+
+	const task = await getTaskAtIndex(0);
+
+	const taskHandleStart = await task.getHandleStart();
+	await dragElementX(taskHandleStart, -dragDistanceNoChange, { page });
+
+	const after = await task.getDetails();
+	expect(after.dateStart).toEqual(new Date("2024-12-29T14:00:00.000Z"));
+	expect(after.dateEnd).toEqual(new Date("2025-01-02T14:00:00.000Z"));
+	expect(after.duration).toEqual(5);
+
+	await expect(task.getTooltips().nth(1)).toHaveText("Jan 03");
 });
 
 test("edit a tasks end date", async ({ page, mount }) => {
@@ -63,7 +86,7 @@ test("edit a tasks end date", async ({ page, mount }) => {
 
 	const taskHandleEnd = page.locator(`.taskDraggableHandle`).nth(1);
 	expect(taskHandleEnd).toHaveCount(1);
-	await dragElementX(taskHandleEnd, 12, { page });
+	await dragElementX(taskHandleEnd, dragDistancePlusOne, { page });
 
 	const after = await task.getDetails();
 	expect(after.dateStart).toEqual(new Date("2024-12-29T14:00:00.000Z"));
@@ -71,6 +94,24 @@ test("edit a tasks end date", async ({ page, mount }) => {
 	expect(after.duration).toEqual(6);
 
 	await expect(task.getTooltips().nth(1)).toHaveText("Jan 04");
+});
+
+test("task end date does not update until drag distance is greater than half a grid unit", async ({ page, mount }) => {
+	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+
+	const { getTaskAtIndex } = tasksHelper({ page });
+
+	const task = await getTaskAtIndex(0);
+
+	const taskHandleEnd = page.locator(`.taskDraggableHandle`).nth(1);
+	await dragElementX(taskHandleEnd, dragDistanceNoChange, { page });
+
+	const after = await task.getDetails();
+	expect(after.dateStart).toEqual(new Date("2024-12-29T14:00:00.000Z"));
+	expect(after.dateEnd).toEqual(new Date("2025-01-02T14:00:00.000Z"));
+	expect(after.duration).toEqual(5);
+
+	await expect(task.getTooltips().nth(1)).toHaveText("Jan 03");
 });
 
 test("reschedule a task maintaining its duration", async ({ page, mount }) => {
@@ -85,7 +126,7 @@ test("reschedule a task maintaining its duration", async ({ page, mount }) => {
 	expect(before.dateEnd).toEqual(new Date("2025-01-02T14:00:00.000Z"));
 	expect(before.duration).toEqual(5);
 
-	await dragElementX(task.getContent(), -80, { page });
+	await dragElementX(task.getContent(), -40, { page });
 
 	const after = await task.getDetails();
 	expect(after.dateStart).toEqual(new Date("2024-12-28T14:00:00.000Z"));
@@ -94,6 +135,21 @@ test("reschedule a task maintaining its duration", async ({ page, mount }) => {
 
 	await expect(task.getTooltips().nth(0)).toHaveText("Dec 29");
 	await expect(task.getTooltips().nth(1)).toHaveText("Jan 02");
+});
+
+test("task dates do not update until drag distance is greater than half a grid unit", async ({ page, mount }) => {
+	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+
+	const { getTaskAtIndex } = tasksHelper({ page });
+
+	const task = await getTaskAtIndex(0);
+
+	await dragElementX(task.getContent(), -dragDistanceNoChange, { page });
+
+	const after = await task.getDetails();
+	expect(after.dateStart).toEqual(new Date("2024-12-29T14:00:00.000Z"));
+	expect(after.dateEnd).toEqual(new Date("2025-01-02T14:00:00.000Z"));
+	expect(after.duration).toEqual(5);
 });
 
 test("reorder tasks from the timeline", async ({ page, mount }) => {

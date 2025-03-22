@@ -3,7 +3,7 @@ import { RefObject, useCallback, useState } from "react";
 import { DndContext, DragEndEvent, DragMoveEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 
-import { DRAG_SENSOR_CONFIG, GANTT_SNAP_LEFT_MIN, GRID_WIDTH } from "../../constants";
+import { DRAG_SENSOR_CONFIG } from "../../constants";
 import { useGanttStore } from "../../hooks/useGanttStore";
 import { useTaskPosition } from "../../hooks/useTaskPosition";
 import { isTaskWithDate } from "../../utils/isTaskWithDate";
@@ -39,7 +39,7 @@ export const Tasks: React.FC<Props> = ({ containerRef }) => {
 				throw new Error(ERROR_MISSING_DATA);
 			}
 
-			setInitialOffset(getX(task.start, false));
+			setInitialOffset(getX(task.start, { startsAtZero: true }));
 			setDragActive(task);
 		},
 		[getX, setDragActive],
@@ -53,7 +53,9 @@ export const Tasks: React.FC<Props> = ({ containerRef }) => {
 				throw new Error(ERROR_MISSING_DATA);
 			}
 
-			taskUpdateSchedule(task.id, _calculateOffsetWithTolerance(initialOffset, event));
+			const offset = initialOffset + event.delta.x;
+
+			taskUpdateSchedule(task.id, offset);
 		},
 		[initialOffset, taskUpdateSchedule],
 	);
@@ -81,7 +83,13 @@ export const Tasks: React.FC<Props> = ({ containerRef }) => {
 	);
 
 	return (
-		<DndContext onDragStart={handleDragStart} onDragMove={handleDragMove} onDragOver={handleDragOver} onDragEnd={handleDragEnd} sensors={sensors}>
+		<DndContext
+			autoScroll={false}
+			onDragStart={handleDragStart}
+			onDragMove={handleDragMove}
+			onDragOver={handleDragOver}
+			onDragEnd={handleDragEnd}
+			sensors={sensors}>
 			<SortableContext items={tasks}>
 				{tasks.map((task) => (
 					<Task task={task} containerRef={containerRef} key={task.id} />
@@ -90,25 +98,4 @@ export const Tasks: React.FC<Props> = ({ containerRef }) => {
 			<DragOverlay dropAnimation={null}>{dragging && <TaskDragOverlay task={dragging} />}</DragOverlay>
 		</DndContext>
 	);
-};
-
-/**
- * Calculates the drag offset with snapping tolerance based on the initial offset and drag movement event.
- * The function only applies a snap behavior when moving left, as the offset is calculated from the left.
- * This prevents unintended date changes when a task is moved only a few pixels.
- */
-const _calculateOffsetWithTolerance = (initialOffset: number, event: DragMoveEvent): number => {
-	const currentOffset = initialOffset + event.delta.x;
-	const currentDaysFromStart = currentOffset / GRID_WIDTH;
-
-	const remainder = currentDaysFromStart % 1;
-
-	if (event.delta.x < 0) {
-		if (remainder <= GANTT_SNAP_LEFT_MIN) {
-			return Math.floor(currentDaysFromStart) * GRID_WIDTH;
-		}
-		return Math.ceil(currentDaysFromStart) * GRID_WIDTH;
-	}
-
-	return currentOffset;
 };
