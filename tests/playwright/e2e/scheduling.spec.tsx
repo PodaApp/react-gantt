@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/experimental-ct-react";
 import { Gantt } from "@poda/core";
 
-import { GRID_WIDTH } from "../../packages/core/src/constants";
+import { GRID_WIDTH } from "../../../packages/core/src/constants";
 import { tasksSingle, tasksWithUnscheduled } from "./__fixtures__/tasks";
 import { getBoundingClientRect } from "./utils/domUtils";
 import { clickElementCenter, dragElementOver, dragElementX } from "./utils/dragUtils";
@@ -12,24 +12,6 @@ const dragDistanceNoChange = halfGridUnit - 1;
 const dragDistancePlusOne = halfGridUnit + 1;
 
 export const ganttDateCentered = new Date(2025, 0, 1);
-
-test.beforeEach(async ({ page }) => {
-	await page.evaluate(() => {
-		const cursor = document.createElement("div");
-		cursor.style.width = "10px";
-		cursor.style.height = "10px";
-		cursor.style.background = "red";
-		cursor.style.position = "absolute";
-		cursor.style.borderRadius = "50%";
-		cursor.style.zIndex = "9999";
-		document.body.appendChild(cursor);
-
-		document.addEventListener("mousemove", (e) => {
-			cursor.style.left = `${e.clientX}px`;
-			cursor.style.top = `${e.clientY}px`;
-		});
-	});
-});
 
 test("edit a tasks start date", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
