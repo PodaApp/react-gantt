@@ -3,9 +3,9 @@ import { Gantt } from "@poda/core";
 
 import { GRID_WIDTH } from "../../../packages/core/src/constants";
 import { tasksSingle, tasksWithUnscheduled } from "./__fixtures__/tasks";
+import { TaskPage } from "./pageObjects/TaskPage";
 import { getBoundingClientRect } from "./utils/domUtils";
 import { clickElementCenter, dragElementOver, dragElementX } from "./utils/mouseUtils";
-import { tasksHelper } from "./utils/taskUtils";
 
 const halfGridUnit = GRID_WIDTH / 2;
 const dragDistanceNoChange = halfGridUnit - 1;
@@ -16,9 +16,9 @@ export const ganttDateCentered = new Date(2025, 0, 1);
 test("edit a tasks start date", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 
-	const { getTaskAtIndex } = tasksHelper({ page });
+	const taskPage = new TaskPage(page);
 
-	const task = await getTaskAtIndex(0);
+	const task = await taskPage.getTaskAtIndex(0);
 
 	const before = await task.getDetails();
 	expect(before.dateStart).toEqual(new Date("2024-12-29T14:00:00.000Z"));
@@ -39,9 +39,9 @@ test("edit a tasks start date", async ({ page, mount }) => {
 test("task start date does not update until drag distance is greater than half a grid unit", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 
-	const { getTaskAtIndex } = tasksHelper({ page });
+	const taskPage = new TaskPage(page);
 
-	const task = await getTaskAtIndex(0);
+	const task = await taskPage.getTaskAtIndex(0);
 
 	const taskHandleStart = await task.getHandleStart();
 	await dragElementX(taskHandleStart, -dragDistanceNoChange, { page });
@@ -57,9 +57,9 @@ test("task start date does not update until drag distance is greater than half a
 test("edit a tasks end date", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 
-	const { getTaskAtIndex } = tasksHelper({ page });
+	const taskPage = new TaskPage(page);
 
-	const task = await getTaskAtIndex(0);
+	const task = await taskPage.getTaskAtIndex(0);
 
 	const before = await task.getDetails();
 	expect(before.dateStart).toEqual(new Date("2024-12-29T14:00:00.000Z"));
@@ -81,9 +81,9 @@ test("edit a tasks end date", async ({ page, mount }) => {
 test("task end date does not update until drag distance is greater than half a grid unit", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 
-	const { getTaskAtIndex } = tasksHelper({ page });
+	const taskPage = new TaskPage(page);
 
-	const task = await getTaskAtIndex(0);
+	const task = await taskPage.getTaskAtIndex(0);
 
 	const taskHandleEnd = page.locator(`.taskDraggableHandle`).nth(1);
 	await dragElementX(taskHandleEnd, dragDistanceNoChange, { page });
@@ -99,9 +99,9 @@ test("task end date does not update until drag distance is greater than half a g
 test("reschedule a task maintaining its duration", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 
-	const { getTaskAtIndex } = tasksHelper({ page });
+	const taskPage = new TaskPage(page);
 
-	const task = await getTaskAtIndex(0);
+	const task = await taskPage.getTaskAtIndex(0);
 
 	const before = await task.getDetails();
 	expect(before.dateStart).toEqual(new Date("2024-12-29T14:00:00.000Z"));
@@ -122,9 +122,9 @@ test("reschedule a task maintaining its duration", async ({ page, mount }) => {
 test("task dates do not update until drag distance is greater than half a grid unit", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 
-	const { getTaskAtIndex } = tasksHelper({ page });
+	const taskPage = new TaskPage(page);
 
-	const task = await getTaskAtIndex(0);
+	const task = await taskPage.getTaskAtIndex(0);
 
 	await dragElementX(task.getContent(), -dragDistanceNoChange, { page });
 
@@ -137,14 +137,14 @@ test("task dates do not update until drag distance is greater than half a grid u
 test("reorder tasks from the timeline", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
 
-	const { getTaskAtIndex } = tasksHelper({ page });
+	const taskPage = new TaskPage(page);
 
-	const taskOne = (await getTaskAtIndex(0)).getContent();
-	const taskThree = (await getTaskAtIndex(2)).getContent();
+	const taskOne = (await taskPage.getTaskAtIndex(0)).getContent();
+	const taskThree = (await taskPage.getTaskAtIndex(2)).getContent();
 
 	await dragElementOver(taskOne, taskThree, { page });
 
-	const reorderedTask = await getTaskAtIndex(2);
+	const reorderedTask = await taskPage.getTaskAtIndex(2);
 
 	await expect(reorderedTask.getTitle()).toHaveText("More CMS Block Types");
 });
@@ -152,13 +152,13 @@ test("reorder tasks from the timeline", async ({ page, mount }) => {
 test("schedule a task with no date", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
 
-	const { getTaskAtIndex } = tasksHelper({ page });
+	const taskPage = new TaskPage(page);
 
 	const task = page.locator(".taskWithoutDate").first();
 
 	await clickElementCenter(task, { page });
 
-	const taskScheduled = await getTaskAtIndex(3);
+	const taskScheduled = await taskPage.getTaskAtIndex(3);
 
 	const after = await taskScheduled.getDetails();
 	expect(after.dateStart).toEqual(new Date("2024-12-29T14:00:00.000Z"));
@@ -172,9 +172,9 @@ test("schedule a task with no date", async ({ page, mount }) => {
 
 test("cannot schedule a tasks start date to be after the task end date", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
-	const { getTaskAtIndex } = tasksHelper({ page });
+	const taskPage = new TaskPage(page);
 
-	const task = await getTaskAtIndex(0);
+	const task = await taskPage.getTaskAtIndex(0);
 	const taskRect = await getBoundingClientRect(task.getTaskBar());
 	const taskHandleStart = await task.getHandleStart();
 	const dragDistance = taskRect.width * 2;
@@ -189,9 +189,9 @@ test("cannot schedule a tasks start date to be after the task end date", async (
 
 test("cannot schedule a tasks end date cannot be before the task start date", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
-	const { getTaskAtIndex } = tasksHelper({ page });
+	const taskPage = new TaskPage(page);
 
-	const task = await getTaskAtIndex(0);
+	const task = await taskPage.getTaskAtIndex(0);
 	const taskRect = await getBoundingClientRect(task.getTaskBar());
 	const taskHandleEnd = await task.getHandleEnd();
 	const dragDistance = taskRect.width * 2 * -1;
@@ -206,8 +206,8 @@ test("cannot schedule a tasks end date cannot be before the task start date", as
 
 test("hides opposite task handle and tooltip when dragging a task over it", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
-	const { getTaskAtIndex } = tasksHelper({ page });
-	const task = await getTaskAtIndex(0);
+	const taskPage = new TaskPage(page);
+	const task = await taskPage.getTaskAtIndex(0);
 
 	const taskHandleStart = await task.getHandleStart();
 
