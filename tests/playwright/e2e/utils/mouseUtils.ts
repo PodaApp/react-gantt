@@ -62,6 +62,11 @@ export const dragElementOver = async (el: Locator, overEl: Locator, { page, mous
 	if (mouseUp) await page.mouse.up();
 };
 
+export const hoverElementCenter = async (el: Locator, { page }: PlaywrightContext) => {
+	const { x: boxCenterX, y: boxCenterY } = await _getCenter(el);
+	await page.mouse.move(boxCenterX, boxCenterY);
+};
+
 export const clickElementCenter = async (el: Locator, { page }: PlaywrightContext) => {
 	const { x: boxCenterX, y: boxCenterY } = await _getCenter(el);
 	await page.mouse.click(boxCenterX, boxCenterY);

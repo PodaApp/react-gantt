@@ -4,8 +4,9 @@ import { Gantt } from "@poda/core";
 import { GRID_WIDTH } from "../../../packages/core/src/constants";
 import { tasksSingle, tasksWithUnscheduled } from "./__fixtures__/tasks";
 import { TaskPage } from "./pageObjects/TaskPage";
+import { TimelinePage } from "./pageObjects/TimelinePage";
 import { getBoundingClientRect } from "./utils/domUtils";
-import { clickElementCenter, dragElementOver, dragElementX } from "./utils/mouseUtils";
+import { clickElementCenter, dragElementOver, dragElementX, hoverElementCenter } from "./utils/mouseUtils";
 
 const halfGridUnit = GRID_WIDTH / 2;
 const dragDistanceNoChange = halfGridUnit - 1;
@@ -149,27 +150,6 @@ test("reorder tasks from the timeline", async ({ page, mount }) => {
 	await expect(reorderedTask.getTitle()).toHaveText("More CMS Block Types");
 });
 
-test("schedule a task with no date", async ({ page, mount }) => {
-	await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
-
-	const taskPage = new TaskPage(page);
-
-	const task = page.locator(".taskWithoutDate").first();
-
-	await clickElementCenter(task, { page });
-
-	const taskScheduled = await taskPage.getTaskAtIndex(3);
-
-	const after = await taskScheduled.getDetails();
-	expect(after.dateStart).toEqual(new Date("2024-12-29T14:00:00.000Z"));
-	expect(after.dateEnd).toEqual(new Date("2025-01-02T14:00:00.000Z"));
-	expect(after.duration).toEqual(5);
-
-	await expect(taskScheduled.getTitle()).toHaveText("Task no date");
-	await expect(taskScheduled.getTooltips().nth(0)).toHaveText("Dec 30");
-	await expect(taskScheduled.getTooltips().nth(1)).toHaveText("Jan 03");
-});
-
 test("cannot schedule a tasks start date to be after the task end date", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 	const taskPage = new TaskPage(page);
@@ -222,6 +202,65 @@ test("hides opposite task handle and tooltip when dragging a task over it", asyn
 	await expect(task.getTooltips().nth(1)).not.toBeVisible();
 });
 
-// test.skip("shows the tasks under the mouse pointer when dragging", () => {});
+test("schedule a task with no date", async ({ page, mount }) => {
+	await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
+
+	const taskPage = new TaskPage(page);
+
+	const task = page.locator(".taskWithoutDate").first();
+
+	await clickElementCenter(task, { page });
+
+	const taskScheduled = await taskPage.getTaskAtIndex(3);
+
+	const after = await taskScheduled.getDetails();
+	expect(after.dateStart).toEqual(new Date("2024-12-29T14:00:00.000Z"));
+	expect(after.dateEnd).toEqual(new Date("2025-01-02T14:00:00.000Z"));
+	expect(after.duration).toEqual(5);
+});
+
+test("schdeule a new task directly on the timeline", async ({ page, mount }) => {
+	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+	const timeline = new TimelinePage(page);
+
+	const newTaskTimeline = timeline.getNewTaskTimeline();
+
+	await hoverElementCenter(newTaskTimeline, { page });
+
+	const placeholder = timeline.getNewTaskPlaceholder();
+	await expect(placeholder).toBeVisible();
+
+	await clickElementCenter(newTaskTimeline, { page });
+
+	const expectedTaskName = "New task created on timeline";
+
+	await page.keyboard.type(expectedTaskName);
+	await page.keyboard.press("Enter");
+
+	await expect(placeholder).not.toBeVisible();
+
+	const tasks = new TaskPage(page);
+
+	const newTask = await tasks.getTaskAtIndex(1);
+	const newTaskDetails = await newTask.getDetails();
+
+	// header range assertion
+	const newTaskRect = await getBoundingClientRect(newTask.getTaskBar());
+
+	const timelineBar = page.locator(".header .timelineBar");
+	const timelineBarRect = await getBoundingClientRect(timelineBar);
+
+	expect(timelineBarRect.left).toEqual(newTaskRect.left);
+	expect(timelineBarRect.width).toEqual(newTaskRect.width);
+
+	expect(newTaskDetails.dateStart).toEqual(new Date("2024-12-29T14:00:00.000Z"));
+	expect(newTaskDetails.dateEnd).toEqual(new Date("2025-01-02T14:00:00.000Z"));
+	expect(newTaskDetails.duration).toEqual(5);
+
+	await expect(newTask.getTitle()).toHaveText(expectedTaskName);
+	await expect(newTask.getTooltips().nth(0)).toHaveText("Dec 30");
+	await expect(newTask.getTooltips().nth(1)).toHaveText("Jan 03");
+});
+
 // test.skip("canvas scrolls on drag when autoScroll is active", () => {});
 // test.skip("canvas does not scroll on drag when autoScroll is not active", () => {});

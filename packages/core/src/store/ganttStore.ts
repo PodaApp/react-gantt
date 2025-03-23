@@ -187,6 +187,7 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 			};
 
 			set({
+				ganttSchedulingTaskId: null,
 				tasks: produce(tasks, (draft) => {
 					draft.push(newTask);
 					return draft;
