@@ -1,13 +1,10 @@
-import { Locator, Page } from "playwright";
+import { Locator } from "playwright";
 
 export class TaskPage {
-	private readonly page: Page;
+	private readonly task: Locator;
 
-	constructor(page: Page) {
-		this.page = page;
-
-		this.getTaskAtIndex = this.getTaskAtIndex.bind(this);
-		this.getTaskById = this.getTaskById.bind(this);
+	constructor(task: Locator) {
+		this.task = task;
 	}
 
 	private async getTaskComputedData(el: Locator) {
@@ -17,12 +14,12 @@ export class TaskPage {
 		});
 	}
 
-	private async computeTaskMeta(el: Locator) {
-		const taskBar = el.locator(`.taskWithDate__bar`);
+	private async computeTaskMeta() {
+		const taskBar = this.task.locator(`.taskWithDate__bar`);
 		const { dateStart, dateEnd, duration, width, x } = await this.getTaskComputedData(taskBar);
 
 		return {
-			title: await el.locator(`.taskContent__title`).nth(0).textContent(),
+			title: await this.task.locator(`.taskContent__title`).nth(0).textContent(),
 			dateStart: new Date(dateStart),
 			dateEnd: new Date(dateEnd),
 			duration,
@@ -31,39 +28,42 @@ export class TaskPage {
 		};
 	}
 
-	private async getTaskHandle(el: Locator, position: 0 | 1) {
-		const handle = await el.locator(`.taskDraggableHandle`).nth(position);
+	private async getTaskHandle(position: 0 | 1) {
+		const handle = await this.task.locator(`.taskDraggableHandle`).nth(position);
 		await handle.scrollIntoViewIfNeeded();
 		await handle.hover();
 		return handle;
 	}
 
-	private getTaskData(el: Locator) {
-		return {
-			getHandleStart: () => this.getTaskHandle(el, 0),
-			getHandleEnd: () => this.getTaskHandle(el, 1),
-			getContent: () => el.locator(`.taskContent`).nth(0),
-			getTaskBar: () => el.locator(`.taskWithDate__bar`),
-			getTitle: () => el.locator(`.taskContent__title`).nth(0),
-			getTooltips: () => el.locator(`.taskDraggableHandle__tooltip`),
-			getDetails: () => this.computeTaskMeta(el),
-			isTaskWithNoDate: () => el.locator(`.taskWithoutDate`),
-		};
+	async getHandleStart() {
+		return this.getTaskHandle(0);
 	}
 
-	async getTaskAtIndex(index: number) {
-		const taskAtIndex = await this.page.locator(`.task`).nth(index);
-		if (!taskAtIndex) {
-			throw new Error(`Task at index ${index} not found`);
-		}
-		return this.getTaskData(taskAtIndex);
+	async getHandleEnd() {
+		return this.getTaskHandle(1);
 	}
 
-	async getTaskById(id: string) {
-		const taskById = await this.page.locator(`.task[data-id="${id}"]`);
-		if (!taskById) {
-			throw new Error(`Task with id ${id} not found`);
-		}
-		return this.getTaskData(taskById);
+	getContent() {
+		return this.task.locator(`.taskContent`).nth(0);
+	}
+
+	getTaskBar() {
+		return this.task.locator(`.taskWithDate__bar`);
+	}
+
+	getTitle() {
+		return this.task.locator(`.taskContent__title`).nth(0);
+	}
+
+	getTooltips() {
+		return this.task.locator(`.taskDraggableHandle__tooltip`);
+	}
+
+	async getDetails() {
+		return this.computeTaskMeta();
+	}
+
+	isTaskWithNoDate() {
+		return this.task.locator(`.taskWithoutDate`);
 	}
 }

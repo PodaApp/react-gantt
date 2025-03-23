@@ -1,5 +1,7 @@
 import { Locator, Page } from "playwright";
 
+import { TaskPage } from "./TaskPage";
+
 export class TimelinePage {
 	private readonly page: Page;
 
@@ -27,5 +29,14 @@ export class TimelinePage {
 		await this.getScrollableArea().evaluate((el, dist) => {
 			el.scrollBy({ left: dist });
 		}, distance);
+	}
+
+	async getTaskAtIndex(index: number) {
+		const taskAtIndex = this.page.locator(`.task`).nth(index);
+		if (!taskAtIndex) {
+			throw new Error(`Task at index ${index} not found`);
+		}
+
+		return new TaskPage(taskAtIndex);
 	}
 }

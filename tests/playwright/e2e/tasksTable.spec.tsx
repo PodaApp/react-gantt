@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/experimental-ct-react";
 import { Gantt } from "@poda/core";
 
 import { tasksSingle, tasksWithUnscheduled } from "./__fixtures__/tasks";
-import { TaskPage } from "./pageObjects/TaskPage";
 import { TaskTablePage } from "./pageObjects/TaskTablePage";
+import { TimelinePage } from "./pageObjects/TimelinePage";
 import { getBoundingClientRect, isTextTruncated } from "./utils/domUtils";
 import { clickElementCenter, dragElementOver } from "./utils/mouseUtils";
 
@@ -119,10 +119,10 @@ test.describe("task table", () => {
 		await expect(taskOne.getTitle()).toHaveText(tasksWithUnscheduled[1]!.title);
 		await expect(taskThree.getTitle()).toHaveText(tasksWithUnscheduled[0]!.title);
 
-		const taskPage = new TaskPage(page);
+		const timelinePage = new TimelinePage(page);
 
-		const timelineTaskOne = await taskPage.getTaskAtIndex(0);
-		const timelineTaskThree = await taskPage.getTaskAtIndex(2);
+		const timelineTaskOne = await timelinePage.getTaskAtIndex(0);
+		const timelineTaskThree = await timelinePage.getTaskAtIndex(2);
 
 		await expect(timelineTaskOne.getTitle()).toHaveText(tasksWithUnscheduled[1]!.title);
 		await expect(timelineTaskThree.getTitle()).toHaveText(tasksWithUnscheduled[0]!.title);

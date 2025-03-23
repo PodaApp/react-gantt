@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/experimental-ct-react";
 import { Gantt } from "@poda/core";
 
 import { tasksSingle, tasksSingleLong, tasksWithUnscheduled } from "./__fixtures__/tasks";
-import { TaskPage } from "./pageObjects/TaskPage";
+import { TimelinePage } from "./pageObjects/TimelinePage";
 import { getBoundingClientRect } from "./utils/domUtils";
 import { dragElementTo } from "./utils/mouseUtils";
 
@@ -11,31 +11,31 @@ export const ganttDateCentered = new Date(2025, 0, 1);
 test.describe("tasks", () => {
 	test("shows a task bar for each task provided when dates have been provided", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
-		const taskPage = new TaskPage(page);
+		const timelinePage = new TimelinePage(page);
 
-		const taskOne = await taskPage.getTaskAtIndex(0);
+		const taskOne = await timelinePage.getTaskAtIndex(0);
 		const taskOneDetails = await taskOne.getDetails();
 		expect(taskOneDetails.title).toBe(tasksWithUnscheduled[0]!.title);
 		expect(taskOneDetails.dateStart).toEqual(tasksWithUnscheduled[0]!.start);
 		expect(taskOneDetails.dateEnd).toEqual(tasksWithUnscheduled[0]!.end);
 		expect(taskOneDetails.duration).toBe(5);
 
-		const taskTwo = await taskPage.getTaskAtIndex(1);
+		const taskTwo = await timelinePage.getTaskAtIndex(1);
 		await expect(taskTwo.getTitle()).toHaveText(tasksWithUnscheduled[1]!.title);
 
-		const taskThree = await taskPage.getTaskAtIndex(2);
+		const taskThree = await timelinePage.getTaskAtIndex(2);
 		await expect(taskThree.getTitle()).toHaveText(tasksWithUnscheduled[2]!.title);
 
 		// Unscheduled task
-		const taskFour = await taskPage.getTaskAtIndex(3);
+		const taskFour = await timelinePage.getTaskAtIndex(3);
 		await expect(taskFour.isTaskWithNoDate()).toBeTruthy();
 	});
 
 	test("shows a handle and tooltip when hovering over the edge of a task", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
-		const taskPage = new TaskPage(page);
+		const timelinePage = new TimelinePage(page);
 
-		const task = await taskPage.getTaskAtIndex(0);
+		const task = await timelinePage.getTaskAtIndex(0);
 		const taskRect = await getBoundingClientRect(task.getTaskBar());
 
 		await page.mouse.move(taskRect.left + 1, taskRect.top + taskRect.height / 2);
@@ -51,12 +51,12 @@ test.describe("tasks", () => {
 
 	test("shows a jump to task start button when the task leaves the viewport", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
-		const taskPage = new TaskPage(page);
+		const timelinePage = new TimelinePage(page);
 
 		const timeline = page.locator(".gantt__scrollable");
 		const timelineRect = await getBoundingClientRect(timeline);
 
-		const task = await taskPage.getTaskAtIndex(0);
+		const task = await timelinePage.getTaskAtIndex(0);
 		const taskRect = await getBoundingClientRect(task.getTaskBar());
 
 		await expect(page.locator(".taskOverflow")).toHaveCount(0);
@@ -98,9 +98,9 @@ test.describe("tasks", () => {
 
 	test("should not show jump to task buttons when dragging a task", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
-		const taskPage = new TaskPage(page);
+		const timelinePage = new TimelinePage(page);
 
-		const task = await taskPage.getTaskAtIndex(0);
+		const task = await timelinePage.getTaskAtIndex(0);
 		const timeLine = page.locator(".gantt__scrollable");
 
 		const timeLineRect = await getBoundingClientRect(timeLine);
@@ -114,12 +114,12 @@ test.describe("tasks", () => {
 
 	test("shows a jump to task end button when the task leaves the viewport", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
-		const taskPage = new TaskPage(page);
+		const timelinePage = new TimelinePage(page);
 
 		const timeline = page.locator(".gantt__scrollable");
 		const timelineRect = await getBoundingClientRect(timeline);
 
-		const task = await taskPage.getTaskAtIndex(0);
+		const task = await timelinePage.getTaskAtIndex(0);
 		const taskRect = await getBoundingClientRect(task.getTaskBar());
 
 		await expect(page.locator(".taskOverflow")).toHaveCount(0);
@@ -164,9 +164,9 @@ test.describe("tasks", () => {
 
 	test("focuses tasks on hover", async ({ mount, page }) => {
 		mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
-		const taskPage = new TaskPage(page);
+		const timelinePage = new TimelinePage(page);
 
-		const taskOne = await taskPage.getTaskAtIndex(0);
+		const taskOne = await timelinePage.getTaskAtIndex(0);
 		const taskOneRect = await getBoundingClientRect(taskOne.getTaskBar());
 
 		await taskOne.getTaskBar().hover();
@@ -177,7 +177,7 @@ test.describe("tasks", () => {
 		expect(timelineBarRect.left).toEqual(taskOneRect.left);
 		expect(timelineBarRect.width).toEqual(taskOneRect.width);
 
-		const taskTwo = await taskPage.getTaskAtIndex(0);
+		const taskTwo = await timelinePage.getTaskAtIndex(0);
 		const taskTwoRect = await getBoundingClientRect(taskOne.getTaskBar());
 
 		await taskTwo.getTaskBar().hover();
@@ -189,9 +189,9 @@ test.describe("tasks", () => {
 	});
 	test("clears task focus when the mouse interacts with and element outside of the timeline", async ({ mount, page }) => {
 		mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
-		const taskPage = new TaskPage(page);
+		const timelinePage = new TimelinePage(page);
 
-		const taskOne = await taskPage.getTaskAtIndex(0);
+		const taskOne = await timelinePage.getTaskAtIndex(0);
 		await taskOne.getTaskBar().hover();
 
 		const header = page.locator(".header");
