@@ -3,7 +3,7 @@ import { Gantt } from "@poda/core";
 
 import { tasksSingle, tasksSingleLong, tasksWithUnscheduled } from "./__fixtures__/tasks";
 import { getBoundingClientRect } from "./utils/domUtils";
-import { dragElementTo } from "./utils/dragUtils";
+import { dragElementTo } from "./utils/mouseUtils";
 import { tasksHelper } from "./utils/taskUtils";
 
 export const ganttDateCentered = new Date(2025, 0, 1);

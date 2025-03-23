@@ -3,7 +3,7 @@ import { Gantt } from "@poda/core";
 
 import { tasksSingle, tasksWithUnscheduled } from "./__fixtures__/tasks";
 import { getBoundingClientRect, isTextTruncated } from "./utils/domUtils";
-import { clickElementCenter, dragElementOver } from "./utils/dragUtils";
+import { clickElementCenter, dragElementOver } from "./utils/mouseUtils";
 import { tasksTableHelper } from "./utils/taskTableUtils";
 import { tasksHelper } from "./utils/taskUtils";
 

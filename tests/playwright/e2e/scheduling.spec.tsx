@@ -4,7 +4,7 @@ import { Gantt } from "@poda/core";
 import { GRID_WIDTH } from "../../../packages/core/src/constants";
 import { tasksSingle, tasksWithUnscheduled } from "./__fixtures__/tasks";
 import { getBoundingClientRect } from "./utils/domUtils";
-import { clickElementCenter, dragElementOver, dragElementX } from "./utils/dragUtils";
+import { clickElementCenter, dragElementOver, dragElementX } from "./utils/mouseUtils";
 import { tasksHelper } from "./utils/taskUtils";
 
 const halfGridUnit = GRID_WIDTH / 2;
