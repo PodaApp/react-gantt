@@ -259,5 +259,5 @@ test("schdeule a new task directly on the timeline", async ({ page, mount }) => 
 	await expect(newTask.getTooltips().nth(1)).toHaveText("Jan 03");
 });
 
-// test.skip("canvas scrolls on drag when autoScroll is active", () => {});
-// test.skip("canvas does not scroll on drag when autoScroll is not active", () => {});
+test.skip("canvas scrolls on drag when autoScroll is active", () => {});
+test.skip("canvas does not scroll on drag when autoScroll is not active", () => {});
