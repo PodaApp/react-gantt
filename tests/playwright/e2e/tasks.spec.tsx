@@ -8,8 +8,8 @@ import { dragElementTo } from "./utils/mouseUtils";
 
 export const ganttDateCentered = new Date(2025, 0, 1);
 
-test.describe("tasks", () => {
-	test("shows a task bar for each task provided when dates have been provided", async ({ mount, page }) => {
+test.describe("Task rendering", () => {
+	test("renders a task bar for each task with valid dates", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
@@ -31,7 +31,7 @@ test.describe("tasks", () => {
 		await expect(taskFour.getTaskWithoutDate()).toBeTruthy();
 	});
 
-	test("shows a handle and tooltip when hovering over the edge of a task", async ({ mount, page }) => {
+	test("displays handles and tooltips when hovering over task edges", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
@@ -48,8 +48,10 @@ test.describe("tasks", () => {
 		await expect(task.getTooltips().nth(0)).toBeHidden();
 		await expect(task.getTooltips().nth(1)).toHaveText("Jan 03");
 	});
+});
 
-	test("shows a jump to task start button when the task leaves the viewport", async ({ mount, page }) => {
+test.describe("Task actions", () => {
+	test("shows a 'jump to task start' button when a task leaves the viewport", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
@@ -96,7 +98,7 @@ test.describe("tasks", () => {
 		expect(finalLeft).toBeGreaterThanOrEqual(200);
 	});
 
-	test("should not show jump to task buttons when dragging a task", async ({ mount, page }) => {
+	test("hides 'jump to task' buttons while dragging a task", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
@@ -112,7 +114,7 @@ test.describe("tasks", () => {
 		await expect(page.locator(".taskOverflow")).not.toBeVisible();
 	});
 
-	test("shows a jump to task end button when the task leaves the viewport", async ({ mount, page }) => {
+	test("shows a 'jump to task end' button when a task leaves the viewport", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
@@ -151,7 +153,7 @@ test.describe("tasks", () => {
 		expect(finalRight).toBeGreaterThanOrEqual(200);
 	});
 
-	test("shows jump to start and jump to end buttons for large tasks that excede the viewports width", async ({ mount, page }) => {
+	test("displays 'jump to start' and 'jump to end' buttons for large tasks exceeding viewport width", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksSingleLong} dateCentered={ganttDateCentered} />);
 
 		const taskOverflow = page.locator(".taskOverflow");
@@ -161,8 +163,10 @@ test.describe("tasks", () => {
 		await expect(taskOverflow.locator(".task__title")).toBeVisible();
 		await expect(taskOverflow.locator(".task__title")).toHaveText(tasksSingleLong[0]!.title);
 	});
+});
 
-	test("focuses tasks on hover", async ({ mount, page }) => {
+test.describe("Task focus", () => {
+	test("focuses on a task when hovered", async ({ mount, page }) => {
 		mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
@@ -187,7 +191,8 @@ test.describe("tasks", () => {
 		expect(timelineBarTwoRect.left).toEqual(taskTwoRect.left);
 		expect(timelineBarTwoRect.width).toEqual(taskTwoRect.width);
 	});
-	test("clears task focus when the mouse interacts with and element outside of the timeline", async ({ mount, page }) => {
+
+	test("removes task focus when interacting with elements outside the timeline", async ({ mount, page }) => {
 		mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 

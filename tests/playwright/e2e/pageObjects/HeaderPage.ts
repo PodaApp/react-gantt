@@ -15,7 +15,7 @@ export class HeaderPage {
 		this.page = page;
 	}
 
-	async getHeaderData() {
+	async getData() {
 		const header = this.getHeader();
 		const headerData = await header.evaluate((el) => el.dataset);
 
@@ -32,15 +32,19 @@ export class HeaderPage {
 		return this.page.locator(SELECTORS.header);
 	}
 
-	getHeaderMonth(month: string): Locator {
+	getTaskRange(): Locator {
+		return this.page.locator(".header .timelineBar");
+	}
+
+	getMonth(month: string): Locator {
 		return this.page.locator(SELECTORS.headerMonth.replace("{month}", month));
 	}
 
-	getHeaderDaysForMonth(month: string): Locator {
-		return this.getHeaderMonth(month).locator(SELECTORS.headerDay);
+	getDaysForMonth(month: string): Locator {
+		return this.getMonth(month).locator(SELECTORS.headerDay);
 	}
 
-	getHeaderStickyMonth(): Locator {
+	getStickyMonth(): Locator {
 		return this.page.locator(SELECTORS.headerSticky);
 	}
 

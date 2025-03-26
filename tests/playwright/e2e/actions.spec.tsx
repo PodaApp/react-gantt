@@ -10,12 +10,18 @@ import { isOnscreen } from "./utils/domUtils";
 
 const dateCentered = new Date(2025, 0, 1);
 
-test.describe("zoom", () => {
-	test("shows each the date for day when the zoom is set to week", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={dateCentered} />);
-		const headerPage = new HeaderPage(page);
+test.describe("Zoom functionality", () => {
+	let headerPage: HeaderPage;
+	let timelinePage: TimelinePage;
 
-		const days = await headerPage.getHeaderDaysForMonth("January 2025");
+	test.beforeEach(async ({ mount, page }) => {
+		await mount(<Gantt tasks={tasksSingle} dateCentered={dateCentered} />);
+		headerPage = new HeaderPage(page);
+		timelinePage = new TimelinePage(page);
+	});
+
+	test("displays daily dates at week zoom level", async () => {
+		const days = await headerPage.getDaysForMonth("January 2025");
 		const dayCount = await days.count();
 
 		expect(dayCount).toBe(31);
@@ -26,36 +32,22 @@ test.describe("zoom", () => {
 			expect(dayText?.trim()).toBe((i + 1).toString());
 		}
 	});
-	test("shows only the dates for mondays when the zoom is set to greater than week", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={dateCentered} />);
-		const timelinePage = new TimelinePage(page);
-		const headerPage = new HeaderPage(page);
 
+	test("displays only Mondays at month zoom level", async () => {
 		await timelinePage.setZoom("month");
 
-		const days = await headerPage.getHeaderDaysForMonth("January 2025");
-		const dayCount = await days.count();
-
-		const mondays = [];
-
-		for (let i = 0; i < dayCount; i++) {
-			const day = days.nth(i);
-			const dayText = await day.textContent();
-			if (dayText) {
-				mondays.push(dayText.trim());
-			}
-		}
+		const days = await headerPage.getDaysForMonth("January 2025");
+		const mondays = await days.evaluateAll((nodes) => nodes.map((node) => node.textContent?.trim()).filter(Boolean));
 
 		expect(mondays).toHaveLength(4);
 		expect(mondays).toEqual(["6", "13", "20", "27"]);
 	});
 
-	test("shows weekend when the zoom is set to week ", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={dateCentered} />);
-		const timelinePage = new TimelinePage(page);
+	test("renders weekend dividers at week zoom level", async ({ page }) => {
 		const weekendDividers = timelinePage.getWeekendDividers();
 
-		await expect(weekendDividers).toHaveCount(52);
+		const expectedWeekendCount = 52;
+		await expect(weekendDividers).toHaveCount(expectedWeekendCount);
 
 		const midPoint = weekendDividers.nth(26);
 		const midPointOffset = await midPoint.evaluate((el) => el.dataset.offset);
@@ -63,10 +55,8 @@ test.describe("zoom", () => {
 
 		expect(midPointDate).toEqual(new Date(2025, 0, 4));
 	});
-	test("shows first of the month when zoom is set to greater than a week", async ({ page, mount }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={dateCentered} />);
-		const timelinePage = new TimelinePage(page);
 
+	test("renders start-of-month dividers at month zoom level", async ({ page }) => {
 		await timelinePage.setZoom("month");
 		const startOfMonthDividers = timelinePage.getStartOfMonthDividers();
 
@@ -74,14 +64,15 @@ test.describe("zoom", () => {
 
 		const midPoint = startOfMonthDividers.nth(13);
 		const midPointOffset = await midPoint.evaluate((el) => el.dataset.offset);
+
+		expect(midPointOffset).not.toBeNull();
+
 		const midPointDate = await getDateForOffset(parseInt(midPointOffset!, 10), { page });
 
 		expect(midPointDate).toEqual(new Date(2025, 0, 1));
 	});
-	test("the date centered on the timeline does not change when the zoom level changes", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={dateCentered} />);
-		const timelinePage = new TimelinePage(page);
 
+	test("preserves centered date when zoom level changes", async () => {
 		const timelineDataWeek = await timelinePage.getProviderData();
 
 		await timelinePage.setZoom("month");
@@ -90,15 +81,11 @@ test.describe("zoom", () => {
 
 		const actualDaysToCenter = differenceInDays(timelineDataWeek.centered, timelineDataMonth.centered);
 
-		// Expect within in range of -3 to 3 days
 		expect(actualDaysToCenter).toBeGreaterThan(-3);
 		expect(actualDaysToCenter).toBeLessThan(3);
 	});
-	test.skip("updating the zoom calculates the date range of the timeline based on the date centered in the viewport", () => {});
-	test("task sizes are adjusted to fit the zoom level", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={dateCentered} />);
-		const timelinePage = new TimelinePage(page);
 
+	test("adjusts task sizes to match zoom level", async ({ page }) => {
 		const taskWeek = await timelinePage.getTaskAtIndex(0);
 		const taskWeekData = await taskWeek.getDetails();
 		const dateWeek = await getDateForOffset(taskWeekData.x, { page });
@@ -114,37 +101,46 @@ test.describe("zoom", () => {
 		expect(taskMonthData.width).toBe(100);
 		expect(dateMonth).toEqual(dateWeek);
 	});
-	test("the total rendered duration of the timeline changes based on the zoom level", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={dateCentered} />);
-		const timelinePage = new TimelinePage(page);
 
+	test("updates rendered duration based on zoom level", async () => {
 		const timelineDataWeek = await timelinePage.getProviderData();
 		const weekLengthInDays = differenceInDays(timelineDataWeek.end, timelineDataWeek.start);
-		expect(weekLengthInDays).toBe(365);
+
+		const expectedDayRangeWeek = 365;
+		expect(weekLengthInDays).toBe(expectedDayRangeWeek);
 
 		await timelinePage.setZoom("month");
 		const timelineDataMonth = await timelinePage.getProviderData();
 		const monthLengthInDays = differenceInDays(timelineDataMonth.end, timelineDataMonth.start);
-		expect(monthLengthInDays).toBe(760);
+
+		const expectedDayRangeMonth = 760;
+		expect(monthLengthInDays).toBe(expectedDayRangeMonth);
 
 		await timelinePage.setZoom("quarter");
 		const timelineDataQuarter = await timelinePage.getProviderData();
 		const quarterLengthInDays = differenceInDays(timelineDataQuarter.end, timelineDataQuarter.start);
-		expect(quarterLengthInDays).toBe(1792);
+
+		const expectedDayRangeQuarter = 1792;
+		expect(quarterLengthInDays).toBe(expectedDayRangeQuarter);
 
 		await timelinePage.setZoom("year");
 		const timelineDataYear = await timelinePage.getProviderData();
 		const yearLengthInDays = differenceInDays(timelineDataYear.end, timelineDataYear.start);
-		expect(yearLengthInDays).toBe(2947);
-	});
 
-	test.skip("the focused task duration only shows start and end dates when the zoom level is greater than week", () => {});
+		const expectedDayRangeYear = 2947;
+		expect(yearLengthInDays).toBe(expectedDayRangeYear);
+	});
 });
 
-test.describe("today", () => {
-	test("centers the timeline on todays date when today is clicked", async ({ mount, page }) => {
+test.describe("Today marker", () => {
+	let timelinePage: TimelinePage;
+
+	test.beforeEach(async ({ mount, page }) => {
 		await mount(<Gantt tasks={[]} />);
-		const timelinePage = new TimelinePage(page);
+		timelinePage = new TimelinePage(page);
+	});
+
+	test("centers the timeline on today's date when clicked", async () => {
 		const timeline = await timelinePage.getScrollableArea();
 
 		await expect(isOnscreen(timeline, timelinePage.getMarkerToday())).resolves.toEqual(true);

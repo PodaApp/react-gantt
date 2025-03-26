@@ -9,7 +9,7 @@ export const getDateForOffset = async (offset: number, { page }: { page: Page })
 	const timelinePage = new TimelinePage(page);
 
 	const providerData = await timelinePage.getProviderData();
-	const headerData = await headerPage.getHeaderData();
+	const headerData = await headerPage.getData();
 
 	if (!headerData.gridWidth) {
 		throw new Error("Missing required data attributes");

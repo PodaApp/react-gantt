@@ -44,19 +44,16 @@ export class TaskPage {
 		};
 	}
 
-	private async getTaskHandle(position: 0 | 1) {
-		const handle = await this.task.locator(SELECTORS.taskHandle).nth(position);
-		await handle.scrollIntoViewIfNeeded();
-		await handle.hover();
-		return handle;
+	getTaskHandleAtIndex(index: 0 | 1) {
+		return this.task.locator(SELECTORS.taskHandle).nth(index);
 	}
 
 	getHandleStart() {
-		return this.getTaskHandle(0);
+		return this.getTaskHandleAtIndex(0);
 	}
 
 	getHandleEnd() {
-		return this.getTaskHandle(1);
+		return this.getTaskHandleAtIndex(1);
 	}
 
 	getContent() {
