@@ -1,5 +1,14 @@
 import { Locator } from "playwright";
 
+const SELECTORS = {
+	taskBar: ".taskWithDate__bar",
+	taskTitle: ".taskContent__title",
+	taskContent: ".taskContent",
+	taskTooltip: ".taskDraggableHandle__tooltip",
+	taskHandle: ".taskDraggableHandle",
+	taskWithoutDate: ".taskWithoutDate",
+};
+
 export class TaskPage {
 	private readonly task: Locator;
 
@@ -9,17 +18,24 @@ export class TaskPage {
 
 	private async getTaskComputedData(el: Locator) {
 		return await el.evaluate((element) => {
-			const dataComputed = element.getAttribute("data-computed");
-			return dataComputed ? JSON.parse(dataComputed) : null;
+			const taskData = element.getAttribute("data-computed");
+
+			if (!taskData) {
+				throw new Error("data-computed attribute is missing");
+			}
+
+			return JSON.parse(taskData);
 		});
 	}
 
-	private async computeTaskMeta() {
-		const taskBar = this.task.locator(`.taskWithDate__bar`);
+	private async getTaskMeta() {
+		const taskBar = this.task.locator(SELECTORS.taskBar);
 		const { dateStart, dateEnd, duration, width, x } = await this.getTaskComputedData(taskBar);
 
+		const title = await this.task.locator(SELECTORS.taskTitle).nth(0).textContent();
+
 		return {
-			title: await this.task.locator(`.taskContent__title`).nth(0).textContent(),
+			title,
 			dateStart: new Date(dateStart),
 			dateEnd: new Date(dateEnd),
 			duration,
@@ -29,7 +45,7 @@ export class TaskPage {
 	}
 
 	private async getTaskHandle(position: 0 | 1) {
-		const handle = await this.task.locator(`.taskDraggableHandle`).nth(position);
+		const handle = await this.task.locator(SELECTORS.taskHandle).nth(position);
 		await handle.scrollIntoViewIfNeeded();
 		await handle.hover();
 		return handle;
@@ -44,26 +60,26 @@ export class TaskPage {
 	}
 
 	getContent() {
-		return this.task.locator(`.taskContent`).nth(0);
+		return this.task.locator(SELECTORS.taskContent).nth(0);
 	}
 
 	getTaskBar() {
-		return this.task.locator(`.taskWithDate__bar`);
+		return this.task.locator(SELECTORS.taskBar);
 	}
 
 	getTitle() {
-		return this.task.locator(`.taskContent__title`).nth(0);
+		return this.task.locator(SELECTORS.taskTitle).nth(0);
 	}
 
 	getTooltips() {
-		return this.task.locator(`.taskDraggableHandle__tooltip`);
+		return this.task.locator(SELECTORS.taskTooltip);
 	}
 
 	getDetails() {
-		return this.computeTaskMeta();
+		return this.getTaskMeta();
 	}
 
 	getTaskWithoutDate() {
-		return this.task.locator(`.taskWithoutDate`);
+		return this.task.locator(SELECTORS.taskWithoutDate);
 	}
 }

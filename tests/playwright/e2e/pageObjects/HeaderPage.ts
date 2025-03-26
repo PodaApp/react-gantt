@@ -1,5 +1,13 @@
 import { Locator, Page } from "playwright";
 
+const SELECTORS = {
+	header: ".header",
+	headerSticky: ".headerSticky",
+	headerMonth: '[data-current="{month}"]',
+	headerDay: ".header__day",
+	zoomSelect: ".headerActions__zoom",
+};
+
 export class HeaderPage {
 	private readonly page: Page;
 
@@ -11,8 +19,8 @@ export class HeaderPage {
 		const header = this.getHeader();
 		const headerData = await header.evaluate((el) => el.dataset);
 
-		if (!headerData.gridWidth) {
-			throw new Error(`Header is missing required data attributes: gridWidth=${headerData.gridWidth}`);
+		if (!headerData.gridWidth || isNaN(parseInt(headerData.gridWidth, 10))) {
+			throw new Error(`Header is missing required data attributes or gridWidth is invalid: gridWidth=${headerData.gridWidth}`);
 		}
 
 		return {
@@ -21,18 +29,24 @@ export class HeaderPage {
 	}
 
 	getHeader(): Locator {
-		return this.page.locator(".header");
+		return this.page.locator(SELECTORS.header);
 	}
 
 	getHeaderMonth(month: string): Locator {
-		return this.page.locator(`[data-current="${month}"]`);
+		return this.page.locator(SELECTORS.headerMonth.replace("{month}", month));
 	}
 
 	getHeaderDaysForMonth(month: string): Locator {
-		return this.getHeaderMonth(month).locator(".header__day");
+		return this.getHeaderMonth(month).locator(SELECTORS.headerDay);
 	}
 
-	getStickyMonth(): Locator {
-		return this.page.locator(".headerSticky");
+	getHeaderStickyMonth(): Locator {
+		return this.page.locator(SELECTORS.headerSticky);
+	}
+
+	async setZoom(zoomLevel: string) {
+		await this.page.locator(SELECTORS.zoomSelect).selectOption({
+			value: zoomLevel,
+		});
 	}
 }

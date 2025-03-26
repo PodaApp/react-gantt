@@ -2,6 +2,20 @@ import { Locator, Page } from "playwright";
 
 import { TaskPage } from "./TaskPage";
 
+const SELECTORS = {
+	ganttContainer: "[data-testid='ganttContainer']",
+	todayMarker: ".today",
+	todayButton: ".headerActions__today",
+	monthDividers: ".firstOfTheMonth",
+	weekendDividers: ".weekend",
+	scrollableArea: ".gantt__scrollable",
+	taskTimeline: ".tasksTimeline",
+	newTaskTimeline: ".tasksTimeline__addNew",
+	newTaskPlaceholder: ".newTaskPlaceholder",
+	task: ".task",
+	zoomSelect: ".headerActions__zoom",
+};
+
 export class TimelinePage {
 	private readonly page: Page;
 
@@ -10,7 +24,7 @@ export class TimelinePage {
 	}
 
 	async getProviderData() {
-		const provider = this.page.locator("[data-testid='ganttContainer']");
+		const provider = this.page.locator(SELECTORS.ganttContainer);
 
 		const { start, centered, end } = await provider.evaluate((el) => el.dataset);
 
@@ -26,9 +40,7 @@ export class TimelinePage {
 	}
 
 	async setZoom(zoomLevel: string) {
-		const zoomSelect = this.page.locator(".headerActions__zoom");
-
-		await zoomSelect.selectOption({
+		await this.page.locator(SELECTORS.zoomSelect).selectOption({
 			value: zoomLevel,
 		});
 	}
@@ -40,7 +52,7 @@ export class TimelinePage {
 	}
 
 	async getTaskAtIndex(index: number) {
-		const taskAtIndex = this.page.locator(`.task`).nth(index);
+		const taskAtIndex = this.page.locator(SELECTORS.task).nth(index);
 		if (!taskAtIndex) {
 			throw new Error(`Task at index ${index} not found`);
 		}
@@ -49,34 +61,34 @@ export class TimelinePage {
 	}
 
 	getMarkerToday(): Locator {
-		return this.page.locator(".today");
+		return this.page.locator(SELECTORS.todayMarker);
 	}
 
 	getButtonToday(): Locator {
-		return this.page.locator(".headerActions__today");
+		return this.page.locator(SELECTORS.todayButton);
 	}
 
 	getStartOfMonthDividers(): Locator {
-		return this.page.locator(`.firstOfTheMonth`);
+		return this.page.locator(SELECTORS.monthDividers);
 	}
 
 	getWeekendDividers() {
-		return this.page.locator(`.weekend`);
+		return this.page.locator(SELECTORS.weekendDividers);
 	}
 
 	getScrollableArea(): Locator {
-		return this.page.locator(".gantt__scrollable");
+		return this.page.locator(SELECTORS.scrollableArea);
 	}
 
 	getTaskTimeline(): Locator {
-		return this.page.locator(".tasksTimeline");
+		return this.page.locator(SELECTORS.taskTimeline);
 	}
 
 	getNewTaskTimeline(): Locator {
-		return this.page.locator(".tasksTimeline__addNew");
+		return this.page.locator(SELECTORS.newTaskTimeline);
 	}
 
 	getNewTaskPlaceholder(): Locator {
-		return this.page.locator(".newTaskPlaceholder");
+		return this.page.locator(SELECTORS.newTaskPlaceholder);
 	}
 }

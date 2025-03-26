@@ -34,8 +34,8 @@ test("sticks the month to the left when the timeline is scrolled", async ({ moun
 
 	await timeline.hover();
 	await timelinePage.scrollBy(-500);
-	await expect(headerPage.getStickyMonth()).toHaveText("December 2024");
+	await expect(headerPage.getHeaderStickyMonth()).toHaveText("December 2024");
 
 	await timelinePage.scrollBy(-500);
-	await expect(headerPage.getStickyMonth()).toHaveText("November 2024");
+	await expect(headerPage.getHeaderStickyMonth()).toHaveText("November 2024");
 });
