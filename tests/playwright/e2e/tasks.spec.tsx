@@ -28,7 +28,7 @@ test.describe("tasks", () => {
 
 		// Unscheduled task
 		const taskFour = await timelinePage.getTaskAtIndex(3);
-		await expect(taskFour.isTaskWithNoDate()).toBeTruthy();
+		await expect(taskFour.getTaskWithoutDate()).toBeTruthy();
 	});
 
 	test("shows a handle and tooltip when hovering over the edge of a task", async ({ mount, page }) => {

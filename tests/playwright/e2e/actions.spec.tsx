@@ -1,40 +1,14 @@
 import { expect, test } from "@playwright/experimental-ct-react";
 import { Gantt } from "@poda/core";
-import { addDays, differenceInDays } from "date-fns";
-import { Locator, Page } from "playwright";
+import { differenceInDays } from "date-fns";
 
 import { tasksSingle } from "./__fixtures__/tasks";
 import { HeaderPage } from "./pageObjects/HeaderPage";
 import { TimelinePage } from "./pageObjects/TimelinePage";
+import { getDateForOffset } from "./utils/dateUtils";
+import { isOnscreen } from "./utils/domUtils";
 
 const dateCentered = new Date(2025, 0, 1);
-
-// TODO: Duplicate code
-const getDateForOffset = async (offset: number, { page }: { page: Page }) => {
-	const headerPage = new HeaderPage(page);
-	const timelinePage = new TimelinePage(page);
-
-	const providerData = await timelinePage.getProviderData();
-	const headerData = await headerPage.getHeaderData();
-
-	if (!headerData.gridWidth) {
-		throw new Error("Missing required data attributes");
-	}
-
-	return addDays(new Date(providerData.start), offset / headerData.gridWidth);
-};
-
-const isOnscreen = async (container: Locator, element: Locator) => {
-	const containerBox = await container.boundingBox();
-	const elementBox = await element.boundingBox();
-
-	if (!containerBox || !elementBox) return false; // Handle case where bounding box isn't available
-
-	return (
-		elementBox.x + elementBox.width > containerBox.x && // Not completely left
-		elementBox.x < containerBox.x + containerBox.width // Not completely right
-	);
-};
 
 test.describe("zoom", () => {
 	test("shows each the date for day when the zoom is set to week", async ({ mount, page }) => {
@@ -173,16 +147,14 @@ test.describe("today", () => {
 		const timelinePage = new TimelinePage(page);
 		const timeline = await timelinePage.getScrollableArea();
 
-		const today = () => page.locator(".today");
-
-		await expect(isOnscreen(timeline, today())).resolves.toEqual(true);
+		await expect(isOnscreen(timeline, timelinePage.getMarkerToday())).resolves.toEqual(true);
 
 		await timelinePage.scrollBy(-2000);
 
-		await expect(isOnscreen(timeline, today())).resolves.toEqual(false);
+		await expect(isOnscreen(timeline, timelinePage.getMarkerToday())).resolves.toEqual(false);
 
 		await timelinePage.getButtonToday().click();
 
-		await expect(isOnscreen(timeline, today())).resolves.toEqual(true);
+		await expect(isOnscreen(timeline, timelinePage.getMarkerToday())).resolves.toEqual(true);
 	});
 });

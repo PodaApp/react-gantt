@@ -66,7 +66,7 @@ test("edit a tasks end date", async ({ page, mount }) => {
 	expect(before.dateEnd).toEqual(new Date("2025-01-02T14:00:00.000Z"));
 	expect(before.duration).toEqual(5);
 
-	const taskHandleEnd = page.locator(`.taskDraggableHandle`).nth(1);
+	const taskHandleEnd = await task.getHandleEnd();
 	expect(taskHandleEnd).toHaveCount(1);
 	await dragElementX(taskHandleEnd, dragDistancePlusOne, { page });
 
@@ -85,7 +85,7 @@ test("task end date does not update until drag distance is greater than half a g
 
 	const task = await timelinePage.getTaskAtIndex(0);
 
-	const taskHandleEnd = page.locator(`.taskDraggableHandle`).nth(1);
+	const taskHandleEnd = await task.getHandleEnd();
 	await dragElementX(taskHandleEnd, dragDistanceNoChange, { page });
 
 	const after = await task.getDetails();
@@ -197,7 +197,8 @@ test("hides opposite task handle and tooltip when dragging a task over it", asyn
 	await page.mouse.down();
 	await page.mouse.move(taskHandleEndRect.x, taskHandleEndRect.y);
 
-	await expect(page.locator(".taskDraggableHandle").nth(1)).not.toBeVisible();
+	const oppositeHandle = await task.getHandleEnd();
+	await expect(oppositeHandle).not.toBeVisible();
 	await expect(task.getTooltips().nth(1)).not.toBeVisible();
 });
 
@@ -206,9 +207,10 @@ test("schedule a task with no date", async ({ page, mount }) => {
 
 	const timelinePage = new TimelinePage(page);
 
-	const task = page.locator(".taskWithoutDate").first();
+	const task = await timelinePage.getTaskAtIndex(3);
+	const taskTimeline = task.getTaskWithoutDate();
 
-	await clickElementCenter(task, { page });
+	await clickElementCenter(taskTimeline, { page });
 
 	const taskScheduled = await timelinePage.getTaskAtIndex(3);
 
@@ -218,7 +220,7 @@ test("schedule a task with no date", async ({ page, mount }) => {
 	expect(after.duration).toEqual(5);
 });
 
-test("schdeule a new task directly on the timeline", async ({ page, mount }) => {
+test("schedule a new task directly on the timeline", async ({ page, mount }) => {
 	await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
 	const timelinePage = new TimelinePage(page);
 

@@ -165,22 +165,23 @@ test.describe("task table", () => {
 
 	test("should not allow task to be scheduled on the timeline when the title is being edited", async ({ mount, page }) => {
 		await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
-		const taskTable = new TaskTablePage(page);
+		const taskTablePage = new TaskTablePage(page);
+		const timelinePage = new TimelinePage(page);
 
-		const taskOne = await taskTable.getTaskAtIndex(0);
+		const taskOne = await taskTablePage.getTaskAtIndex(0);
 		await taskOne.getTitle().click();
 
-		const taskUnsheduled = await taskTable.getTaskAtIndex(3);
+		const taskUnscheduled = await taskTablePage.getTaskAtIndex(3);
 
-		const timeLine = page.locator(".gantt__scrollable"); //TODO Create timeline page object
+		const timeLine = timelinePage.getScrollableArea();
 		const timeLineRect = await getBoundingClientRect(timeLine);
-		const timelineTaskUnscheduledRect = await getBoundingClientRect(taskUnsheduled.getTitle());
+		const timelineTaskUnscheduledRect = await getBoundingClientRect(taskUnscheduled.getTitle());
 
 		const timelineCenterTaskThree = {
 			x: timeLineRect.left + timeLineRect.width / 2,
 			y: timelineTaskUnscheduledRect.top + timelineTaskUnscheduledRect.height / 2,
 		};
 		await page.mouse.move(timelineCenterTaskThree.x, timelineCenterTaskThree.y);
-		await expect(page.locator(".newTaskPlaceholder")).not.toBeVisible(); //TODO add to tasks page object
+		await expect(timelinePage.getNewTaskPlaceholder()).not.toBeVisible();
 	});
 });

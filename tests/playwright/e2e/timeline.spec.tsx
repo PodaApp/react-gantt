@@ -1,32 +1,19 @@
 import { expect, test } from "@playwright/experimental-ct-react";
 import { Gantt } from "@poda/core";
-import { addDays, startOfDay } from "date-fns";
-import { Page } from "playwright";
+import { startOfDay } from "date-fns";
 
 import { HeaderPage } from "./pageObjects/HeaderPage";
 import { TimelinePage } from "./pageObjects/TimelinePage";
-
-// TODO: Do i need to keep this method or should I just use data attributes
-const getDateForOffset = async (offset: number, { page }: { page: Page }) => {
-	const headerPage = new HeaderPage(page);
-	const timelinePage = new TimelinePage(page);
-
-	const providerData = await timelinePage.getProviderData();
-	const headerData = await headerPage.getHeaderData();
-
-	if (!headerData.gridWidth) {
-		throw new Error("Missing required data attributes");
-	}
-
-	return addDays(new Date(providerData.start), offset / headerData.gridWidth);
-};
+import { getDateForOffset } from "./utils/dateUtils";
 
 export const ganttDateCentered = new Date(2025, 0, 1);
 
 test("highlights today on the timeline", async ({ mount, page }) => {
 	await mount(<Gantt tasks={[]} />);
 
-	const today = await page.locator(".today");
+	const timelinePage = new TimelinePage(page);
+
+	const today = timelinePage.getMarkerToday();
 	const todayData = await today.evaluate((el) => el.dataset);
 
 	if (!todayData.offset) {

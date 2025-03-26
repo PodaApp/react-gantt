@@ -35,11 +35,11 @@ export class TaskPage {
 		return handle;
 	}
 
-	async getHandleStart() {
+	getHandleStart() {
 		return this.getTaskHandle(0);
 	}
 
-	async getHandleEnd() {
+	getHandleEnd() {
 		return this.getTaskHandle(1);
 	}
 
@@ -59,11 +59,11 @@ export class TaskPage {
 		return this.task.locator(`.taskDraggableHandle__tooltip`);
 	}
 
-	async getDetails() {
+	getDetails() {
 		return this.computeTaskMeta();
 	}
 
-	isTaskWithNoDate() {
+	getTaskWithoutDate() {
 		return this.task.locator(`.taskWithoutDate`);
 	}
 }

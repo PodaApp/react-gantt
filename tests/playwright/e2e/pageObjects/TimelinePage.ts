@@ -48,6 +48,10 @@ export class TimelinePage {
 		return new TaskPage(taskAtIndex);
 	}
 
+	getMarkerToday(): Locator {
+		return this.page.locator(".today");
+	}
+
 	getButtonToday(): Locator {
 		return this.page.locator(".headerActions__today");
 	}
