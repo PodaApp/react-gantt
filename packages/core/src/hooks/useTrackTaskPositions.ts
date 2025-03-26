@@ -44,7 +44,11 @@ export const useTrackTaskPositions = (containerRef: RefObject<HTMLDivElement>) =
 					right: containerRightEdge,
 				};
 
-				const calculatePostion = (options: Partial<ITaskViewportPosition>) => setOffscreenTasks(id, { ...currentPosition, ...options });
+				const calculatePostion = (options: Partial<ITaskViewportPosition>) => {
+					requestAnimationFrame(() => {
+						setOffscreenTasks(id, { ...currentPosition, ...options });
+					});
+				};
 
 				if (enterLeftStart) {
 					calculatePostion({ overflowLeft: false });

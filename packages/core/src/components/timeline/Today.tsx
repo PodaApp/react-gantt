@@ -16,7 +16,7 @@ export const Today = () => {
 	const day = format(today, "d");
 
 	return (
-		<div className="today" style={{ transform: `translateX(${x}px)` }}>
+		<div className="today" style={{ transform: `translateX(${x}px)` }} data-offset={x}>
 			<div className="today__day">{day}</div>
 		</div>
 	);

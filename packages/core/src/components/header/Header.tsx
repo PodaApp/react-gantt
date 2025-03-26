@@ -33,7 +33,7 @@ export const Header = ({ containerRef }: Props) => {
 		<>
 			<HeaderSticky />
 			<HeaderActions containerRef={containerRef} />
-			<div className="header" style={timelineStyles} ref={containerRef}>
+			<div className="header" style={timelineStyles} data-grid-width={gridWidth} ref={containerRef}>
 				<HeaderRange />
 				{calendar.map((month, index) => {
 					const nextMonth = calendar[index + 1] || month;

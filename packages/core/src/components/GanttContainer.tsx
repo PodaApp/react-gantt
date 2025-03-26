@@ -13,7 +13,9 @@ export const GanttContainer = () => {
 	const elTimeline = useRef<HTMLDivElement>(null);
 
 	const taskTableOpen = useGanttStore((state) => state.ganttTaskListOpen);
+	const ganttDateStart = useGanttStore((state) => state.ganttDateStart);
 	const ganttDateCentered = useGanttStore((state) => state.ganttDateCentered);
+	const ganttDateEnd = useGanttStore((state) => state.ganttDateEnd);
 	const ganttCurrentOffset = useGanttStore(getGanttCurrentOffset);
 	const clearTaskFocused = useGanttStore((state) => state.clearTaskFocused);
 
@@ -37,7 +39,12 @@ export const GanttContainer = () => {
 	}, [elTimeline, ganttCurrentOffset, ganttDateCentered]);
 
 	return (
-		<div className="gantt">
+		<div
+			className="gantt"
+			data-testid="ganttContainer"
+			data-start={ganttDateStart.toISOString()}
+			data-centered={ganttDateCentered.toISOString()}
+			data-end={ganttDateEnd.toISOString()}>
 			{taskTableOpen && (
 				<div className="gantt__tasksTable">
 					<TaskTable />

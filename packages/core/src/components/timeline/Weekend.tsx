@@ -17,5 +17,5 @@ export const Weekend = ({ daysOffset = 0 }: Props) => {
 		"--weekend-width": `${width}px`,
 	} as React.CSSProperties;
 
-	return <div className="weekend" style={weekendStyles} />;
+	return <div className="weekend" style={weekendStyles} data-offset={x} />;
 };

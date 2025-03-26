@@ -42,7 +42,9 @@ export const useTrackCurrentMonth = (containerRef: RefObject<HTMLDivElement>) =>
 			});
 
 			if (currentMonth) {
-				setHeaderMonth(currentMonth);
+				requestAnimationFrame(() => {
+					setHeaderMonth(currentMonth);
+				});
 			}
 		};
 

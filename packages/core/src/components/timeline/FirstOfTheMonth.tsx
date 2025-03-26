@@ -15,5 +15,5 @@ export const FirstOfTheMonth = ({ offsetDays }: Props) => {
 		"--first-of-month-x": `${x}px`,
 	} as React.CSSProperties;
 
-	return <div className="firstOfTheMonth" style={firstOfMonthStyle} />;
+	return <div className="firstOfTheMonth" style={firstOfMonthStyle} data-offset={x} />;
 };
