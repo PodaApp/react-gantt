@@ -1,6 +1,6 @@
 import { MouseEvent, useCallback, useRef } from "react";
 
-import { TASK_ID_UNCOMMITED } from "../../constants";
+import { TASK_ID_UNCOMMITTED } from "../../constants";
 import { useGanttStore } from "../../hooks/useGanttStore";
 import { ITask } from "../../types";
 import { NewTaskPlaceholder } from "./NewTaskPlaceholder";
@@ -14,7 +14,7 @@ type Props = {
 export const TaskWithoutDate = ({ task }: Props) => {
 	const taskNewRef = useRef<HTMLDivElement>(null);
 
-	const taskId = task?.id || TASK_ID_UNCOMMITED;
+	const taskId = task?.id || TASK_ID_UNCOMMITTED;
 
 	const scheduleTask = useGanttStore((state) => state.scheduleTask);
 	const scheduleTaskClear = useGanttStore((state) => state.scheduleTaskClear);

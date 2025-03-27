@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/experimental-ct-react";
 import { Gantt } from "@poda/core";
 
-import { GRID_WIDTH } from "../../../packages/core/src/constants";
+import { DEFAULT_ZOOM, TIMELINE_CONFIG } from "../../../packages/core/src/constants";
 import { tasksWithUnscheduled } from "./__fixtures__/tasks";
 import { HeaderPage } from "./pageObjects/HeaderPage";
 import { TaskPage } from "./pageObjects/TaskPage";
@@ -9,7 +9,7 @@ import { TimelinePage } from "./pageObjects/TimelinePage";
 import { getBoundingClientRect } from "./utils/domUtils";
 import { clickElementCenter, dragElementOver, dragElementX, hoverElementCenter } from "./utils/mouseUtils";
 
-const halfGridUnit = GRID_WIDTH / 2;
+const halfGridUnit = TIMELINE_CONFIG[DEFAULT_ZOOM].gridWidth / 2;
 const dragDistanceNoChange = halfGridUnit - 1;
 const dragDistancePlusOne = halfGridUnit + 1;
 

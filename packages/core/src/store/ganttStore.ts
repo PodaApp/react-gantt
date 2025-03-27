@@ -3,7 +3,7 @@ import { add, differenceInDays, isWithinInterval, startOfDay, startOfMonth, sub 
 import { produce } from "immer";
 import { createStore } from "zustand";
 
-import { DEFAULT_ZOOM, GRID_WIDTH, TASK_ID_UNCOMMITED, TIMELINE_CONFIG, TimelineZoomLevels } from "../constants";
+import { DEFAULT_ZOOM, TASK_ID_UNCOMMITTED, TIMELINE_CONFIG, TimelineZoomLevels } from "../constants";
 import { ITask, ITaskViewportPosition, ITaskWithDate } from "../types";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { getDateRangeFromOffset } from "../utils/getDateRangeFromOffset";
@@ -89,7 +89,7 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 		tasks: [],
 		tasksPosition: {},
 		zoom: "week",
-		zoomGridWidth: GRID_WIDTH,
+		zoomGridWidth: TIMELINE_CONFIG[DEFAULT_ZOOM].gridWidth,
 		zoomOffsetRatio: null,
 		...initialState,
 
@@ -266,7 +266,7 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 				return;
 			}
 
-			if (taskId !== TASK_ID_UNCOMMITED) {
+			if (taskId !== TASK_ID_UNCOMMITTED) {
 				setTaskRange(taskId, start, end);
 			} else {
 				createTask(start, end);
