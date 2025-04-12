@@ -1,5 +1,5 @@
 import { useGanttStore } from "../../hooks/useGanttStore";
-import { ITask } from "../../types";
+import { ITask } from "../../types/tasks";
 import { TimelineBar } from "./TimelineBar";
 
 type Props = {

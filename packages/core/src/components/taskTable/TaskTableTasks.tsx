@@ -5,7 +5,7 @@ import { SortableContext } from "@dnd-kit/sortable";
 
 import { DRAG_SENSOR_CONFIG } from "../../constants";
 import { useGanttStore } from "../../hooks/useGanttStore";
-import { ITask } from "../../types";
+import { ITask } from "../../types/tasks";
 import { TaskTableDragOverlay } from "./TaskTableDragOverlay";
 import { TaskTableTask } from "./TaskTableTask";
 

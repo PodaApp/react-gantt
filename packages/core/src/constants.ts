@@ -23,8 +23,9 @@ type TimelineConfig = {
 export const DEFAULT_ZOOM: TimelineZoomLevels = "week";
 
 export type TimelineZoomLevels = "year" | "quarter" | "month" | "week";
+export type TimelineZoomConfig = Record<TimelineZoomLevels, TimelineConfig>;
 
-export const TIMELINE_CONFIG: Record<TimelineZoomLevels, TimelineConfig> = {
+export const TIMELINE_CONFIG: TimelineZoomConfig = {
 	week: { gridWidth: 40, monthsPadding: 6, components: ["weekends"], headerScale: "days", defaultTaskSizeDays: 5 },
 	month: { gridWidth: 20, monthsPadding: 12, components: ["firstOfMonth"], headerScale: "weeks", defaultTaskSizeDays: 14 },
 	quarter: { gridWidth: 12, monthsPadding: 29, components: ["firstOfMonth"], headerScale: "weeks", defaultTaskSizeDays: 14 },

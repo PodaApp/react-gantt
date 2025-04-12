@@ -1,6 +1,6 @@
 import { differenceInDays } from "date-fns";
 
-import { ITaskOffset } from "../types";
+import { ITaskOffset } from "../types/tasks";
 import { getOffsetFromDate } from "./getOffsetFromDate";
 import { getWidthFromDays } from "./getWidthFromDays";
 

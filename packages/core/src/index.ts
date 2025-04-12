@@ -1,3 +1,4 @@
-export { Gantt, type GanttProps } from "./components/Gantt";
+export { Gantt } from "./components/Gantt";
 
-export * from "./types";
+export * from "./types/tasks";
+export * from "./types/componentProps";

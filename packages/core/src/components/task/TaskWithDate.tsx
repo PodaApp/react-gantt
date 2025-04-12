@@ -1,6 +1,6 @@
 import { RefObject } from "react";
 
-import { ITaskWithDate } from "../../types";
+import { ITaskWithDate } from "../../types/tasks";
 import { TaskContent } from "./TaskContent";
 import { TaskDraggable } from "./TaskDraggable";
 import { TimelineBar } from "./TimelineBar";

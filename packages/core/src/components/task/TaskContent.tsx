@@ -7,7 +7,7 @@ import { GANTT_JUMP_TO_TASK_PADDING_DAYS } from "../../constants";
 import { useGanttStore } from "../../hooks/useGanttStore";
 import { useTaskPosition } from "../../hooks/useTaskPosition";
 import { GanttStoreState } from "../../store/ganttStore";
-import { ITaskWithDate } from "../../types";
+import { ITaskWithDate } from "../../types/tasks";
 import { TaskOverflow, TaskOverflowDirection, TaskOverflowOnClick } from "./TaskOverflow";
 import { TaskStatic } from "./TaskStatic";
 import { TaskTitleInline } from "./TaskTitleInline";

@@ -1,21 +1,50 @@
+import { DragEndEvent, DragMoveEvent, DragStartEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { add, differenceInDays, isWithinInterval, startOfDay, startOfMonth, sub } from "date-fns";
 import { produce } from "immer";
 import { createStore } from "zustand";
 
-import { DEFAULT_ZOOM, TASK_ID_UNCOMMITTED, TIMELINE_CONFIG, TimelineZoomLevels } from "../constants";
-import { ITask, ITaskViewportPosition, ITaskWithDate } from "../types";
+import { DEFAULT_ZOOM, TASK_ID_UNCOMMITTED, TIMELINE_CONFIG, TimelineZoomConfig, TimelineZoomLevels } from "../constants";
+import { ITask, ITaskViewportPosition, ITaskWithDate } from "../types/tasks";
 import { getDateFromOffset } from "../utils/getDateFromOffset";
 import { getDateRangeFromOffset } from "../utils/getDateRangeFromOffset";
 
 type TaskDate = Date | null;
 
-export type GanttStoreState = {
+type TaskMouseHandler<TaskType extends ITask = ITask> = (event: MouseEvent, task: TaskType) => void;
+type TaskDragHandler<DragEvent, TaskType extends ITask = ITask> = (event: DragEvent, task: TaskType) => void;
+
+export type GanttStoreProps<TaskType extends ITask = ITask> = {
+	tasks: TaskType[];
+	dateFormatLong: string;
+	dateFormatShort: string;
+	timelineDateCentered: Date;
+	timelineJumpToPaddingDays: number;
+	timelineZoomConfig: TimelineZoomConfig;
+	onTaskClick?: TaskMouseHandler<TaskType>;
+	onTaskMouseEnter?: TaskMouseHandler<TaskType>;
+	onTaskMouseLeave?: TaskMouseHandler<TaskType>;
+	onTaskContextClick?: TaskMouseHandler<TaskType>;
+	onTaskDrag?: TaskDragHandler<DragMoveEvent, TaskType>;
+	onTaskDragStart?: TaskDragHandler<DragStartEvent, TaskType>;
+	onTaskDragEnd?: TaskDragHandler<DragEndEvent, TaskType>;
+	/**
+	 * TODO: Don't know that to do with this yet TLDR it will fire when the timeline changes
+	 */
+	onTimelineChange?: (event: unknown) => void;
+	/**
+	 * TODO: Don't know what this is yet may just need to send a delta of what has changed
+	 * eg: What to output when tasks have been reordered ?
+	 */
+	onTasksChange?: (event: unknown) => void;
+};
+
+export type GanttStoreState<TaskType extends ITask = ITask> = {
 	draggingActiveIndex: number | null;
 	draggingOverId: string | null;
 	draggingTask: ITask | null;
 
-	ganttDateCentered: Date;
+	timelineDateCentered: Date;
 	ganttDateEnd: Date;
 	ganttDateStart: Date;
 	ganttTaskListOpen: boolean;
@@ -24,8 +53,8 @@ export type GanttStoreState = {
 	headerMonth: string | null;
 	headerTaskRange: [TaskDate, TaskDate];
 
-	taskEditingId: ITask["id"] | null;
-	taskFocusedId: ITask["id"] | null;
+	taskEditingId: TaskType["id"] | null;
+	taskFocusedId: TaskType["id"] | null;
 	taskOverPosition: { id: string | undefined; position: "before" | "after" } | null;
 
 	tasks: ITask[];
@@ -64,7 +93,7 @@ type GanttStoreActions = {
 	clearTaskFocused: () => void;
 };
 
-export type IGanttStore = GanttStoreState & GanttStoreActions;
+export type IGanttStore<TaskType extends ITask = ITask> = GanttStoreState<TaskType> & GanttStoreActions;
 
 // TODO Will need a way to specify a GUID generator;
 const dodgyGuid = () => Math.floor(Math.random() * 1000000).toString();
@@ -76,7 +105,7 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 		draggingActiveIndex: null,
 		draggingOverId: null,
 		draggingTask: null,
-		ganttDateCentered: today,
+		timelineDateCentered: today,
 		ganttDateEnd: add(today, { months: TIMELINE_CONFIG[DEFAULT_ZOOM].monthsPadding }),
 		ganttDateStart: sub(today, { months: TIMELINE_CONFIG[DEFAULT_ZOOM].monthsPadding }),
 		ganttSchedulingTaskId: null,
@@ -100,8 +129,8 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 
 			const dateIsInRange = isWithinInterval(date, { start: ganttDateStart, end: ganttDateEnd });
 
-			const next: Partial<Pick<GanttStoreState, "ganttDateCentered" | "ganttDateEnd" | "ganttDateStart">> = {
-				ganttDateCentered: Object.freeze(date),
+			const next: Partial<Pick<GanttStoreState, "timelineDateCentered" | "ganttDateEnd" | "ganttDateStart">> = {
+				timelineDateCentered: Object.freeze(date),
 			};
 
 			if (!dateIsInRange) {
@@ -420,7 +449,7 @@ export const buildGanttStore = (initialState: Partial<GanttStoreState>) => {
 			set({
 				zoom: zoomLevel,
 				zoomGridWidth: nextWidth,
-				ganttDateCentered: Object.freeze(nextDate),
+				timelineDateCentered: Object.freeze(nextDate),
 				ganttDateEnd: Object.freeze(add(nextDate, { months: nextPadding })),
 				ganttDateStart: Object.freeze(startOfMonth(sub(nextDate, { months: nextPadding }))),
 			});

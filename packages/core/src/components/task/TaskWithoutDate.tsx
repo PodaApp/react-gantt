@@ -2,7 +2,7 @@ import { MouseEvent, useCallback, useRef } from "react";
 
 import { TASK_ID_UNCOMMITTED } from "../../constants";
 import { useGanttStore } from "../../hooks/useGanttStore";
-import { ITask } from "../../types";
+import { ITask } from "../../types/tasks";
 import { NewTaskPlaceholder } from "./NewTaskPlaceholder";
 
 import "./TaskWithoutDate.css";

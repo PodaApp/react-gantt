@@ -5,7 +5,7 @@ import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
 import { useGanttStore } from "../../hooks/useGanttStore";
 import { useTaskPosition } from "../../hooks/useTaskPosition";
-import { ITaskOffset, ITaskWithDate } from "../../types";
+import { ITaskOffset, ITaskWithDate } from "../../types/tasks";
 import { TaskDraggableHandle } from "./TaskDraggableHandle";
 
 type Props = {

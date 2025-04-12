@@ -5,7 +5,7 @@ import { format } from "date-fns";
 
 import { DATE_FORMAT_SHORT_MONTH } from "../../constants";
 import { useGanttStore } from "../../hooks/useGanttStore";
-import { ITaskWithDate } from "../../types";
+import { ITaskWithDate } from "../../types/tasks";
 import { ArrowRight } from "../icons/ArrowRight";
 import { MoveLeft } from "../icons/MoveLeft";
 import { MoveRight } from "../icons/MoveRight";

@@ -1,4 +1,4 @@
-import { ITask } from "../../types";
+import { ITask } from "../../types/tasks";
 import { isTaskWithDate } from "../../utils/isTaskWithDate";
 import { TaskStatic } from "./TaskStatic";
 import { TimelineBar } from "./TimelineBar";

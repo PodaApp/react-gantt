@@ -4,7 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import classNames from "classnames";
 
 import { useGanttStore } from "../../hooks/useGanttStore";
-import { ITask } from "../../types";
+import { ITask } from "../../types/tasks";
 import { GripVertical } from "../icons/GripVertical";
 import { Plus } from "../icons/Plus";
 import { TaskTitleInline } from "../task/TaskTitleInline";

@@ -13,7 +13,7 @@ type Props = {
 };
 
 /**
- * NOTE: Consider using contenteditible rather than field-sizing. Currently
+ * NOTE: Consider using contenteditable rather than field-sizing. Currently
  * field-sizing has limited browser adoption. This may require this component
  * to be split as adding tasks on the timeline view requires a place holder
  * and an input element may still be the best choice there... But at the moment

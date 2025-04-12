@@ -5,7 +5,7 @@ import classNames from "classnames";
 
 import { useGanttStore } from "../../hooks/useGanttStore";
 import { useTrackTaskPositions } from "../../hooks/useTrackTaskPositions";
-import { ITask } from "../../types";
+import { ITask } from "../../types/tasks";
 import { isTaskWithDate } from "../../utils/isTaskWithDate";
 import { TaskWithDate } from "./TaskWithDate";
 import { TaskWithoutDate } from "./TaskWithoutDate";

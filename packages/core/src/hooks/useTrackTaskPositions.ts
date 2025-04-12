@@ -1,6 +1,6 @@
 import { RefObject, useEffect } from "react";
 
-import { ITaskViewportPosition } from "../types";
+import { ITaskViewportPosition } from "../types/tasks";
 import { useGanttStore } from "./useGanttStore";
 
 export const useTrackTaskPositions = (containerRef: RefObject<HTMLDivElement>) => {

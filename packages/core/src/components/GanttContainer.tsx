@@ -14,7 +14,7 @@ export const GanttContainer = () => {
 
 	const taskTableOpen = useGanttStore((state) => state.ganttTaskListOpen);
 	const ganttDateStart = useGanttStore((state) => state.ganttDateStart);
-	const ganttDateCentered = useGanttStore((state) => state.ganttDateCentered);
+	const ganttDateCentered = useGanttStore((state) => state.timelineDateCentered);
 	const ganttDateEnd = useGanttStore((state) => state.ganttDateEnd);
 	const ganttCurrentOffset = useGanttStore(getGanttCurrentOffset);
 	const clearTaskFocused = useGanttStore((state) => state.clearTaskFocused);

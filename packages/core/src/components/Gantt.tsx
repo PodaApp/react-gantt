@@ -1,18 +1,23 @@
 import { GanttProvider } from "../store/GanttProvider";
-import { ITask } from "../types";
+import { GanttProps } from "../types/componentProps";
+import { ITask } from "../types/tasks";
 import { GanttContainer } from "./GanttContainer";
+import { StoreUpdater } from "./StoreUpdater";
 
-export type GanttProps = {
-	tasks: ITask[];
-	dateCentered?: Date;
-};
-
-export const Gantt = (props: GanttProps) => {
-	const { dateCentered, tasks } = props;
+export const Gantt = <TaskType extends ITask = ITask>(props: GanttProps<TaskType>) => {
+	const { dateFormatLong, dateFormatShort, tasks, timelineDateCentered, timelineJumpToPaddingDays, timelineZoomConfig } = props;
 
 	return (
-		<GanttProvider dateCentered={dateCentered} tasks={tasks}>
-			<GanttContainer />
+		<GanttProvider
+			timelineDateCentered={timelineDateCentered}
+			tasks={tasks}
+			timelineZoomConfig={timelineZoomConfig}
+			timelineJumpToPaddingDays={timelineJumpToPaddingDays}
+			dateFormatLong={dateFormatLong}
+			dateFormatShort={dateFormatShort}>
+			<StoreUpdater {...props}>
+				<GanttContainer />
+			</StoreUpdater>
 		</GanttProvider>
 	);
 };

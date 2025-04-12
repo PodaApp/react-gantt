@@ -1,6 +1,6 @@
 import { DragOverlay } from "@dnd-kit/core";
 
-import { ITask } from "../../types";
+import { ITask } from "../../types/tasks";
 import { TaskTableTaskTitle } from "./TaskTableTaskTitle";
 
 import "./TaskTableDragOverlay.css";

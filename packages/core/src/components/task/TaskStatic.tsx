@@ -1,4 +1,4 @@
-import { ITask } from "../../types";
+import { ITask } from "../../types/tasks";
 
 type Props = {
 	task: ITask;
