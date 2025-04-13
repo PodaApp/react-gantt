@@ -1,5 +1,5 @@
+import { Gantt } from "@nikglavin/react-gantt";
 import { expect, test } from "@playwright/experimental-ct-react";
-import { Gantt } from "@poda/core";
 
 import { tasksSingle, tasksSingleLong, tasksWithUnscheduled } from "./__fixtures__/tasks";
 import { TimelinePage } from "./pageObjects/TimelinePage";

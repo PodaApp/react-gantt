@@ -1,5 +1,5 @@
 {
-	"name": "@poda/eslint-config",
+	"name": "@nikglavin/eslint-config",
 	"type": "module",
 	"version": "0.0.1",
 	"private": true,

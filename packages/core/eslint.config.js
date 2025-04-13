@@ -1,3 +1,3 @@
-import config from "@poda/eslint-config";
+import config from "@nikglavin/eslint-config";
 
 export default config;

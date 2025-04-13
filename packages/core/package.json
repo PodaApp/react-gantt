@@ -1,5 +1,5 @@
 {
-	"name": "@poda/core",
+	"name": "@nikglavin/react-gantt",
 	"version": "0.0.0",
 	"type": "module",
 	"source": "src/index.ts",
@@ -43,7 +43,7 @@
 		"react-dom": "^18.3.1"
 	},
 	"devDependencies": {
-		"@poda/eslint-config": "workspace:*",
+		"@nikglavin/eslint-config": "workspace:*",
 		"@rollup/plugin-typescript": "^12.1.2",
 		"@testing-library/dom": "10.4.0",
 		"@testing-library/react": "16.0.0",

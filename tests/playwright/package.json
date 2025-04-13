@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@poda/core": "workspace:*"
+    "@nikglavin/react-gantt": "workspace:*"
   },
   "devDependencies": {
     "@playwright/experimental-ct-react": "1.51.1",

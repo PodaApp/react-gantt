@@ -1,4 +1,4 @@
-import { ITask } from "@poda/core";
+import { ITask } from "@nikglavin/react-gantt";
 import { startOfDay } from "date-fns";
 
 export const tasksSingle: ITask[] = [

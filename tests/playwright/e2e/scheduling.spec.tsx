@@ -1,5 +1,5 @@
+import { Gantt } from "@nikglavin/react-gantt";
 import { expect, test } from "@playwright/experimental-ct-react";
-import { Gantt } from "@poda/core";
 
 import { DEFAULT_ZOOM, TIMELINE_CONFIG } from "../../../packages/core/src/constants";
 import { tasksWithUnscheduled } from "./__fixtures__/tasks";

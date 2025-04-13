@@ -1,5 +1,5 @@
+import { Gantt } from "@nikglavin/react-gantt";
 import { expect, test } from "@playwright/experimental-ct-react";
-import { Gantt } from "@poda/core";
 import { startOfDay } from "date-fns";
 
 import { HeaderPage } from "./pageObjects/HeaderPage";

@@ -1,5 +1,5 @@
+import { Gantt } from "@nikglavin/react-gantt";
 import { expect, test } from "@playwright/experimental-ct-react";
-import { Gantt } from "@poda/core";
 import { differenceInDays } from "date-fns";
 
 import { tasksSingle } from "./__fixtures__/tasks";

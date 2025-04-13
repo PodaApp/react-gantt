@@ -1,7 +1,7 @@
-import { Gantt } from "@poda/core";
+import { Gantt } from "@nikglavin/react-gantt";
 
 import "./App.css";
-import "@poda/core/style.css";
+import "@nikglavin/react-gantt/style.css";
 
 function App() {
 	const tasks = [

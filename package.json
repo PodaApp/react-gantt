@@ -1,5 +1,5 @@
 {
-	"name": "@poda/monorepo",
+	"name": "@nikglavin/monorepo",
 	"version": "0.0.0",
 	"description": "A Gantt component library",
 	"private": true,

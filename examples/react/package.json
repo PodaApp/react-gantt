@@ -10,7 +10,7 @@
 		"preview": "vite preview"
 	},
 	"devDependencies": {
-		"@poda/core": "workspace:*",
+		"@nikglavin/react-gantt": "workspace:*",
 		"@eslint/js": "^9.19.0",
 		"@vitejs/plugin-react-swc": "^3.5.0",
 		"eslint": "^9.19.0",
