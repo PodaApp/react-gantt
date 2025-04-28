@@ -30,7 +30,7 @@ test.describe("Timeline markers", () => {
 
 test.describe("Sticky headers", () => {
 	test("keeps the month header sticky when scrolling the timeline", async ({ mount, page }) => {
-		await mount(<Gantt tasks={[]} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={[]} timelineDateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 		const headerPage = new HeaderPage(page);
 

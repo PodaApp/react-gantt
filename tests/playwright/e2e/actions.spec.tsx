@@ -15,7 +15,7 @@ test.describe("Zoom functionality", () => {
 	let timelinePage: TimelinePage;
 
 	test.beforeEach(async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={dateCentered} />);
+		await mount(<Gantt tasks={tasksSingle} timelineDateCentered={dateCentered} />);
 		headerPage = new HeaderPage(page);
 		timelinePage = new TimelinePage(page);
 	});

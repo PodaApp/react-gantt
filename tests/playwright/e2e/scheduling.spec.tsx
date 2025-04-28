@@ -25,7 +25,7 @@ async function verifyTaskDetails(task: TaskPage, expectedDetails: { dateStart: D
 }
 
 test.beforeEach(async ({ page, mount }) => {
-	await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
+	await mount(<Gantt tasks={tasksWithUnscheduled} timelineDateCentered={ganttDateCentered} />);
 	timelinePage = new TimelinePage(page);
 });
 

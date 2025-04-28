@@ -10,7 +10,7 @@ export const ganttDateCentered = new Date(2025, 0, 1);
 
 test.describe("Task rendering", () => {
 	test("renders a task bar for each task with valid dates", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksWithUnscheduled} timelineDateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
 		const taskOne = await timelinePage.getTaskAtIndex(0);
@@ -32,7 +32,7 @@ test.describe("Task rendering", () => {
 	});
 
 	test("displays handles and tooltips when hovering over task edges", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksSingle} timelineDateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
 		const task = await timelinePage.getTaskAtIndex(0);
@@ -52,7 +52,7 @@ test.describe("Task rendering", () => {
 
 test.describe("Task actions", () => {
 	test("shows a 'jump to task start' button when a task leaves the viewport", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksSingle} timelineDateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
 		const timeline = page.locator(".gantt__scrollable");
@@ -99,7 +99,7 @@ test.describe("Task actions", () => {
 	});
 
 	test("hides 'jump to task' buttons while dragging a task", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksSingle} timelineDateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
 		const task = await timelinePage.getTaskAtIndex(0);
@@ -115,7 +115,7 @@ test.describe("Task actions", () => {
 	});
 
 	test("shows a 'jump to task end' button when a task leaves the viewport", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksSingle} timelineDateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
 		const timeline = page.locator(".gantt__scrollable");
@@ -154,7 +154,7 @@ test.describe("Task actions", () => {
 	});
 
 	test("displays 'jump to start' and 'jump to end' buttons for large tasks exceeding viewport width", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingleLong} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksSingleLong} timelineDateCentered={ganttDateCentered} />);
 
 		const taskOverflow = page.locator(".taskOverflow");
 
@@ -167,7 +167,7 @@ test.describe("Task actions", () => {
 
 test.describe("Task focus", () => {
 	test("focuses on a task when hovered", async ({ mount, page }) => {
-		mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
+		mount(<Gantt tasks={tasksWithUnscheduled} timelineDateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
 		const taskOne = await timelinePage.getTaskAtIndex(0);
@@ -193,7 +193,7 @@ test.describe("Task focus", () => {
 	});
 
 	test("removes task focus when interacting with elements outside the timeline", async ({ mount, page }) => {
-		mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+		mount(<Gantt tasks={tasksSingle} timelineDateCentered={ganttDateCentered} />);
 		const timelinePage = new TimelinePage(page);
 
 		const taskOne = await timelinePage.getTaskAtIndex(0);

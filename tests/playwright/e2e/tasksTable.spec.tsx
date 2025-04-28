@@ -11,7 +11,7 @@ export const ganttDateCentered = new Date(2025, 0, 1);
 
 test.describe("Task table visibility", () => {
 	test("toggles the visibility of the task table", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksWithUnscheduled} timelineDateCentered={ganttDateCentered} />);
 		const taskTable = new TaskTablePage(page);
 
 		await expect(taskTable.getAllTasks()).toHaveCount(tasksWithUnscheduled.length);
@@ -24,7 +24,7 @@ test.describe("Task table visibility", () => {
 
 test.describe("Task title editing", () => {
 	test("allows task titles to be edited", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksSingle} timelineDateCentered={ganttDateCentered} />);
 		const taskTable = new TaskTablePage(page);
 
 		const task = await taskTable.getTaskAtIndex(0);
@@ -37,7 +37,7 @@ test.describe("Task title editing", () => {
 	});
 
 	test("expands the textarea height for long titles during editing", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksSingle} timelineDateCentered={ganttDateCentered} />);
 		const taskTable = new TaskTablePage(page);
 
 		const task = await taskTable.getTaskAtIndex(0);
@@ -55,7 +55,7 @@ test.describe("Task title editing", () => {
 	});
 
 	test("truncates long task titles in the table view", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksSingle} timelineDateCentered={ganttDateCentered} />);
 		const taskTable = new TaskTablePage(page);
 
 		const task = await taskTable.getTaskAtIndex(0);
@@ -69,7 +69,7 @@ test.describe("Task title editing", () => {
 	});
 
 	test("saves title changes when clicking outside the input", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksWithUnscheduled} timelineDateCentered={ganttDateCentered} />);
 		const taskTable = new TaskTablePage(page);
 
 		const task = await taskTable.getTaskAtIndex(0);
@@ -85,7 +85,7 @@ test.describe("Task title editing", () => {
 
 test.describe("Task creation", () => {
 	test("adds a new task after the selected task", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksSingle} timelineDateCentered={ganttDateCentered} />);
 		const taskTable = new TaskTablePage(page);
 
 		const task = await taskTable.getTaskAtIndex(0);
@@ -101,7 +101,7 @@ test.describe("Task creation", () => {
 	});
 
 	test("adds a new task at the end of the task list", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksSingle} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksSingle} timelineDateCentered={ganttDateCentered} />);
 		const taskTable = new TaskTablePage(page);
 
 		await taskTable.getNewTaskButton().click();
@@ -118,7 +118,7 @@ test.describe("Task creation", () => {
 
 test.describe("Task reordering", () => {
 	test("reorders tasks from the task table", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksWithUnscheduled} timelineDateCentered={ganttDateCentered} />);
 		const taskTable = new TaskTablePage(page);
 
 		const taskOne = await taskTable.getTaskAtIndex(0);
@@ -141,7 +141,7 @@ test.describe("Task reordering", () => {
 	});
 
 	test("hides actions while tasks are being reordered", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksWithUnscheduled} timelineDateCentered={ganttDateCentered} />);
 		const taskTable = new TaskTablePage(page);
 
 		const taskOne = await taskTable.getTaskAtIndex(0);
@@ -159,7 +159,7 @@ test.describe("Task reordering", () => {
 	});
 
 	test("hides actions while tasks are being edited", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksWithUnscheduled} timelineDateCentered={ganttDateCentered} />);
 		const taskTable = new TaskTablePage(page);
 
 		const taskOne = await taskTable.getTaskAtIndex(0);
@@ -177,7 +177,7 @@ test.describe("Task reordering", () => {
 	});
 
 	test("prevents scheduling tasks on the timeline while editing titles", async ({ mount, page }) => {
-		await mount(<Gantt tasks={tasksWithUnscheduled} dateCentered={ganttDateCentered} />);
+		await mount(<Gantt tasks={tasksWithUnscheduled} timelineDateCentered={ganttDateCentered} />);
 		const taskTablePage = new TaskTablePage(page);
 		const timelinePage = new TimelinePage(page);
 
