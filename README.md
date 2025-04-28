@@ -37,7 +37,7 @@ export function App() {
 ```
 
 ## TODO
-### Must have pre "release"
+### Must have "Prerelease"
 - Event hooks
 - Github actions
 - Additional Examples 
