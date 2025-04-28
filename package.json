@@ -27,5 +27,8 @@
 		"typescript": "~5.7.3",
 		"concurrently": "^9.1.2"
 	},
+	"resolutions": {
+		"@babel/helpers": "^7.26.10"
+	},
 	"packageManager": "pnpm@9.7.1"
 }
