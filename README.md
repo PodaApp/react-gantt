@@ -19,13 +19,13 @@ import { Gantt, type ITask } from "@nikglavin/react-gantt";
 import "@nikglavin/react-gantt/style.css";
 
 const tasks: ITask[] = [
-		{
-			id: "0",
-			title: "One",
-			start: new Date(2025, 2, 10),
-			end: new Date(2025, 2, 14),
-		},
-		{ id: "3", title: "two", start: null, end: null },
+  {
+    id: "0",
+    title: "One",
+    start: new Date(2025, 2, 10),
+    end: new Date(2025, 2, 14),
+  },
+  { id: "3", title: "two", start: null, end: null },
 ];
 
 export function App() {
