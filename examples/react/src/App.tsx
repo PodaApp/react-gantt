@@ -1,10 +1,10 @@
-import { Gantt } from "@nikglavin/react-gantt";
+import { Gantt, type ITask } from "@nikglavin/react-gantt";
 
 import "./App.css";
 import "@nikglavin/react-gantt/style.css";
 
 function App() {
-	const tasks = [
+	const tasks: ITask[] = [
 		{
 			id: "0",
 			title: "More CMS Block Types",
